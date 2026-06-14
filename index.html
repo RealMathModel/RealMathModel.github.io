@@ -135,14 +135,23 @@ h1 .ac{color:var(--amber)}
   var empty = document.getElementById('empty');
   var label = document.getElementById('count-label');
 
+  function metaHtml(c){
+    if(c.children){ var k=c.children.length; return '<span>'+k+' area'+(k===1?'':'s')+'</span>'; }
+    var r=(c.resources||[]); var ext=r.filter(function(x){return x.type==='external';}).length;
+    return '<span>'+r.length+' link'+(r.length===1?'':'s')+'</span><span>'+ext+' ext</span>';
+  }
+  function subtreeText(c){
+    var s=(c.title||'')+' '+(c.blurb||'')+' '+(c.tag||'');
+    (c.resources||[]).forEach(function(r){ s+=' '+r.label; });
+    (c.children||[]).forEach(function(ch){ s+=' '+subtreeText(ch); });
+    return s.toLowerCase();
+  }
   function render(list){
     grid.innerHTML = '';
     label.textContent = list.length + (list.length===1?' area':' areas');
     if(!list.length){ empty.style.display='block'; return; }
     empty.style.display='none';
     list.forEach(function(c){
-      var n = (c.resources||[]).length;
-      var ext = (c.resources||[]).filter(function(r){return r.type==='external';}).length;
       var a = document.createElement('a');
       a.className = 'card';
       a.href = 'category.html?id=' + encodeURIComponent(c.id);
@@ -152,7 +161,7 @@ h1 .ac{color:var(--amber)}
           '<div class="ctitle">'+esc(c.title)+(c.tag?'<span class="tag">'+esc(c.tag)+'</span>':'')+'</div>'+
           (c.blurb?'<div class="cblurb">'+esc(c.blurb)+'</div>':'')+
         '</div>'+
-        '<div class="cmeta"><span>'+n+' link'+(n===1?'':'s')+'</span><span>'+ext+' ext</span></div>'+
+        '<div class="cmeta">'+metaHtml(c)+'</div>'+
         '<span class="arrow">›</span>';
       grid.appendChild(a);
     });
@@ -165,10 +174,7 @@ h1 .ac{color:var(--amber)}
   q.addEventListener('input', function(){
     var t = q.value.trim().toLowerCase();
     if(!t){ render(cats); return; }
-    render(cats.filter(function(c){
-      return (c.title+' '+(c.blurb||'')+' '+(c.tag||'')+' '+
-        (c.resources||[]).map(function(r){return r.label;}).join(' ')).toLowerCase().indexOf(t) > -1;
-    }));
+    render(cats.filter(function(c){ return subtreeText(c).indexOf(t) > -1; }));
   });
 })();
 </script>
