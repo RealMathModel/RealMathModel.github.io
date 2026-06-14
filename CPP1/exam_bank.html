@@ -176,6 +176,19 @@ pre.code{font-family:var(--mono); font-size:13.5px; line-height:1.6; background:
 .rev pre.code{margin:8px 0}
 .center{text-align:center}
 .empty{font-family:var(--mono); color:var(--good); text-align:center; padding:18px; font-size:15px}
+.timer{font-family:var(--mono); font-size:12px; color:var(--muted); border:1px solid var(--line); border-radius:6px; padding:3px 8px; letter-spacing:.04em}
+.timer::before{content:"◷ "; color:var(--amber)}
+.score .rank{font-family:var(--mono); font-size:13px; letter-spacing:.14em; color:var(--faint); margin-top:12px; text-transform:uppercase}
+.score .rank b{color:var(--amber); font-weight:700}
+.score .pacetag{display:inline-block; margin-left:10px; font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:99px; padding:2px 10px; letter-spacing:.06em; text-transform:none}
+.pacebox{display:flex; gap:10px; margin-top:18px; flex-wrap:wrap}
+.pstat{flex:1 1 120px; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px; text-align:center}
+.pstat .pv{font-family:var(--mono); font-size:20px; color:var(--ink); font-weight:700}
+.pstat .pl{font-size:11px; color:var(--faint); letter-spacing:.1em; text-transform:uppercase; margin-top:4px}
+.insights{display:flex; flex-direction:column; gap:8px; margin-top:12px}
+.insight{font-size:13px; line-height:1.5; border-radius:9px; padding:10px 13px; border:1px solid}
+.insight.bad{background:var(--bad-bg); border-color:var(--bad-line); color:#f0b3a4}
+.insight.warn{background:#241d0e; border-color:#5c4a1f; color:#e7cf94}
 @media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}}
 </style>
 </head>
@@ -221,15 +234,21 @@ function answerNode(label, text, color){
 const state = {
   chapters:new Set([1,2,3,4,5,6,7,8,9]),
   set:"Both", immediate:true, count:"All",
-  qs:[], idx:0, answered:{}, order:{}
+  qs:[], idx:0, answered:{}, order:{},
+  times:{}, shownAt:null, sessionStart:null, tick:null
 };
 const app = document.getElementById("app");
+const fmtClock = ms => { const s=Math.floor(ms/1000); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+function commitTime(i){ if(state.shownAt!=null) state.times[i]=(performance.now()-state.shownAt)/1000; }
+function stopTick(){ if(state.tick){clearInterval(state.tick); state.tick=null;} }
+function updTimer(){ const e=document.getElementById("sesstime"); if(e&&state.sessionStart!=null) e.textContent=fmtClock(performance.now()-state.sessionStart); }
 
 function nMcq(){return BANK.filter(q=>q.kind!=="Checkpoint").length;}
 function nCp(){return BANK.filter(q=>q.kind==="Checkpoint").length;}
 
 /* ---------------- START ---------------- */
 function renderStart(){
+  stopTick();
   app.innerHTML="";
   const pr = el("p","prompt"); pr.innerHTML='<span class="u">hasan</span>@<span class="p">iug</span>:<span class="d">~/cpp</span>$ ./mastery<span class="cursor"></span>';
   app.appendChild(pr);
@@ -314,6 +333,8 @@ function startSession(){
   if(state.count!=="All") pool=pool.slice(0,parseInt(state.count));
   pool.sort((a,b)=> (a.ch-b.ch) || ((a.kind==="Checkpoint")-(b.kind==="Checkpoint")));
   state.qs=pool; state.idx=0; state.answered={}; state.order={};
+  state.times={}; state.sessionStart=performance.now();
+  stopTick(); state.tick=setInterval(updTimer,1000);
   renderQ();
 }
 
@@ -324,8 +345,10 @@ function renderQ(){
   const head=el("div","qhead");
   const chb=el("span","badge ch","CH "+q.ch); head.appendChild(chb);
   const kb=el("span","badge kind",q.kind); kb.style.background=KIND_COLOR[q.kind]; head.appendChild(kb);
+  const t=el("span","timer"); t.id="sesstime"; t.textContent=state.sessionStart!=null?fmtClock(performance.now()-state.sessionStart):"00:00"; head.appendChild(t);
   head.appendChild(el("span","count",`${i+1} / ${total}`));
   app.appendChild(head);
+  state.shownAt=performance.now();
   const bar=el("div","bar"); const fill=el("i"); fill.style.width=((i+1)/total*100)+"%"; bar.appendChild(fill); app.appendChild(bar);
 
   app.appendChild(el("p","qtext",q.q));
@@ -362,6 +385,7 @@ function renderMcq(q,body){
       else if(p.t===state.answered[i]) b.classList.add("wrong");
     }
     b.onclick=()=>{
+      commitTime(i);
       state.answered[i]=p.t;
       if(state.immediate){ renderQ(); }
       else { [...wrap.children].forEach(x=>x.style.outline=""); b.style.outline="2px solid var(--amber)"; }
@@ -379,7 +403,7 @@ function renderFree(q,body){
   const inp=el("input"); inp.type="text"; inp.value=answered?state.answered[i]:""; inp.placeholder="output…";
   inp.disabled=answered&&state.immediate; inp.autocomplete="off"; inp.autocapitalize="off"; inp.spellcheck=false;
   const chk=el("button","btn primary","Check"); chk.disabled=answered&&state.immediate;
-  const submit=()=>{ if(!inp.value.trim())return; state.answered[i]=inp.value; renderQ(); };
+  const submit=()=>{ if(!inp.value.trim())return; commitTime(i); state.answered[i]=inp.value; renderQ(); };
   chk.onclick=submit; inp.addEventListener("keydown",e=>{if(e.key==="Enter")submit();});
   fr.append(inp,chk); body.appendChild(fr);
   if(answered && state.immediate){
@@ -405,6 +429,7 @@ function isCorrect(i){
 function correctText(q){ if(q.answers)return q.answers[0]; return q.opts[q.ans]; }
 
 function renderResults(){
+  stopTick();
   app.innerHTML="";
   const total=state.qs.length; let correct=0;
   const perCh={}, perKind={}, misses=[];
@@ -412,25 +437,67 @@ function renderResults(){
     const ok=isCorrect(i); if(ok)correct++;
     (perCh[q.ch]=perCh[q.ch]||[0,0]); perCh[q.ch][1]++; if(ok)perCh[q.ch][0]++;
     (perKind[q.kind]=perKind[q.kind]||[0,0]); perKind[q.kind][1]++; if(ok)perKind[q.kind][0]++;
-    if(!ok) misses.push([q,state.answered[i]]);
+    if(!ok) misses.push([q,state.answered[i],i]);
   });
   const pct=total?Math.round(100*correct/total):0;
   const pass=pct>=70;
+
+  // --- timing analysis ---
+  const tvals = state.qs.map((q,i)=>state.times[i]).filter(v=>v!=null);
+  const totalT = state.sessionStart!=null ? (performance.now()-state.sessionStart)/1000 : 0;
+  const answeredT = tvals.reduce((a,b)=>a+b,0);
+  const avg = tvals.length ? answeredT/tvals.length : 0;
+  const sorted=[...tvals].sort((a,b)=>a-b);
+  const median = sorted.length ? sorted[Math.floor(sorted.length/2)] : 0;
+  // rank: accuracy-gated (speed can't buy it)
+  const tiers=[[95,"CHAMPION"],[85,"Sharp"],[70,"Solid build"],[50,"Building"],[0,"Needs a rebuild"]];
+  const rank=tiers.find(t=>pct>=t[0])[1];
+  const pace = median===0 ? "" : (median<8?"blazing":(median<=20?"steady":"deliberate"));
+  const flair = (pct>=95 && pace==="blazing") ? " ⚡" : "";
+  // rushed misses = wrong AND fast;  grinders = right but slow
+  let rushed=0, grinders=0;
+  state.qs.forEach((q,i)=>{
+    const tt=state.times[i]; if(tt==null) return;
+    const fast = tt < Math.max(2.5, 0.45*median);
+    const slow = median>0 && tt > 2.4*median;
+    if(!isCorrect(i) && fast) rushed++;
+    if(isCorrect(i) && slow) grinders++;
+  });
+
   const pr=el("p","prompt"); pr.innerHTML='<span class="u">hasan</span>@<span class="p">iug</span>:<span class="d">~/cpp</span>$ make test'; app.appendChild(pr);
   const sc=el("div","score");
   sc.appendChild(el("div","pf", pass?"build passed":"tests incomplete"));
   const big=el("div","big "+(pass?"pass":"fail"),pct+"%"); sc.appendChild(big);
   sc.appendChild(el("div","frac",correct+" / "+total+" correct"));
+  const rk=el("div","rank"); rk.innerHTML='RANK&nbsp; <b>'+rank+flair+'</b>'+(pace?'<span class="pacetag">'+pace+' pace</span>':''); sc.appendChild(rk);
   app.appendChild(sc);
+
+  // pace stats strip
+  if(tvals.length){
+    const ps=el("div","pacebox");
+    const stat=(lbl,val)=>{const d=el("div","pstat"); d.appendChild(el("div","pv",val)); d.appendChild(el("div","pl",lbl)); return d;};
+    ps.appendChild(stat("total time", fmtClock(totalT*1000)));
+    ps.appendChild(stat("avg / question", avg.toFixed(1)+"s"));
+    ps.appendChild(stat("median", median.toFixed(1)+"s"));
+    app.appendChild(ps);
+    if(rushed||grinders){
+      const ins=el("div","insights");
+      if(rushed){ const r=el("div","insight bad"); r.textContent="⚠ "+rushed+" rushed miss"+(rushed>1?"es":"")+" — wrong answers under "+Math.max(2.5,0.45*median).toFixed(1)+"s. These read like guesses; slow down and re-derive."; ins.appendChild(r); }
+      if(grinders){ const g=el("div","insight warn"); g.textContent="◷ "+grinders+" grinder"+(grinders>1?"s":"")+" — correct but slow. You know these; drill them for exam-speed fluency."; ins.appendChild(g); }
+      app.appendChild(ins);
+    }
+  }
+
 
   const t1=el("div","sec"); t1.appendChild(el("div","label","By chapter")); t1.appendChild(meterTable(perCh,k=>"Chapter "+k)); app.appendChild(t1);
   const t2=el("div","sec"); t2.appendChild(el("div","label","By type")); t2.appendChild(meterTable(perKind,k=>k)); app.appendChild(t2);
 
   if(misses.length){
     const m=el("div","sec"); m.appendChild(el("div","label","Review — "+misses.length+" to revisit"));
-    misses.forEach(([q,chosen])=>{
+    misses.forEach(([q,chosen,qi])=>{
       const r=el("div","rev");
-      r.appendChild(el("div","tag","CH "+q.ch+" · "+q.kind));
+      const tt=state.times[qi];
+      r.appendChild(el("div","tag","CH "+q.ch+" · "+q.kind+(tt!=null?" · "+tt.toFixed(1)+"s":"")));
       r.appendChild(el("p","rq",q.q));
       if(q.code) r.appendChild(el("pre","code",q.code));
       r.appendChild(answerNode("Your answer:", chosen==null?"(skipped)":chosen, "var(--bad)"));
