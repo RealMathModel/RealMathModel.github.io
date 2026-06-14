@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>resources — realmathmodel</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='38' fill='%230B1220'/%3E%3Ctext x='26' y='118' font-family='monospace' font-size='62' fill='%23E0B23C'%3E%26gt;_%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' rx='7' fill='%230B1220'/%3E%3Ctext x='4' y='23' font-family='monospace' font-size='18' fill='%23E0B23C'%3E%26gt;_%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0B1220; --bg2:#0E1726; --panel:#141E33; --panel2:#192541;
+  --line:#26334E; --line2:#33425f;
+  --ink:#E7ECF7; --muted:#8A97AD; --faint:#5C6981;
+  --amber:#E7B53D; --amber-dim:#9c7a25;
+  --good:#4FC08A; --bad:#EB6A4E;
+  --blue:#6F9BE8; --purple:#B79BE0; --orange:#E08A5B; --teal:#4FB89A; --green:#4FC08A;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:
+    radial-gradient(1200px 600px at 70% -10%, rgba(231,181,61,.06), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(79,184,154,.06), transparent 55%),
+    var(--bg);
+  color:var(--ink); font-family:var(--sans);
+  -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100vh; min-height:100dvh;
+}
+.wrap{max-width:740px; margin:0 auto; padding:0 16px env(safe-area-inset-bottom) 16px;
+  padding-top:calc(12px + env(safe-area-inset-top));}
+.term{background:linear-gradient(180deg,var(--panel),var(--bg2));
+  border:1px solid var(--line); border-radius:12px; overflow:hidden;
+  box-shadow:0 24px 60px -28px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.03);}
+.termbar{display:flex; align-items:center; gap:8px; padding:10px 14px;
+  background:rgba(255,255,255,.02); border-bottom:1px solid var(--line);}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.r{background:#e8654b}.dot.y{background:#e7b53d}.dot.g{background:#4fc08a}
+.termtitle{font-family:var(--mono); font-size:12px; color:var(--faint); margin-left:8px; letter-spacing:.02em}
+.termbody{padding:18px 18px 22px}
+@media(min-width:560px){.termbody{padding:24px 26px 28px}}
+.back{display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:12.5px;
+  color:var(--muted); text-decoration:none; margin-bottom:12px}
+.back:hover{color:var(--amber)}
+.prompt{font-family:var(--mono); font-size:13px; color:var(--muted); margin:0 0 6px}
+.prompt .u{color:var(--good)} .prompt .p{color:var(--blue)} .prompt .d{color:var(--amber)}
+.head{display:flex; align-items:center; gap:13px; margin-bottom:4px}
+.ic{width:46px;height:46px;border-radius:11px;flex:0 0 auto; display:grid; place-items:center;
+  font-family:var(--mono); font-size:21px; font-weight:700; border:1px solid transparent}
+.ic.amber{background:rgba(231,181,61,.16); color:var(--amber); border-color:rgba(231,181,61,.3)}
+.ic.blue{background:rgba(111,155,232,.16); color:var(--blue); border-color:rgba(111,155,232,.3)}
+.ic.purple{background:rgba(183,155,224,.16); color:var(--purple); border-color:rgba(183,155,224,.3)}
+.ic.orange{background:rgba(224,138,91,.16); color:var(--orange); border-color:rgba(224,138,91,.3)}
+.ic.teal{background:rgba(79,184,154,.16); color:var(--teal); border-color:rgba(79,184,154,.3)}
+.ic.green{background:rgba(79,192,138,.16); color:var(--green); border-color:rgba(79,192,138,.3)}
+h1{font-family:var(--mono); font-weight:700; font-size:23px; letter-spacing:-.01em; margin:0; line-height:1.15}
+@media(min-width:560px){h1{font-size:27px}}
+.sub{color:var(--muted); font-size:13.5px; margin:8px 0 2px}
+.label{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--faint); margin:20px 0 10px; display:flex; align-items:center; gap:8px}
+.label::before{content:""; width:14px; height:1px; background:var(--line2)}
+/* resource rows */
+.list{display:flex; flex-direction:column; gap:8px}
+.res{display:flex; align-items:center; gap:12px; padding:13px 14px;
+  background:var(--panel); border:1px solid var(--line); border-radius:10px;
+  text-decoration:none; color:inherit; transition:border-color .15s, background .15s, transform .12s}
+.res:hover{border-color:var(--line2); background:linear-gradient(var(--panel),var(--panel2))}
+.res:active{transform:translateY(1px)}
+.res.todo{cursor:default; border-style:dashed; opacity:.72}
+.res.todo:hover{border-color:var(--line); background:var(--panel); transform:none}
+.kind{font-family:var(--mono); font-size:9.5px; letter-spacing:.06em; padding:3px 7px; border-radius:6px;
+  flex:0 0 auto; font-weight:700}
+.kind.int{background:rgba(79,184,154,.14); color:var(--teal); border:1px solid rgba(79,184,154,.35)}
+.kind.ext{background:rgba(111,155,232,.14); color:var(--blue); border:1px solid rgba(111,155,232,.35)}
+.kind.todo{background:rgba(140,150,170,.1); color:var(--faint); border:1px solid var(--line2)}
+.rbody{flex:1 1 auto; min-width:0}
+.rlabel{font-size:14px; color:var(--ink)}
+.rnote{font-family:var(--mono); font-size:11px; color:var(--faint); margin-top:2px}
+.rgo{font-family:var(--mono); color:var(--faint); font-size:15px; flex:0 0 auto; transition:color .15s, transform .15s}
+.res:hover .rgo{color:var(--amber); transform:translateX(2px)}
+.note{color:var(--faint); font-size:12.5px; line-height:1.6; margin:22px 2px 4px; border-top:1px solid var(--line); padding-top:14px}
+.note b{color:var(--muted)} .note code{font-family:var(--mono); color:var(--amber); font-size:12px}
+.miss{font-family:var(--mono); color:var(--muted); font-size:14px; padding:14px 0}
+.miss a{color:var(--amber)}
+.foot{font-family:var(--mono); font-size:11px; color:var(--faint); text-align:center; margin:16px 0 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="term">
+    <div class="termbar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="termtitle" id="ttl">realmathmodel — bash — 80×24</span>
+    </div>
+    <div class="termbody">
+      <a class="back" href="index.html">‹ cd ..</a>
+      <div id="content"></div>
+      <p class="foot">&gt; realmathmodel.github.io</p>
+    </div>
+  </div>
+</div>
+
+<script src="catalog.js"></script>
+<script>
+(function(){
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
+  function param(k){return new URLSearchParams(location.search).get(k);}
+  var id = param('id');
+  var cats = (window.CATALOG && CATALOG.categories) || [];
+  var c = cats.filter(function(x){return x.id===id;})[0];
+  var box = document.getElementById('content');
+  var owner=(CATALOG&&CATALOG.owner)||'hasan', host=(CATALOG&&CATALOG.host)||'iug';
+
+  if(!c){
+    document.getElementById('ttl').textContent = 'not found — bash';
+    box.innerHTML = '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+
+      '</span>:<span class="d">~</span>$ cat '+esc(id||'?')+'</p>'+
+      '<p class="miss">No such area. <a href="index.html">Back to the hub ›</a></p>';
+    return;
+  }
+
+  document.getElementById('ttl').textContent = c.id + ' — bash — 80×24';
+  document.title = c.title + ' — realmathmodel';
+
+  var rows = (c.resources||[]).map(function(r){
+    var todo = (!r.href || r.href==='#');
+    var ext  = (r.type==='external');
+    if(todo){
+      return '<div class="res todo">'+
+        '<span class="kind todo">TODO</span>'+
+        '<div class="rbody"><div class="rlabel">'+esc(r.label)+'</div>'+
+          '<div class="rnote">'+(r.note?esc(r.note):'internal page not added yet')+'</div></div>'+
+        '<span class="rgo">·</span></div>';
+    }
+    return '<a class="res" href="'+esc(r.href)+'"'+(ext?' target="_blank" rel="noopener"':'')+'>'+
+      '<span class="kind '+(ext?'ext':'int')+'">'+(ext?'EXT':'INT')+'</span>'+
+      '<div class="rbody"><div class="rlabel">'+esc(r.label)+'</div>'+
+        (r.note?'<div class="rnote">'+esc(r.note)+'</div>':'')+'</div>'+
+      '<span class="rgo">'+(ext?'↗':'›')+'</span></a>';
+  }).join('');
+
+  var n=(c.resources||[]).length;
+  box.innerHTML =
+    '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+
+      '</span>:<span class="d">~/study</span>$ open '+esc(c.id)+'</p>'+
+    '<div class="head"><div class="ic '+(c.accent||'amber')+'">'+esc(c.icon||'•')+'</div>'+
+      '<div><h1>'+esc(c.title)+'</h1></div></div>'+
+    (c.blurb?'<p class="sub">'+esc(c.blurb)+'</p>':'')+
+    '<div class="label">'+n+' resource'+(n===1?'':'s')+'</div>'+
+    '<div class="list">'+rows+'</div>'+
+    '<p class="note"><b>INT</b> = a page in this repo · <b>EXT</b> = outside site (new tab) · '+
+      '<b>TODO</b> = add the file then set its <code>href</code> in <code>catalog.js</code>.</p>';
+})();
+</script>
+</body>
+</html>
