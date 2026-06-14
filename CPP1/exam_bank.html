@@ -127,6 +127,8 @@ pre.code{font-family:var(--mono); font-size:13.5px; line-height:1.6; background:
 .opt.correct .ltr{color:var(--good)}
 .opt.wrong{background:var(--bad-bg); border-color:var(--bad-line)}
 .opt.wrong .ltr{color:var(--bad)}
+.opt .codeopt{font-family:var(--mono); font-size:13px; line-height:1.55; white-space:pre-wrap; word-break:break-word; flex:1; color:#dbe4f5}
+.inlinecode{font-family:var(--mono); font-size:12.5px; line-height:1.55; white-space:pre-wrap; word-break:break-word; display:block; margin-top:5px; background:#0a0f1c; border:1px solid var(--line); border-radius:7px; padding:9px 11px; color:#d7e0f2}
 /* free response */
 .fr{display:flex; gap:9px; margin-top:6px; flex-wrap:wrap}
 .fr input{flex:1 1 200px; font-family:var(--mono); font-size:15px; background:#0a0f1c; color:var(--ink);
@@ -207,6 +209,14 @@ const KIND_COLOR = {Concept:"var(--k-concept)",Trace:"var(--k-trace)",Recall:"va
 const norm = s => (s||"").trim().toLowerCase().replace(/\s+/g,"");
 const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
 const el = (t,c,txt)=>{const e=document.createElement(t); if(c)e.className=c; if(txt!=null)e.textContent=txt; return e;};
+const isCode = t => /\n/.test(t) || /[;{}]|cout|cin|rand\(|::|#include|<<|>>|\(\)/.test(t);
+function answerNode(label, text, color){
+  const p=el("p"); p.style.margin="0 0 6px"; p.style.fontSize="13.5px"; if(color)p.style.color=color;
+  const b=el("b",null,label); b.style.color="var(--muted)"; b.style.fontWeight="600"; p.appendChild(b);
+  if(isCode(text)){ p.appendChild(el("div","inlinecode",text)); }
+  else { p.append(" "+text); }
+  return p;
+}
 
 const state = {
   chapters:new Set([1,2,3,4,5,6,7,8,9]),
@@ -346,7 +356,7 @@ function renderMcq(q,body){
   pairs.forEach((p,n)=>{
     const b=el("button","opt"); b.disabled=answered && state.immediate;
     b.appendChild(el("span","ltr",letters[n]+"."));
-    b.appendChild(el("span",null,p.t));
+    b.appendChild(el("span",isCode(p.t)?"codeopt":null,p.t));
     if(answered && state.immediate){
       if(p.t===correct) b.classList.add("correct");
       else if(p.t===state.answered[i]) b.classList.add("wrong");
@@ -380,7 +390,7 @@ function renderFree(q,body){
 function feedback(ok,q){
   const fb=el("div","fb "+(ok?"ok":"no"));
   const v=el("p","v"); v.textContent=ok?"✓ PASS":"✗ FAIL"; fb.appendChild(v);
-  if(!ok){ const a=el("p","ans"); a.innerHTML="<b>Answer:</b> "; a.append(document.createTextNode(q.answers?q.answers[0]:q.opts[q.ans])); fb.appendChild(a); }
+  if(!ok){ fb.appendChild(answerNode("Answer:", q.answers?q.answers[0]:q.opts[q.ans])); }
   if(q.exp){ fb.appendChild(el("p","exp",q.exp)); }
   return fb;
 }
@@ -423,8 +433,8 @@ function renderResults(){
       r.appendChild(el("div","tag","CH "+q.ch+" · "+q.kind));
       r.appendChild(el("p","rq",q.q));
       if(q.code) r.appendChild(el("pre","code",q.code));
-      r.appendChild(el("p","ya","Your answer: "+(chosen==null?"(skipped)":chosen)));
-      r.appendChild(el("p","ca","Correct: "+correctText(q)));
+      r.appendChild(answerNode("Your answer:", chosen==null?"(skipped)":chosen, "var(--bad)"));
+      r.appendChild(answerNode("Correct:", correctText(q), "var(--good)"));
       if(q.exp) r.appendChild(el("p","ex",q.exp));
       m.appendChild(r);
     });
