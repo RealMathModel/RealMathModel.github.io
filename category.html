@@ -56,6 +56,27 @@ body{
 .ic.orange{background:rgba(224,138,91,.16); color:var(--orange); border-color:rgba(224,138,91,.3)}
 .ic.teal{background:rgba(79,184,154,.16); color:var(--teal); border-color:rgba(79,184,154,.3)}
 .ic.green{background:rgba(79,192,138,.16); color:var(--green); border-color:rgba(79,192,138,.3)}
+/* breadcrumb */
+.crumb{font-family:var(--mono); font-size:11.5px; color:var(--faint); margin:0 0 10px; word-break:break-word}
+.crumb a{color:var(--muted); text-decoration:none} .crumb a:hover{color:var(--amber)}
+.crumb .sep{color:var(--line2); margin:0 6px}
+/* sub-area cards (when this node is a branch) */
+.grid{display:grid; grid-template-columns:1fr; gap:9px}
+@media(min-width:560px){.grid{grid-template-columns:1fr 1fr}}
+.card{display:flex; align-items:center; gap:13px; padding:13px 14px; cursor:pointer;
+  background:var(--panel); border:1px solid var(--line); border-radius:10px;
+  text-decoration:none; color:inherit; transition:border-color .15s, background .15s, transform .12s}
+.card:hover{border-color:var(--line2); background:linear-gradient(var(--panel),var(--panel2))}
+.card:active{transform:translateY(1px)}
+.card .ic{width:40px;height:40px;font-size:18px;border-radius:9px}
+.cbody{flex:1 1 auto; min-width:0}
+.ctitle{font-size:14.5px; color:var(--ink); font-weight:600; display:flex; align-items:center; gap:8px}
+.tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; padding:2px 6px; border-radius:5px;
+  border:1px solid var(--line2); color:var(--muted); flex:0 0 auto}
+.cblurb{font-size:12.5px; color:var(--muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cmeta{font-family:var(--mono); font-size:11px; color:var(--faint); flex:0 0 auto; text-align:right}
+.arrow{color:var(--faint); font-family:var(--mono); font-size:16px; flex:0 0 auto; transition:color .15s, transform .15s}
+.card:hover .arrow{color:var(--amber); transform:translateX(2px)}
 h1{font-family:var(--mono); font-weight:700; font-size:23px; letter-spacing:-.01em; margin:0; line-height:1.15}
 @media(min-width:560px){h1{font-size:27px}}
 .sub{color:var(--muted); font-size:13.5px; margin:8px 0 2px}
@@ -96,7 +117,6 @@ h1{font-family:var(--mono); font-weight:700; font-size:23px; letter-spacing:-.01
       <span class="termtitle" id="ttl">realmathmodel — bash — 80×24</span>
     </div>
     <div class="termbody">
-      <a class="back" href="index.html">‹ cd ..</a>
       <div id="content"></div>
       <p class="foot">&gt; realmathmodel.github.io</p>
     </div>
@@ -110,13 +130,30 @@ h1{font-family:var(--mono); font-weight:700; font-size:23px; letter-spacing:-.01
   function param(k){return new URLSearchParams(location.search).get(k);}
   var id = param('id');
   var cats = (window.CATALOG && CATALOG.categories) || [];
-  var c = cats.filter(function(x){return x.id===id;})[0];
+  var owner=(window.CATALOG&&CATALOG.owner)||'hasan', host=(window.CATALOG&&CATALOG.host)||'iug';
   var box = document.getElementById('content');
-  var owner=(CATALOG&&CATALOG.owner)||'hasan', host=(CATALOG&&CATALOG.host)||'iug';
+
+  // find path root..node (array of nodes) for breadcrumbs + back
+  function findPath(nodes, target, trail){
+    for(var i=0;i<nodes.length;i++){
+      var n=nodes[i], t=trail.concat([n]);
+      if(n.id===target) return t;
+      if(n.children){ var r=findPath(n.children, target, t); if(r) return r; }
+    }
+    return null;
+  }
+  function countMeta(c){
+    if(c.children){ var k=c.children.length; return k+' area'+(k===1?'':'s'); }
+    var r=(c.resources||[]); return r.length+' link'+(r.length===1?'':'s');
+  }
+
+  var path = findPath(cats, id, []);
+  var c = path ? path[path.length-1] : null;
 
   if(!c){
     document.getElementById('ttl').textContent = 'not found — bash';
-    box.innerHTML = '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+
+    box.innerHTML = '<a class="back" href="index.html">‹ cd ~</a>'+
+      '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+
       '</span>:<span class="d">~</span>$ cat '+esc(id||'?')+'</p>'+
       '<p class="miss">No such area. <a href="index.html">Back to the hub ›</a></p>';
     return;
@@ -125,33 +162,62 @@ h1{font-family:var(--mono); font-weight:700; font-size:23px; letter-spacing:-.01
   document.getElementById('ttl').textContent = c.id + ' — bash — 80×24';
   document.title = c.title + ' — realmathmodel';
 
-  var rows = (c.resources||[]).map(function(r){
-    var todo = (!r.href || r.href==='#');
-    var ext  = (r.type==='external');
-    if(todo){
-      return '<div class="res todo">'+
-        '<span class="kind todo">TODO</span>'+
-        '<div class="rbody"><div class="rlabel">'+esc(r.label)+'</div>'+
-          '<div class="rnote">'+(r.note?esc(r.note):'internal page not added yet')+'</div></div>'+
-        '<span class="rgo">·</span></div>';
-    }
+  // breadcrumb + back target (parent, or hub)
+  var parent = path.length>=2 ? path[path.length-2] : null;
+  var backHref = parent ? ('category.html?id='+encodeURIComponent(parent.id)) : 'index.html';
+  var backTxt  = parent ? ('‹ '+parent.title) : '‹ cd ~';
+  var crumb = '<a href="index.html">~</a>';
+  for(var i=0;i<path.length;i++){
+    var last = (i===path.length-1);
+    crumb += '<span class="sep">/</span>'+(last?esc(path[i].title)
+            : '<a href="category.html?id='+encodeURIComponent(path[i].id)+'">'+esc(path[i].title)+'</a>');
+  }
+
+  var pwd = path.map(function(n){return n.id;}).join('/');
+  var header =
+    '<a class="back" href="'+backHref+'">'+esc(backTxt)+'</a>'+
+    '<p class="crumb">'+crumb+'</p>'+
+    '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+
+      '</span>:<span class="d">~/'+esc(pwd)+'</span>$ '+(c.children?'ls':'open '+esc(c.id))+'</p>'+
+    '<div class="head"><div class="ic '+(c.accent||'amber')+'">'+esc(c.icon||'•')+'</div>'+
+      '<div><h1>'+esc(c.title)+'</h1></div></div>'+
+    (c.blurb?'<p class="sub">'+esc(c.blurb)+'</p>':'');
+
+  if(c.children){
+    // BRANCH -> show sub-area cards
+    var k=c.children.length;
+    var cards = c.children.map(function(ch){
+      return '<a class="card" href="category.html?id='+encodeURIComponent(ch.id)+'">'+
+        '<div class="ic '+(ch.accent||'amber')+'">'+esc(ch.icon||'•')+'</div>'+
+        '<div class="cbody"><div class="ctitle">'+esc(ch.title)+(ch.tag?'<span class="tag">'+esc(ch.tag)+'</span>':'')+'</div>'+
+          (ch.blurb?'<div class="cblurb">'+esc(ch.blurb)+'</div>':'')+'</div>'+
+        '<div class="cmeta">'+countMeta(ch)+'</div><span class="arrow">›</span></a>';
+    }).join('');
+    box.innerHTML = header +
+      '<div class="label">'+k+' area'+(k===1?'':'s')+'</div>'+
+      (k ? '<div class="grid">'+cards+'</div>'
+         : '<p class="miss">No sub-areas yet — add some under <span style="color:var(--amber)">'+esc(c.id)+'</span> in <code style="color:var(--amber);font-family:var(--mono)">catalog.js</code>.</p>');
+    return;
+  }
+
+  // LEAF -> show resources
+  var res=(c.resources||[]);
+  var rows = res.map(function(r){
+    var todo=(!r.href||r.href==='#'), ext=(r.type==='external');
+    if(todo) return '<div class="res todo"><span class="kind todo">TODO</span>'+
+      '<div class="rbody"><div class="rlabel">'+esc(r.label)+'</div>'+
+        '<div class="rnote">'+(r.note?esc(r.note):'internal page not added yet')+'</div></div>'+
+      '<span class="rgo">·</span></div>';
     return '<a class="res" href="'+esc(r.href)+'"'+(ext?' target="_blank" rel="noopener"':'')+'>'+
       '<span class="kind '+(ext?'ext':'int')+'">'+(ext?'EXT':'INT')+'</span>'+
       '<div class="rbody"><div class="rlabel">'+esc(r.label)+'</div>'+
         (r.note?'<div class="rnote">'+esc(r.note)+'</div>':'')+'</div>'+
       '<span class="rgo">'+(ext?'↗':'›')+'</span></a>';
   }).join('');
-
-  var n=(c.resources||[]).length;
-  box.innerHTML =
-    '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+
-      '</span>:<span class="d">~/study</span>$ open '+esc(c.id)+'</p>'+
-    '<div class="head"><div class="ic '+(c.accent||'amber')+'">'+esc(c.icon||'•')+'</div>'+
-      '<div><h1>'+esc(c.title)+'</h1></div></div>'+
-    (c.blurb?'<p class="sub">'+esc(c.blurb)+'</p>':'')+
-    '<div class="label">'+n+' resource'+(n===1?'':'s')+'</div>'+
+  box.innerHTML = header +
+    '<div class="label">'+res.length+' resource'+(res.length===1?'':'s')+'</div>'+
     '<div class="list">'+rows+'</div>'+
-    '<p class="note"><b>INT</b> = a page in this repo · <b>EXT</b> = outside site (new tab) · '+
+    '<p class="note"><b>INT</b> = page in this repo · <b>EXT</b> = outside site (new tab) · '+
       '<b>TODO</b> = add the file then set its <code>href</code> in <code>catalog.js</code>.</p>';
 })();
 </script>
