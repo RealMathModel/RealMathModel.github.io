@@ -27,7 +27,7 @@
 
 const CATALOG = {
   owner: "hasan",
-  host:  "iug",
+  host:  "MathModel",
   categories: [
 
     /* ===================== UNIVERSITY (by year) ===================== */
@@ -99,22 +99,6 @@ const CATALOG = {
             { label:"Codeforces — contests & problemset", href:"https://codeforces.com/", type:"external" },
             { label:"AtCoder — contests", href:"https://atcoder.jp/", type:"external" },
           ]},
-
-        { id:"web", title:"Web Development", tag:"WEB", icon:"\u2329\u232A", accent:"blue",
-          blurb:"front-end & back-end",
-          resources:[
-            { label:"MDN Web Docs — HTML / CSS / JS reference", href:"https://developer.mozilla.org/", type:"external" },
-            { label:"The Odin Project — full curriculum", href:"https://www.theodinproject.com/", type:"external" },
-            { label:"freeCodeCamp", href:"https://www.freecodecamp.org/", type:"external" },
-          ]},
-
-        { id:"tools", title:"Git & Tooling", tag:"OPS", icon:"\u2387", accent:"teal",
-          blurb:"version control & workflow",
-          resources:[
-            { label:"Pro Git — the book (free)", href:"https://git-scm.com/book", type:"external" },
-            { label:"Learn Git Branching — interactive", href:"https://learngitbranching.js.org/", type:"external" },
-            { label:"Overleaf — LaTeX docs & learn", href:"https://www.overleaf.com/learn", type:"external" },
-          ]},
       ]},
 
     /* ===================== GENERAL MATH IMPROVEMENT (leaf) ===================== */
@@ -128,31 +112,6 @@ const CATALOG = {
         { label:"Brilliant — guided problem solving", href:"https://brilliant.org/", type:"external" },
         { label:"Art of Problem Solving", href:"https://artofproblemsolving.com/", type:"external" },
       ]},
-
-    /* ===================== EXTRAS (keep or delete) ===================== */
-    { id:"islamic", title:"Islamic Studies", tag:"DIN", icon:"\u262A", accent:"green",
-      blurb:"Tajweed & Tafseer",
-      resources:[
-        { label:"Tajweed & Tafseer notes (typeset Arabic)", href:"#", type:"internal" },
-        { label:"Quran.com — text, recitation & tafsirs", href:"https://quran.com/", type:"external" },
-        { label:"Tanzil — Quran navigator", href:"https://tanzil.net/", type:"external" },
-      ]},
-
-    { id:"firstaid", title:"First Aid", tag:"MED", icon:"\u271A", accent:"teal",
-      blurb:"Arabic first-aid reference",
-      resources:[
-        { label:"Arabic First-Aid summary (OCR + typeset)", href:"#", type:"internal" },
-        { label:"IFRC — international first aid guidelines", href:"https://www.ifrc.org/", type:"external" },
-      ]},
-
-    { id:"audit", title:"Internal Auditing & PM", tag:"ADM", icon:"\u00A7", accent:"orange",
-      blurb:"humanitarian programme work",
-      resources:[
-        { label:"Internal Auditing self-study (7 ch · 140 MCQs)", href:"#", type:"internal" },
-        { label:"UNRWA Project Procedures — analysis report", href:"#", type:"internal" },
-        { label:"The IIA — Institute of Internal Auditors", href:"https://www.theiia.org/", type:"external" },
-      ]},
-
   ]
 };
 
