@@ -452,30 +452,6 @@ function renderStart(){
   app.appendChild(exsec);
 
   // Implementation Lab
-  const impsec=el("div","sec");
-  impsec.appendChild(el("div","label","Implementation Lab"));
-  const icard=el("div","examcard");
-  const ihead=el("div","exhead");
-  ihead.appendChild(el("span","extag","CODE"));
-  ihead.appendChild(el("span","extitle","Implementation problems"));
-  icard.appendChild(ihead);
-  icard.appendChild(el("div","exsub",PROBLEMS.length+" coding problems (Ch 1\u20139) \u00b7 write code, run the test suite, or paste your Visual Studio output"));
-  const irun=el("button","btn primary","\u25B7 Open implementation problems");
-  irun.onclick=startImpl;
-  icard.appendChild(irun);
-  impsec.appendChild(icard);
-  app.appendChild(impsec);
-
-  // set selector
-  const s2=el("div","sec");
-  s2.appendChild(el("div","label","Question set"));
-  const seg=el("div","seg");
-  [["Both","Both"],["MCQ only","MCQ only"],["Checkpoints only","Checkpoints only"]].forEach(([lbl,val])=>{
-    const b=el("button",state.set===val?"on":"",lbl); b.onclick=()=>{state.set=val; [...seg.children].forEach(x=>x.classList.remove("on")); b.classList.add("on"); updateNote();};
-    seg.appendChild(b);
-  });
-  s2.appendChild(seg);
-  app.appendChild(s2);
 
   // options row
   const s3=el("div","sec"); s3.appendChild(el("div","label","Options"));
