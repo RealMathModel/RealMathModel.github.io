@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C++ Blueprint · Chapters 1–9 · Liang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a141f; --ink-2:#0e1c2c; --surface:#12253a; --surface-2:#0f1f31;
+  --line:rgba(120,190,255,.10); --line-strong:rgba(120,190,255,.22);
+  --blue:#5bb8ff; --blue-dim:#2f6f9e; --amber:#ffb454; --amber-dim:#9a6a26;
+  --text:#e8eff6; --muted:#8ba3bb; --good:#5fd08a; --bad:#ff6f6f;
+  --code-bg:#0a1623; --maxw:880px;
+  --mono:'IBM Plex Mono','JetBrains Mono',ui-monospace,monospace;
+  --sans:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  --disp:'Space Grotesk','IBM Plex Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--ink); color:var(--text);
+  font-family:var(--sans); font-size:16.5px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:34px 34px; background-attachment:fixed;
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+#topbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(10,20,31,.97),rgba(10,20,31,.86));backdrop-filter:blur(8px);border-bottom:1px solid var(--line-strong)}
+#topbar .wrap{display:flex;align-items:center;gap:14px;height:58px}
+.brand{font-family:var(--disp);font-weight:700;letter-spacing:.02em;font-size:15px;white-space:nowrap;cursor:pointer}
+.brand b{color:var(--blue)} .brand i{color:var(--amber);font-style:normal}
+.bar-track{flex:1;height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar-fill{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--amber));transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.mastery{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+.mastery b{color:var(--amber)}
+
+/* hero / home */
+header.hero{padding:58px 0 20px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+h1{font-family:var(--disp);font-weight:700;font-size:clamp(32px,6.5vw,54px);line-height:1.05;margin:0 0 14px;letter-spacing:-.02em}
+h1 .obj{color:var(--amber)} h1 .cls{color:var(--blue)}
+.sub{max-width:560px;margin:0 auto 8px;color:var(--muted);font-size:17px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:16px;margin:40px 0 10px;text-align:left}
+.ch-card{position:relative;border:1.5px dashed var(--blue-dim);border-radius:14px;padding:18px 18px 16px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(91,184,255,.05),rgba(91,184,255,.015));transition:.16s;overflow:hidden}
+.ch-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 22px 44px -28px rgba(91,184,255,.6)}
+.ch-card .num{font-family:var(--mono);font-size:13px;color:var(--blue);letter-spacing:.12em}
+.ch-card h3{font-family:var(--disp);font-size:18px;font-weight:600;margin:6px 0 4px;line-height:1.2}
+.ch-card .tag{color:var(--muted);font-size:13.5px;min-height:34px}
+.ch-card .foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.ch-card .pct{color:var(--amber)} .ch-card .pct.full{color:var(--good)}
+.ring{--p:0;width:30px;height:30px;border-radius:50%;flex:0 0 auto;
+  background:conic-gradient(var(--amber) calc(var(--p)*1%), rgba(255,255,255,.08) 0);
+  display:grid;place-items:center}
+.ring.full{background:conic-gradient(var(--good) 100%, rgba(255,255,255,.08) 0)}
+.ring::after{content:'';width:22px;height:22px;border-radius:50%;background:var(--surface-2)}
+.meta{margin:18px 0 6px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+
+/* modules */
+main{padding:24px 0 80px}
+.module{display:none;border:1px solid var(--line-strong);border-radius:18px;background:linear-gradient(180deg,var(--surface),var(--surface-2));
+  padding:30px 30px 26px;margin-bottom:22px;box-shadow:0 30px 60px -40px rgba(0,0,0,.8);animation:fade .4s ease both}
+.module.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.crumbs{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:14px}
+.crumbs a{color:var(--blue);text-decoration:none;cursor:pointer} .crumbs a:hover{text-decoration:underline}
+.mod-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.mod-num{font-family:var(--mono);font-size:13px;color:var(--amber);letter-spacing:.1em}
+.mod-mins{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.module h2{font-family:var(--disp);font-weight:700;font-size:26px;letter-spacing:-.01em;margin:2px 0 4px}
+.lead{color:var(--muted);margin:0 0 18px;font-size:16px}
+.module h4{font-family:var(--disp);font-size:16.5px;margin:22px 0 8px;color:var(--blue)}
+.module p{margin:10px 0} .module ul,.module ol{margin:10px 0;padding-left:22px} .module li{margin:6px 0}
+.k{font-family:var(--mono);font-size:.9em;background:rgba(91,184,255,.12);color:#bfe0ff;padding:1px 6px;border-radius:5px;border:1px solid rgba(91,184,255,.2)}
+.term{color:var(--amber);font-weight:600} .cls-w{color:var(--blue);font-weight:600}
+.ar{direction:rtl;text-align:right;color:#cdd;opacity:.75;font-size:15px;margin:4px 0 12px}
+
+pre{margin:14px 0;background:var(--code-bg);border:1px solid var(--line-strong);border-radius:11px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.6;position:relative}
+pre .cap{position:absolute;top:0;right:0;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:rgba(255,255,255,.04);padding:3px 9px;border-bottom-left-radius:8px;border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+code{font-family:var(--mono)}
+.tk-key{color:#ff9eb1}.tk-type{color:#6fd0ff}.tk-str{color:#9be29b}.tk-com{color:#5f7488;font-style:italic}.tk-num{color:#ffcf7a}.tk-pre{color:#c79bff}.tk-fn{color:#ffd27d}
+
+.note{border-left:3px solid var(--blue);background:rgba(91,184,255,.06);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.trap{border-left:3px solid var(--bad);background:rgba(255,111,111,.07);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+.trap .th{font-family:var(--disp);font-weight:600;color:var(--bad);font-size:13.5px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.win{border-left:3px solid var(--good);background:rgba(95,208,138,.07);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0}
+
+.predict{border:1px solid var(--line-strong);border-radius:13px;padding:16px;margin:18px 0;background:var(--surface-2)}
+.predict .q{font-weight:600;margin-bottom:12px}
+.predict .q .pill{font-family:var(--mono);font-size:11px;color:var(--amber);border:1px solid var(--amber-dim);border-radius:6px;padding:1px 7px;margin-right:8px;text-transform:uppercase;letter-spacing:.1em}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:center;gap:11px;text-align:left;width:100%;cursor:pointer;font-family:var(--mono);font-size:13.5px;color:var(--text);background:var(--code-bg);border:1px solid var(--line-strong);border-radius:9px;padding:11px 13px;transition:.14s}
+.opt:hover{border-color:var(--blue);background:rgba(91,184,255,.05)}
+.opt .mark{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--muted);flex:0 0 auto;display:grid;place-items:center;font-size:12px;color:#07131f}
+.opt.correct{border-color:var(--good);background:rgba(95,208,138,.10)} .opt.correct .mark{background:var(--good);border-color:var(--good)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,111,111,.10)} .opt.wrong .mark{background:var(--bad);border-color:var(--bad)}
+.opt.lock{cursor:default} .opt.lock:not(.correct):not(.wrong){opacity:.55}
+.explain{margin-top:13px;font-size:14.5px;color:var(--muted);display:none;border-top:1px dashed var(--line-strong);padding-top:12px}
+.explain.show{display:block} .explain b{color:var(--text)}
+
+.modnav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;border-top:1px solid var(--line);padding-top:20px}
+.modnav button{font-family:var(--disp);font-weight:600;font-size:14.5px;border-radius:10px;padding:11px 20px;cursor:pointer;transition:.14s;border:1.5px solid var(--line-strong);background:transparent;color:var(--text)}
+.modnav .next{background:linear-gradient(180deg,#ffc878,var(--amber));color:#07131f;border:none}
+.modnav .next:hover{filter:brightness(1.05)} .modnav .prev:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.modnav button:disabled{opacity:.3;cursor:not-allowed}
+
+.dotnav{display:flex;gap:7px;justify-content:center;margin:2px 0 18px;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.14);cursor:pointer;transition:.15s}
+.dot.on{background:var(--amber);transform:scale(1.25)} .dot.seen{background:var(--blue-dim)}
+
+/* chapter-complete card */
+.done-card{text-align:center}
+.done-card .big{font-family:var(--disp);font-size:54px;font-weight:700;line-height:1;margin:6px 0}
+.done-card .big b{color:var(--amber)}
+.recap{columns:2;column-gap:24px;margin:16px 0;text-align:left}
+@media(max-width:640px){.recap{columns:1}}
+.recap div{break-inside:avoid;margin-bottom:10px;font-size:13.5px}
+.recap b{color:var(--blue);font-family:var(--mono);font-size:12.5px}
+.tamam{text-align:center;font-size:26px;color:var(--amber);margin-top:20px}
+
+footer{text-align:center;color:var(--muted);font-size:12.5px;font-family:var(--mono);padding:26px 0 50px}
+@media (max-width:560px){body{font-size:15.5px}.module{padding:22px 18px}.recap{columns:1}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div id="topbar"><div class="wrap">
+  <div class="brand" onclick="goHome()"><b>class</b> CppCourse <i id="brandSub">{ Liang · 1–9 }</i></div>
+  <div class="bar-track"><div class="bar-fill" id="barFill"></div></div>
+  <div class="mastery">mastery <b id="masteryPct">0%</b></div>
+</div></div>
+
+<div class="wrap">
+  <header class="hero" id="hero">
+    <div class="eyebrow">C++ · Liang · blueprint trainer</div>
+    <h1>One <span class="cls">blueprint</span>, nine chapters.<br>Pick one and <span class="obj">master it</span>.</h1>
+    <p class="sub">Each chapter is a short flow of modules with predict-then-reveal traps — the same engine that got Chapter 9 to stick. Nothing is saved; nothing needs sign-in.</p>
+    <div class="grid" id="chGrid"></div>
+    <div class="meta" id="overallMeta"></div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<footer>Built from your <code>summary.tex</code> · C++ Chapters 1–9 · <span id="fyear"></span></footer>
+
+<script>
+/* ---------- C++ highlighter ---------- */
+const KEYS=new Set(['class','struct','public','private','protected','const','void','return','this','new','delete','if','else','for','while','do','switch','case','break','continue','default','inline','using','namespace','include','define','ifndef','endif','true','false','nullptr','sizeof','static_cast']);
+const TYPES=new Set(['int','double','float','bool','char','string','long','short','unsigned','signed','auto','size_t','ofstream','ifstream']);
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function highlight(src){
+  let out='',i=0,n=src.length;
+  while(i<n){const c=src[i];
+    if(c==='/'&&src[i+1]==='/'){let j=i;while(j<n&&src[j]!=='\n')j++;out+='<span class="tk-com">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(c==='/'&&src[i+1]==='*'){let j=i+2;while(j<n&&!(src[j]==='*'&&src[j+1]==='/'))j++;j=Math.min(j+2,n);out+='<span class="tk-com">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(c==='#'){let j=i;while(j<n&&src[j]!=='\n')j++;out+='<span class="tk-pre">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(c==='"'){let j=i+1;while(j<n&&src[j]!=='"'){if(src[j]==='\\')j++;j++;}j=Math.min(j+1,n);out+='<span class="tk-str">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(c==="'"){let j=i+1;while(j<n&&src[j]!=="'"){if(src[j]==='\\')j++;j++;}j=Math.min(j+1,n);out+='<span class="tk-str">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(/[0-9]/.test(c)){let j=i;while(j<n&&/[0-9.fxXa-fA-F]/.test(src[j]))j++;out+='<span class="tk-num">'+esc(src.slice(i,j))+'</span>';i=j;continue;}
+    if(/[A-Za-z_]/.test(c)){let j=i;while(j<n&&/[A-Za-z0-9_]/.test(src[j]))j++;const w=src.slice(i,j);let cls=null;
+      if(KEYS.has(w))cls='tk-key';else if(TYPES.has(w))cls='tk-type';else if(/^[A-Z]/.test(w))cls='tk-type';else if(src[j]==='(')cls='tk-fn';
+      out+=cls?'<span class="'+cls+'">'+esc(w)+'</span>':esc(w);i=j;continue;}
+    out+=esc(c);i++;}
+  return out;
+}
+function cb(src,cap){const c=cap?'<span class="cap">'+cap+'</span>':'';return '<pre>'+c+'<code>'+highlight(src.replace(/^\n/,''))+'</code></pre>';}
+
+/* ====================== CONTENT ====================== */
+const CHAPTERS=[
+{ num:1, title:'Introduction to C++', tag:'The build pipeline & program anatomy', modules:[
+  { title:'How the build runs', mins:'3 min',
+    lead:'Your .cpp is just text until a four-stage pipeline turns it into a running program. Knowing which stage complains tells you what the error actually is.',
+    body:`<p class="ar">افهم الآلة التي تُنفّذ الكود، فتزول الفخاخ من نفسها بدل حفظها.</p>
+    <ol>
+      <li><b>Preprocessor</b> — only touches <span class="k">#</span> lines; it pastes text. <span class="k">#include &lt;iostream&gt;</span> drops the header's text in. That's why it takes <b>no semicolon</b> — it isn't a statement.</li>
+      <li><b>Compiler</b> — reads top to bottom checking grammar and types; a name must be declared above its use. Syntax/type errors live here.</li>
+      <li><b>Linker</b> — matches every name to a real definition. The classic "undefined reference" comes from here.</li>
+      <li><b>Load &amp; run</b> — the OS loads the program and jumps into <span class="k">main</span>.</li>
+    </ol>
+    <div class="note">Names are matched as raw text and C++ is <b>case sensitive</b>, so <span class="k">Main</span> is simply not <span class="k">main</span> — that's why it fails, not a rule to memorize.</div>`,
+    quiz:[{pill:'check',q:'Why does <code>#include &lt;iostream&gt;</code> take no semicolon?',
+      opts:['It is a statement like any other','It is a preprocessor text command, not a C++ statement','Semicolons are optional in C++'],correct:1,
+      explain:'<code>#</code> lines are handled by the <b>preprocessor</b>, which just pastes text. They aren\u2019t C++ statements, so they take no <code>;</code>.'}]},
+  { title:'Anatomy of a program', mins:'3 min',
+    lead:'The handful of pieces every program has, and what each token actually does.',
+    body:`${cb(`#include <iostream>
+using namespace std;
+int main() {
+    cout << "Welcome to C++!" << endl;
+    return 0;
+}`,'the smallest real program')}
+    <ul>
+      <li><span class="k">cout</span> = console output; <span class="k">&lt;&lt;</span> is the <b>stream insertion</b> operator.</li>
+      <li><span class="k">endl</span> ends the line <b>and flushes</b> the output buffer.</li>
+      <li><span class="k">return 0;</span> signals a successful exit.</li>
+      <li>Every statement ends with <span class="k">;</span> — except <span class="k">#</span> lines.</li>
+      <li>Comments: <span class="k">//</span> to end of line, or <span class="k">/* ... */</span>; ignored by the compiler.</li>
+    </ul>
+    <div class="note"><b>Integer division</b> truncates: <span class="k">9 / 5</span> is <b>1</b>. To get 1.8 you need a floating operand: <span class="k">9.0 / 5</span>.</div>`,
+    quiz:[{pill:'predict',q:'What does <code>cout &lt;&lt; 9 / 5;</code> print?',
+      opts:['1.8','1','2'],correct:1,
+      explain:'Both operands are <code>int</code>, so this is integer division — the fraction is truncated, giving <b>1</b>. Use <code>9.0 / 5</code> for 1.8.'}]},
+  { title:'Three kinds of error', mins:'2 min',
+    lead:'Classifying a failure is half of fixing it.',
+    body:`<ul>
+      <li><b>Syntax (compile) errors</b> — broken construction: missing <span class="k">;</span>, unbalanced braces, misspelled keywords. The compiler catches them. Fix from the <b>top line down</b>, since one error cascades.</li>
+      <li><b>Runtime errors</b> — the program crashes while running: division by zero, bad input, missing file.</li>
+      <li><b>Logic errors</b> — it runs fine but gives the wrong answer (area instead of perimeter). The hardest to find.</li>
+    </ul>`,
+    quiz:[{pill:'check',q:'A program runs without crashing but prints the wrong total. What kind of error?',
+      opts:['Syntax error','Runtime error','Logic error'],correct:2,
+      explain:'No crash, no compiler complaint, wrong output — that\u2019s a <b>logic error</b>, the trickiest kind to debug.'}]}
+]},
+
+{ num:2, title:'Elementary Programming', tag:'Types, expressions, and the surprises in arithmetic', modules:[
+  { title:'Every expression has a type and a value', mins:'4 min',
+    lead:'Decide the type first, then compute the value from the inside out. Most "wrong answer" questions are really type questions.',
+    body:`<p class="ar">القاعدة الذهبية: كل تعبير له نوعٌ وقيمة. حدِّد النوع أولاً، ثم احسب القيمة من الداخل للخارج.</p>
+    <ul>
+      <li><b>Integer division &amp; modulo:</b> if both operands are <span class="k">int</span>, <span class="k">/</span> drops the fraction and <span class="k">%</span> gives the remainder. <span class="k">5/2</span> is 2, <span class="k">1/2</span> is 0, <span class="k">1.0/2</span> is 0.5.</li>
+      <li><b>Implicit promotion:</b> if types differ, the narrower is converted up. A single <span class="k">double</span> anywhere pulls the whole sub-expression into real division.</li>
+      <li><b>Assignment truncates:</b> <span class="k">int x = 3.9;</span> stores <b>3</b> — no rounding.</li>
+    </ul>`,
+    quiz:[{pill:'predict',q:'<code>double c = 5 / 2;</code> — what is <code>c</code>?',
+      opts:['2.5','2.0','2'],correct:1,
+      explain:'<code>5 / 2</code> is computed first as <b>int</b> division = 2, then converted to double on storage. So <code>c = 2.0</code>, not 2.5.'},
+      {pill:'check',q:'<code>int x = 3.9;</code> stores what in x?',
+      opts:['4 (rounded)','3 (truncated)','3.9'],correct:1,
+      explain:'Storing a double into an int <b>truncates</b> — the fraction is dropped with no rounding. x = 3.'}]},
+  { title:'Operators that trip people', mins:'4 min',
+    lead:'Augmented assignment, prefix vs postfix, and precedence.',
+    body:`<ul>
+      <li><b>Augmented assignment:</b> <span class="k">x op= e</span> means <span class="k">x = x op (e)</span> with the whole right side parenthesized. So <span class="k">x *= a+b</span> is <span class="k">x = x*(a+b)</span>.</li>
+      <li><b>Prefix</b> <span class="k">++x</span> increments then yields the new value; <b>postfix</b> <span class="k">x++</span> yields the old value then increments.</li>
+      <li><b>Precedence (high→low):</b> <span class="k">()</span> → unary → <span class="k">* / %</span> → <span class="k">+ -</span> → assignment. Same level associates left-to-right.</li>
+    </ul>
+    ${cb(`int x = 5;
+cout << x++;   // prints 5, THEN x becomes 6
+cout << ++x;   // x becomes 7, prints 7`,'old value vs new value')}`,
+    quiz:[{pill:'predict',q:'<code>int x = 5; cout &lt;&lt; x++;</code> prints what, and what is x after?',
+      opts:['prints 6, x is 6','prints 5, x is 6','prints 5, x is 5'],correct:1,
+      explain:'Postfix hands back the <b>old</b> value (5) first, then increments. So it prints 5 and x becomes 6.'}]},
+  { title:'Overflow, round-off, casting', mins:'3 min',
+    lead:'Where correct-looking arithmetic quietly lies.',
+    body:`<ul>
+      <li><b>Overflow:</b> an <span class="k">int</span> has a fixed range; pass it and the value <b>wraps</b> (a <span class="k">short</span> at 32767 + 1 becomes −32768). C++ reports no error.</li>
+      <li><b>Round-off:</b> doubles are approximations, so <span class="k">10.03 * 100</span> can be 1002.9999..., and casting to int gives 1002. Never test computed doubles with <span class="k">==</span>.</li>
+      <li><b>Casting:</b> <span class="k">static_cast&lt;int&gt;(34.7)</span> truncates to 34. Widening (small→large) is safe; narrowing can lose precision.</li>
+    </ul>`,
+    quiz:[{pill:'check',q:'A correct formula suddenly prints a negative number for large inputs. First suspect?',
+      opts:['A typo in the algebra','Integer overflow (wraparound)','The compiler is broken'],correct:1,
+      explain:'When a sound formula spits out negatives/garbage at scale, suspect <b>overflow</b> — the value wrapped past the type\u2019s range. Trace the magnitude, not just the algebra.'}]}
+]},
+
+{ num:3, title:'Selections', tag:'Boolean logic, branching, and switch', modules:[
+  { title:'bool is just a number', mins:'3 min',
+    lead:'false is 0, true is 1, and any nonzero value counts as true. That single fact explains most selection traps.',
+    body:`<p class="ar">المنطق رقمي: صفر يعني خطأ، وأي قيمة غير صفر تعني صحيح.</p>
+    <div class="trap"><div class="th">Printing a bool</div><span class="k">cout &lt;&lt; (4 &lt; 5);</span> prints <b>1</b>, not "true". <span class="k">cout &lt;&lt; (4 &gt; 5);</span> prints <b>0</b>.</div>
+    <div class="trap"><div class="th">= vs ==</div><span class="k">if (x = 5)</span> <b>assigns</b> 5 to x, then treats nonzero as true — always runs. You meant <span class="k">==</span>.</div>
+    <div class="trap"><div class="th">! precedence</div><span class="k">!amount &lt;= 50</span> parses as <span class="k">(!amount) &lt;= 50</span>, which is always true. Write <span class="k">!(amount &lt;= 50)</span>.</div>`,
+    quiz:[{pill:'predict',q:'What does <code>cout &lt;&lt; (4 &gt; 5);</code> print?',
+      opts:['false','0','nothing'],correct:1,
+      explain:'A bool prints as an integer: <b>0</b> for false, 1 for true. It does not print the words.'}]},
+  { title:'if, else, and the semicolon trap', mins:'3 min',
+    lead:'Indentation means nothing to the compiler; braces and order do.',
+    body:`<div class="trap"><div class="th">The stray semicolon</div><span class="k">if (amount &gt;= 100);</span> — that <span class="k">;</span> is an <b>empty body</b>. The block after it runs <b>unconditionally</b>.</div>
+    <div class="trap"><div class="th">Dangling else</div>An <span class="k">else</span> binds to the <b>nearest unmatched if</b>, no matter how you indent. Only braces change the pairing.</div>
+    <div class="note"><b>Order matters in multi-way tests.</b> Checking <span class="k">score &gt;= 60</span> first means a 95 still prints "Grade D" and exits. Go highest threshold first.</div>`,
+    quiz:[{pill:'predict',q:'<code>if (n &gt;= 100);</code> followed by <code>cout &lt;&lt; "big";</code>. When does "big" print?',
+      opts:['Only when n >= 100','Always — the ; ended the if with an empty body','Never'],correct:1,
+      explain:'The semicolon makes the if\u2019s body empty. The <code>cout</code> is a separate statement that runs <b>every time</b>.'}]},
+  { title:'switch & short-circuiting', mins:'3 min',
+    lead:'A switch is a jump table, not a stack of ifs — and && / || stop early.',
+    body:`<ul>
+      <li>The switch expression must be <b>integral</b> (<span class="k">int, char, bool, short, long</span>) — never float/double/string. Cases must be constants.</li>
+      <li><b>Fall-through:</b> once a case matches, execution runs <b>downward</b> through later cases until a <span class="k">break</span>. Forgetting <span class="k">break</span> is the classic bug.</li>
+    </ul>
+    <div class="note"><b>Short-circuit:</b> in <span class="k">A && B</span>, if A is false, B never runs. In <span class="k">A || B</span>, if A is true, B never runs — side effects in the skipped operand simply don't happen.</div>
+    ${cb(`int x = 0;
+if (false && (++x)) {}
+cout << x;   // prints 0 -- ++x was short-circuited away`,'short-circuit skips the side effect')}`,
+    quiz:[{pill:'predict',q:'<code>int x=0; if(false &amp;&amp; (++x)){} cout&lt;&lt;x;</code> prints?',
+      opts:['1','0','undefined'],correct:1,
+      explain:'<code>&&</code> sees the left side is false and stops immediately, so <code>++x</code> never runs. x stays <b>0</b>.'},
+      {pill:'check',q:'Which type is NOT allowed in a switch expression?',
+      opts:['char','int','double'],correct:2,
+      explain:'A switch needs an <b>integral</b> value. <code>double</code> (and float and string) are not allowed.'}]}
+]},
+
+{ num:4, title:'Math, Characters & Strings', tag:'cmath, ASCII arithmetic, and the string class', modules:[
+  { title:'Math functions return double', mins:'3 min',
+    lead:'The <cmath> library, and two constants you must define yourself.',
+    body:`<ul>
+      <li><span class="k">pow(a,b)</span>, <span class="k">sqrt(x)</span>, <span class="k">log(x)</span> (natural log), <span class="k">exp(x)</span>, trig in <b>radians</b>.</li>
+      <li><span class="k">ceil</span>/<span class="k">floor</span> return a <b>double</b>, not an int: <span class="k">floor(-2.1)</span> is −3.0.</li>
+      <li><span class="k">pow(2,10)</span> is <b>1024.0</b> — storing it in an int truncates.</li>
+    </ul>
+    <div class="trap"><div class="th">PI and E are not predefined</div>The standard library does not define <span class="k">PI</span> or <span class="k">E</span>. You must declare them: <span class="k">const double PI = 3.14159;</span>. Otherwise the names won't compile.</div>`,
+    quiz:[{pill:'check',q:'What type does <code>floor(2.1)</code> return?',
+      opts:['int (2)','double (2.0)','float'],correct:1,
+      explain:'Both <code>floor</code> and <code>ceil</code> return a <b>double</b>. <code>floor(2.1)</code> is 2.0, not the int 2.'}]},
+  { title:'A char is a number', mins:'3 min',
+    lead:'A char holds an ASCII code, so char arithmetic is integer arithmetic on codes.',
+    body:`<p class="ar">الحرف رقمٌ في حقيقته: المتغيّر المحرفي يخزّن رمز الآسكي.</p>
+    <ul>
+      <li><span class="k">'A'</span>=65, <span class="k">'a'</span>=97, <span class="k">'0'</span>=48. So <span class="k">'A'+1</span> is the int 66.</li>
+      <li>Digit char to its value: <span class="k">ch - '0'</span> (since <span class="k">'7'-'0'</span> = 7).</li>
+      <li><span class="k">++ch</span> stays a char (prints the next letter), but <span class="k">ch + 1</span> promotes to <b>int</b> (prints the code+1).</li>
+    </ul>
+    <div class="trap"><div class="th">Character math trap</div><span class="k">cout &lt;&lt; ('c' - 'a');</span> prints the integer <b>2</b>, not a character. Wrap in <span class="k">static_cast&lt;char&gt;(...)</span> to show a letter.</div>`,
+    quiz:[{pill:'predict',q:'What does <code>cout &lt;&lt; (\u0027c\u0027 - \u0027a\u0027);</code> print?',
+      opts:['c','2','b'],correct:1,
+      explain:'Char subtraction is integer arithmetic on ASCII codes: 99 − 97 = <b>2</b>, printed as an integer.'}]},
+  { title:'Strings: concat & reading', mins:'3 min',
+    lead:'string is an object type with indexing, concatenation, and a famous input gotcha.',
+    body:`<ul>
+      <li><span class="k">s.length()</span> / <span class="k">s.size()</span>, valid indices <span class="k">0..length-1</span>, <span class="k">s[i]='x'</span> edits in place.</li>
+      <li><span class="k">+</span> concatenates, <span class="k">+=</span> appends.</li>
+    </ul>
+    <div class="trap"><div class="th">Can't concat two literals</div><span class="k">string c = "London" + "Paris";</span> is illegal. Once one side is a string it's fine: <span class="k">s + "London" + "Paris"</span>.</div>
+    <div class="trap"><div class="th">cin &gt;&gt; then getline</div><span class="k">cin &gt;&gt;</span> leaves the <span class="k">'\\n'</span> in the buffer; the next <span class="k">getline</span> reads that empty newline and returns "". Fix with <span class="k">cin.ignore()</span> between them.</div>`,
+    quiz:[{pill:'check',q:'Why is <code>string c = "a" + "b";</code> illegal?',
+      opts:['Strings can\u2019t be concatenated at all','You can\u2019t add two string literals — neither side is a string object','You must use += instead'],correct:1,
+      explain:'Two string <b>literals</b> have no <code>+</code> defined. Make at least one side a <code>string</code> object first, then <code>+</code> works.'}]}
+]},
+
+{ num:5, title:'Loops', tag:'Firing order, counts, break & continue', modules:[
+  { title:'The exact firing order', mins:'3 min',
+    lead:'Almost every loop bug comes from being fuzzy on the order. Memorize the five steps.',
+    body:`<p class="ar">احفظ ترتيب التنفيذ الدقيق لحلقة التكرار، فتنحلّ أخطاء العدّ من نفسها.</p>
+    <ol>
+      <li>run <b>init</b> once;</li><li><b>test</b> the condition — if false, exit now;</li>
+      <li>run the <b>body</b>;</li><li>run the <b>update</b>;</li><li>back to step 2.</li>
+    </ol>
+    <p>Two consequences: the update happens <b>after</b> the body, and the condition is tested one more time than the body runs.</p>
+    <div class="note"><span class="k">for(i=0;i&lt;n;i++)</span> runs exactly <b>n</b> times; <span class="k">i&lt;=n</span> runs <b>n+1</b> times — the classic off-by-one.</div>`,
+    quiz:[{pill:'predict',q:'<code>for(int i=0; i&lt;=5; i++)</code> — how many times does the body run?',
+      opts:['5','6','7'],correct:1,
+      explain:'i takes 0,1,2,3,4,5 — that\u2019s <b>6</b> iterations. <code>i&lt;=5</code> runs one more time than <code>i&lt;5</code>.'}]},
+  { title:'while, do-while, sentinels', mins:'3 min',
+    lead:'When the body must run at least once, and how to stop on a special value.',
+    body:`<ul>
+      <li><span class="k">while(c)</span> is a for with no init/update.</li>
+      <li><span class="k">do { ... } while(c);</span> tests <b>after</b> the body, so it always runs <b>at least once</b>.</li>
+      <li><b>Sentinel loop:</b> read until a special value (e.g. 0) appears. If the first input is the sentinel, the body never runs.</li>
+    </ul>
+    <div class="trap"><div class="th">Float equality in loop control</div><span class="k">while (item != 0)</span> decrementing by 0.1 may never hit exactly 0 — infinite loop. Use integer counters.</div>`,
+    quiz:[{pill:'predict',q:'How many times does a <code>do { ... } while(false);</code> body run?',
+      opts:['0','1','infinite'],correct:1,
+      explain:'A do-while tests the condition <b>after</b> the body, so the body always runs at least <b>once</b> — even when the condition is false.'}]},
+  { title:'break & continue', mins:'2 min',
+    lead:'Two ways to alter the flow — and one that creates an infinite loop.',
+    body:`<ul>
+      <li><span class="k">break</span> leaves the innermost loop immediately.</li>
+      <li><span class="k">continue</span> skips the rest of the body and jumps to the update (for) or the condition (while).</li>
+    </ul>
+    <div class="trap"><div class="th">continue before the increment</div>In a <span class="k">while</span> loop whose counter is incremented <b>below</b> a <span class="k">continue</span>, the continue skips that increment — infinite loop.</div>`,
+    quiz:[{pill:'check',q:'In a while loop, <code>continue</code> jumps to…',
+      opts:['the update line','the loop condition','the first line of main'],correct:1,
+      explain:'In a <code>while</code>, <code>continue</code> goes back to the <b>condition</b>. (In a <code>for</code>, it goes to the update first.) If your increment sits after the continue, it gets skipped.'}]}
+]},
+
+{ num:6, title:'Functions', tag:'Stack frames, value vs reference, overloading', modules:[
+  { title:'Every call gets its own frame', mins:'3 min',
+    lead:'A call opens a private box on the stack with its own parameters and locals. That is why recursion works.',
+    body:`<p class="ar">كل استدعاء يفتح إطاراً خاصاً على المكدّس بنسخه الخاصة من المعاملات.</p>
+    <ul>
+      <li>Each call creates an <b>activation record</b> on the <b>call stack</b> (LIFO — last in, first out).</li>
+      <li><span class="k">return e;</span> copies the value out and ends the function. A <span class="k">void</span> function returns nothing (use <span class="k">return;</span> to exit early).</li>
+      <li><b>Declaration before use:</b> the compiler needs a prototype or definition above the call.</li>
+    </ul>`,
+    quiz:[{pill:'check',q:'What order does the call stack remove records in?',
+      opts:['First in, first out','Last in, first out (LIFO)','Random'],correct:1,
+      explain:'The call stack is <b>LIFO</b>: the most recently called function\u2019s record is the first removed when it returns.'}]},
+  { title:'Value vs reference', mins:'4 min',
+    lead:'The one distinction behind "why didn\u2019t my swap work?"',
+    body:`<ul>
+      <li><b>Pass by value</b> (<span class="k">int p</span>) copies the argument — the caller never sees changes.</li>
+      <li><b>Pass by reference</b> (<span class="k">int&amp; p</span>) makes the parameter an alias for the caller's variable — changes reach the caller.</li>
+    </ul>
+    ${cb(`void swapV(int a, int b)  { int t=a; a=b; b=t; }   // copies -- no effect
+void swapR(int& a, int& b){ int t=a; a=b; b=t; }   // aliases -- works`,'why swap needs references')}
+    <div class="note">A reference parameter needs a <b>variable</b> of the <b>same type</b> — no literals, no expressions, no automatic conversion.</div>`,
+    quiz:[{pill:'predict',q:'A swap function takes <code>int a, int b</code> by value. After calling it, the caller\u2019s variables are…',
+      opts:['swapped correctly','unchanged','set to zero'],correct:1,
+      explain:'Pass-by-value swaps only the <b>copies</b> inside the function. The caller\u2019s originals are <b>unchanged</b>. You need <code>int&amp;</code> parameters.'}]},
+  { title:'Overloading, defaults, scope', mins:'3 min',
+    lead:'How the compiler picks between same-named functions, and the rules around defaults.',
+    body:`<ul>
+      <li><b>Overload resolution</b> uses the number and types of arguments — <b>never the return type</b>. Two equally good matches = ambiguity error.</li>
+      <li><b>Default arguments</b> fill from the right; once a parameter has a default, every parameter to its right must too.</li>
+      <li><b>Scope &amp; shadowing:</b> a name is visible only in its block; an inner declaration hides an outer same-named one.</li>
+    </ul>`,
+    quiz:[{pill:'check',q:'Can you overload two functions that differ only by return type?',
+      opts:['Yes','No — overloading ignores return type','Only for void'],correct:1,
+      explain:'Overload resolution looks at the <b>parameter list only</b>. Differing solely by return type is not a valid overload.'}]}
+]},
+
+{ num:7, title:'Single-Dimensional Arrays', tag:'Contiguous memory, no bounds checks, C-strings', modules:[
+  { title:'One contiguous block', mins:'3 min',
+    lead:'The name decays to the address of element 0, so a[i] is *(a+i). Every rule follows from that picture.',
+    body:`<p class="ar">المصفوفة كتلة متجاورة في الذاكرة، واسمها يتحوّل إلى عنوان أول عنصر.</p>
+    <ul>
+      <li>0-based: valid indices <span class="k">0..size-1</span>.</li>
+      <li>The size must be a <b>constant</b> (literal or <span class="k">const int</span>), not a regular variable.</li>
+    </ul>
+    <div class="trap"><div class="th">No bounds checking</div><span class="k">a[5]</span> on a size-5 array reads/writes neighbouring memory — undefined behaviour, <b>no error raised</b>. You track the range yourself.</div>`,
+    quiz:[{pill:'predict',q:'On <code>int a[5];</code>, what does writing <code>a[5] = 9;</code> do?',
+      opts:['Throws an index error','Silently writes out of bounds (undefined behaviour)','Resizes the array'],correct:1,
+      explain:'C++ does <b>no bounds checking</b>. <code>a[5]</code> is past the last valid index (4), so this writes into neighbouring memory — UB, with no error.'}]},
+  { title:'Passing arrays', mins:'3 min',
+    lead:'An array argument is really an address, which changes two things.',
+    body:`<ul>
+      <li>Passing an array passes the <b>address</b>, not a copy — the function edits the caller's real array (behaves like pass-by-reference).</li>
+      <li>Inside the function, <span class="k">sizeof(param)</span> gives the <b>pointer's</b> size, not the array's. So you must pass the <b>length</b> as a separate argument.</li>
+    </ul>
+    <div class="trap"><div class="th">You can't copy with =</div><span class="k">list = myList;</span> is illegal for arrays. Copy element-by-element in a loop.</div>`,
+    quiz:[{pill:'check',q:'Why must you pass an array\u2019s length as a separate parameter?',
+      opts:['Style convention','Inside the function sizeof gives the pointer size, not the array size','Arrays have no length'],correct:1,
+      explain:'The array decays to a pointer when passed, so <code>sizeof</code> inside the function measures the <b>pointer</b>, not the data. The length must come in separately.'}]},
+  { title:'Initializers & C-strings', mins:'2 min',
+    lead:'Partial init zero-fills, and a C-string hides a terminator.',
+    body:`<ul>
+      <li><span class="k">int a[5] = {1,2};</span> fills the first two, <b>zero-fills</b> the rest.</li>
+      <li><span class="k">int a[] = {1,2,3};</span> sizes itself to 3.</li>
+      <li>Uninitialized arrays hold <b>garbage</b>.</li>
+    </ul>
+    <div class="note">A <b>C-string</b> is a char array ended by the null terminator <span class="k">'\\0'</span>. So <span class="k">"abc"</span> stores <b>four</b> chars: a, b, c, \\0. Library functions stop at \\0; if it's missing they run off the end.</div>`,
+    quiz:[{pill:'predict',q:'How many chars does the C-string <code>"abc"</code> actually store?',
+      opts:['3','4','5'],correct:1,
+      explain:'Three letters plus the null terminator <code>\u0027\\0\u0027</code> = <b>4</b> chars. That terminator is how string functions know where to stop.'}]}
+]},
+
+{ num:8, title:'Multidimensional Arrays', tag:'Row-major layout and the passing rule', modules:[
+  { title:'Stored row by row', mins:'3 min',
+    lead:'A 2D array is one flat block: all of row 0, then row 1. The offset formula explains everything.',
+    body:`<p class="ar">التخزين يكون صفّاً تلو الآخر؛ ومن صيغة الإزاحة تتّضح قاعدة التمرير.</p>
+    <p>For <span class="k">a[R][C]</span>, element <span class="k">a[i][j]</span> sits at flat offset <span class="k">i*C + j</span>. This is <b>row-major</b> storage.</p>
+    ${cb(`int m[3][4];   // 12 ints in one contiguous block:
+// m[0][0] m[0][1] m[0][2] m[0][3] | m[1][0] ... | m[2][0] ...`,'row-major layout')}
+    <div class="note">Iterating row-outer / column-inner walks memory in order (cache-friendly). The reverse jumps around and is slower for large arrays.</div>`,
+    quiz:[{pill:'check',q:'In <code>a[R][C]</code>, element <code>a[i][j]</code> is at flat offset…',
+      opts:['j*R + i','i*C + j','i + j'],correct:1,
+      explain:'Row-major layout: skip <code>i</code> whole rows of width <code>C</code>, then <code>j</code> more — offset <b>i*C + j</b>.'}]},
+  { title:'The passing rule & subscript trap', mins:'3 min',
+    lead:'Why you can drop the first dimension but never the column count.',
+    body:`<p>To compute <span class="k">i*C + j</span> the compiler needs <span class="k">C</span>. So when passing a 2D array you may omit the <b>first</b> dimension but must give every later one:</p>
+    ${cb(`void f(int a[][4], int rows);   // column count REQUIRED, row count optional`,'passing a 2D array')}
+    <div class="trap"><div class="th">Each subscript needs its own brackets</div>Access row 2, col 1 as <span class="k">matrix[2][1]</span>. Writing <span class="k">matrix[2, 1]</span> is wrong and won't do what you mean.</div>`,
+    quiz:[{pill:'predict',q:'When passing a 2D array to a function, which dimension may you omit?',
+      opts:['The column count','The first (row) dimension','Both'],correct:1,
+      explain:'You can omit the <b>first</b> dimension, but the column count is required — without it the compiler can\u2019t compute <code>i*C + j</code>.'}]},
+  { title:'Processing with nested loops', mins:'2 min',
+    lead:'Outer loop rows, inner loop columns — or swap them to go by column.',
+    body:`<ul>
+      <li>Total visits for <span class="k">R x C</span> is <b>R × C</b>.</li>
+      <li>To sum <b>by column</b>, make the <b>column</b> index the outer loop and the row index inner.</li>
+      <li>Nested-brace initializers <span class="k">{{...},{...}}</span> zero-fill any missing entries, same as 1D.</li>
+    </ul>`,
+    quiz:[{pill:'check',q:'To sum a matrix column-by-column, which index is the outer loop?',
+      opts:['The row index','The column index','Either works the same'],correct:1,
+      explain:'Put the <b>column</b> index on the outer loop and rows on the inner, so each outer pass accumulates one full column.'}]}
+]},
+
+{ num:9, title:'Objects & Classes', tag:'Blueprints, constructors, encapsulation', modules:[
+  { title:'Blueprint & instance', mins:'4 min',
+    lead:'A class is the blueprint; an object is one instance stamped from it. Each object owns its data; functions are shared.',
+    body:`<p class="ar">الصنف مخطّط، والكائن نسخة منه؛ ولكل كائن نسخته الخاصة من البيانات.</p>
+    <ul>
+      <li>An object has <b>identity</b>, <b>state</b> (data fields), and <b>behavior</b> (functions).</li>
+      <li>A <span class="cls-w">class</span> is the template; making an object is <b>instantiation</b>; the object is an <b>instance</b>.</li>
+      <li><b>Default visibility is private</b> — if you don't write <span class="k">public:</span>, members are private.</li>
+    </ul>
+    ${cb(`class TV {
+public:
+    int channel;
+    bool on;
+    TV() { channel = 1; on = false; }
+    void channelUp() { if (on && channel < 120) channel++; }
+};`,'a class is a new type')}`,
+    quiz:[{pill:'check',q:'<code>TV a; TV b; a.channelUp();</code> — what happens to <code>b.channel</code>?',
+      opts:['It rises too','Nothing — b has its own copy of the data','Compile error'],correct:1,
+      explain:'Each object owns its <b>own copy</b> of the data fields. Functions are shared code that act only on the calling object, so <code>b</code> is untouched.'}]},
+  { title:'Reading a class', mins:'3 min',
+    lead:'The hidden this pointer, const functions, and UML.',
+    body:`<div class="note"><b>The hidden <span class="k">this</span> pointer.</b> Inside a member function, <span class="k">this</span> points to the object it was called on, so <span class="k">radius</span> and <span class="k">this-&gt;radius</span> mean the same member.</div>
+    <p>A <span class="k">const</span> member function promises not to modify the object's data (getters are the classic case).</p>
+    <p><b>UML:</b> <span style="color:var(--good)">+</span> public, <span style="color:var(--bad)">−</span> private. Fields are <span class="k">name: type</span>; functions are <span class="k">name(p: type): returnType</span>.</p>`,
+    quiz:[{pill:'check',q:'In UML, <code>\u2212 balance: double</code> means…',
+      opts:['a public field','a private field of type double','a function returning double'],correct:1,
+      explain:'The leading <b>\u2212</b> means private; the <code>name: type</code> form marks a data field.'}]},
+  { title:'Constructors', mins:'4 min',
+    lead:'Three peculiarities, and the rule about the free default.',
+    body:`<ul>
+      <li>Same <b>name</b> as the class; <b>no return type</b> (not even <span class="k">void</span>); runs <b>automatically</b>.</li>
+      <li><b>Overloading:</b> several constructors with different parameter lists.</li>
+      <li>The free <b>default constructor</b> exists only if you declare <b>no constructors at all</b>. Define any, and it disappears.</li>
+    </ul>
+    <div class="trap"><div class="th">The void trap</div><span class="k">void TV()</span> is an ordinary function, not a constructor — it won't run on construction.</div>`,
+    quiz:[{pill:'predict',q:'A class defines only <code>Circle(double r)</code>. Does <code>Circle c;</code> compile?',
+      opts:['Yes — there\u2019s always a free default','No — defining any constructor removes the free default'],correct:1,
+      explain:'The free no-arg default exists only when you declare <b>no</b> constructors. Once you wrote <code>Circle(double)</code>, it\u2019s gone — "no matching constructor".'}]},
+  { title:'Initializer lists', mins:'4 min',
+    lead:'Required for const and reference members, with a famous ordering trap.',
+    body:`${cb(`Circle::Circle() : radius(1) { }`,'initializer list')}
+    <p>Required (the only legal form) for <b><span class="k">const</span> members</b> and <b>reference members</b> — they can't be assigned after creation.</p>
+    <div class="trap"><div class="th">Initialization order</div>Members initialize in <b>declaration order</b>, not list order.</div>
+    ${cb(`class Range {
+    int low;   // declared first
+    int high;  // declared second
+    Range(int h) : high(h), low(high) { }  // low runs FIRST, reads garbage high -> UB
+};`,'declaration order wins')}
+    <div class="win">Rule: write the list in the same order the fields are declared. GCC\u2019s <span class="k">-Wreorder</span> warns you.</div>`,
+    quiz:[{pill:'predict',q:'<code>int low; int high;</code> declared in that order; ctor <code>: high(h), low(high)</code>. Which initializes first?',
+      opts:['high (first in list)','low (declared first)'],correct:1,
+      explain:'Initialization follows <b>declaration order</b>, ignoring list order — so <code>low</code> runs first and reads an uninitialized <code>high</code>.'}]},
+  { title:'Creating & using objects', mins:'4 min',
+    lead:'The no-parentheses trap, the dot operator, and object memory.',
+    body:`${cb(`Circle c2(5.5);   // with arguments
+Circle c1;        // no-arg: NO parentheses`,'two ways to construct')}
+    <div class="trap"><div class="th">Empty parentheses</div><span class="k">Circle c1();</span> declares a <b>function</b> named c1 returning a Circle — not an object. Drop the parens.</div>
+    <ul>
+      <li>The dot <span class="k">.</span> accesses members: <span class="k">c1.getArea()</span>.</li>
+      <li><b>Memberwise copy:</b> <span class="k">c2 = c1;</span> copies every field; they stay separate.</li>
+      <li><span class="k">sizeof(c1)</span> counts only data fields — functions are shared.</li>
+    </ul>`,
+    quiz:[{pill:'predict',q:'What does <code>Circle c1();</code> declare?',
+      opts:['A no-arg object','A function named c1 returning Circle','A syntax error'],correct:1,
+      explain:'The "most vexing parse": the compiler reads it as a <b>function prototype</b>. For a no-arg object write <code>Circle c1;</code> with no parens.'}]},
+  { title:'Header vs. implementation', mins:'4 min',
+    lead:'Split the contract from the bodies, with two syntax traps and the include guard.',
+    body:`<ul>
+      <li><span class="k">.h</span> = the contract (fields + prototypes); <span class="k">.cpp</span> = the bodies.</li>
+      <li><span class="k">::</span> says which class a body belongs to: <span class="k">double Circle::getArea()</span>.</li>
+    </ul>
+    <div class="trap"><div class="th">Missing semicolon</div>A class definition must end with <span class="k">};</span> — forgetting it is a classic error.</div>
+    ${cb(`#ifndef CIRCLE_H
+#define CIRCLE_H
+class Circle { /* ... */ };
+#endif`,'inclusion guard')}
+    <div class="note">A function defined <b>inside</b> the class body is automatically inline.</div>`,
+    quiz:[{pill:'check',q:'Why wrap a header in <code>#ifndef / #define / #endif</code>?',
+      opts:['Faster compiles','To stop the class being defined twice on multiple includes','To make members private'],correct:1,
+      explain:'Inclusion guards prevent multiple-inclusion, which would otherwise cause "multiple definition" errors.'}]},
+  { title:'Encapsulation', mins:'4 min',
+    lead:'Hide the data, expose a clean interface. Plus the variable-hiding trap.',
+    body:`<ul>
+      <li>Make fields <span class="k">private</span>; expose a <b>getter</b> (<span class="k">getRadius()</span>, or <span class="k">isOn()</span> for bool) and a <b>setter</b> (<span class="k">setRadius()</span>).</li>
+    </ul>
+    <div class="trap"><div class="th">Variable hiding</div>A local variable with a field's name <b>hides</b> the field inside that block.</div>
+    ${cb(`class Foo {
+public:
+    int x;
+    Foo() { x = 10; }
+    void p() { int x = 20; cout << x; }  // prints 20, not 10
+};`,'local x shadows the field')}
+    <div class="note"><b>Abstraction:</b> the class is a black box; clients see only the public contract while the implementation hides in the .cpp.</div>`,
+    quiz:[{pill:'predict',q:'Field <code>x=10</code>. A method does <code>int x=20; cout&lt;&lt;x;</code>. What prints?',
+      opts:['10','20','compile error'],correct:1,
+      explain:'The <b>local</b> x shadows the field inside that block, so it prints 20.'},
+      {pill:'check',q:'Conventional accessor name for a private <code>bool on;</code>?',
+      opts:['getOn()','isOn()','onGet()'],correct:1,
+      explain:'Boolean accessors use <b>is</b> by convention: <code>isOn()</code>.'}]}
+]}
+];
+
+/* ====================== ENGINE ====================== */
+let curCh=null;            // index into CHAPTERS, or null = home
+const score={}, total={}, visited={};   // keyed by chapter index
+CHAPTERS.forEach((c,i)=>{ score[i]=0; total[i]=c.modules.reduce((s,m)=>s+m.quiz.length,0); visited[i]=new Set(); });
+const answered=new Set();
+
+const main=document.getElementById('main');
+const hero=document.getElementById('hero');
+const grid=document.getElementById('chGrid');
+
+function chPct(i){return total[i]? Math.round(score[i]/total[i]*100):0;}
+
+function renderGrid(){
+  grid.innerHTML='';
+  CHAPTERS.forEach((c,i)=>{
+    const p=chPct(i), full=p===100, seen=visited[i].size>0;
+    const card=document.createElement('div');
+    card.className='ch-card';
+    card.onclick=()=>openChapter(i);
+    card.innerHTML=`
+      <div class="num">CHAPTER 0${c.num}</div>
+      <h3>${c.title}</h3>
+      <div class="tag">${c.tag}</div>
+      <div class="foot">
+        <span>${c.modules.length} modules${seen?' · started':''}</span>
+        <span style="display:flex;align-items:center;gap:8px">
+          <span class="pct ${full?'full':''}">${seen?p+'%':'\u2192'}</span>
+          ${seen?`<span class="ring ${full?'full':''}" style="--p:${p}"></span>`:''}
+        </span>
+      </div>`;
+    grid.appendChild(card);
+  });
+  const overall=Object.keys(score).reduce((s,k)=>s+score[k],0);
+  const ot=Object.keys(total).reduce((s,k)=>s+total[k],0);
+  document.getElementById('overallMeta').textContent=`${CHAPTERS.length} chapters · ${ot} checkpoints · overall mastery ${ot?Math.round(overall/ot*100):0}%`;
+}
+
+function buildChapter(ci){
+  const c=CHAPTERS[ci];
+  // clear previous chapter modules
+  main.innerHTML='';
+  c.modules.forEach((m,idx)=>{
+    const sec=document.createElement('section');
+    sec.className='module'; sec.dataset.idx=idx;
+    let quizHtml='';
+    m.quiz.forEach((q,qi)=>{
+      const opts=q.opts.map((o,oi)=>`<button class="opt" data-key="${ci}_${idx}_${qi}" data-i="${oi}" data-c="${q.correct}"><span class="mark"></span><span>${o}</span></button>`).join('');
+      quizHtml+=`<div class="predict"><div class="q"><span class="pill">${q.pill}</span>${q.q}</div><div class="opts">${opts}</div><div class="explain" id="exp_${ci}_${idx}_${qi}">${q.explain}</div></div>`;
+    });
+    const dots=c.modules.map((_,d)=>`<span class="dot" data-d="${d}" onclick="showModule(${d})"></span>`).join('');
+    const isLast=idx===c.modules.length-1;
+    sec.innerHTML=`
+      <div class="crumbs"><a onclick="goHome()">All chapters</a> &nbsp;/&nbsp; Chapter 0${c.num}: ${c.title}</div>
+      <div class="dotnav">${dots}</div>
+      <div class="mod-head"><span class="mod-num">MODULE 0${idx+1} / 0${c.modules.length}</span><span class="mod-mins">${m.mins}</span></div>
+      <h2>${m.title}</h2>
+      <p class="lead">${m.lead}</p>
+      ${m.body}
+      ${quizHtml}
+      <div class="modnav">
+        <button class="prev" ${idx===0?'disabled':''} onclick="showModule(${idx-1})">\u2190 ${idx===0?'Back':'Previous'}</button>
+        <button class="next" onclick="${isLast?`finishChapter()`:`showModule(${idx+1})`}">${isLast?'Finish chapter \u2192':'Next \u2192'}</button>
+      </div>`;
+    main.appendChild(sec);
+  });
+  // chapter-complete card
+  const done=document.createElement('section');
+  done.className='module'; done.id='chDone';
+  done.innerHTML=`
+    <div class="crumbs"><a onclick="goHome()">All chapters</a> &nbsp;/&nbsp; Chapter 0${c.num}</div>
+    <div class="done-card">
+      <div class="mod-num">CHAPTER 0${c.num} \u00b7 MASTERY</div>
+      <h2 style="margin-top:6px">${c.title} \u2014 done.</h2>
+      <div class="big"><b id="chScore">0</b><span style="font-size:26px;color:var(--muted)"> / <span id="chTotal">0</span></span></div>
+      <p id="chMsg" style="color:var(--muted)"></p>
+    </div>
+    <div class="modnav">
+      <button class="prev" onclick="showModule(${c.modules.length-1})">\u2190 Last module</button>
+      <button class="next" onclick="goHome()">All chapters \u2192</button>
+    </div>`;
+  main.appendChild(done);
+}
+
+const dots=()=>[...document.querySelectorAll('.dot')];
+function showModule(idx){
+  const c=CHAPTERS[curCh];
+  const secs=[...main.querySelectorAll('.module')];
+  secs.forEach(s=>s.classList.remove('active'));
+  let target;
+  if(idx>=c.modules.length){ target=document.getElementById('chDone'); }
+  else { target=secs[idx]; }
+  target.classList.add('active');
+  if(idx<c.modules.length){ visited[curCh].add(idx); }
+  // dot states (each module section has its own dotnav; update the active one)
+  const active=target;
+  active.querySelectorAll('.dot').forEach(d=>{
+    const di=+d.dataset.d;
+    d.classList.toggle('on', di===idx);
+    d.classList.toggle('seen', visited[curCh].has(di)&&di!==idx);
+  });
+  setBars();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.showModule=showModule;
+
+function openChapter(ci){
+  curCh=ci;
+  hero.style.display='none';
+  document.getElementById('brandSub').textContent=`{ Ch ${CHAPTERS[ci].num} }`;
+  buildChapter(ci);
+  showModule(0);
+}
+window.openChapter=openChapter;
+
+function finishChapter(){
+  showModule(CHAPTERS[curCh].modules.length);
+  const c=CHAPTERS[curCh];
+  document.getElementById('chScore').textContent=score[curCh];
+  document.getElementById('chTotal').textContent=total[curCh];
+  const p=chPct(curCh);
+  let msg;
+  if(p===100) msg='Clean sweep \u2014 every trap spotted. On to the next blueprint.';
+  else if(p>=70) msg='Solid. Skim the cards you missed and this chapter is exam-ready.';
+  else if(p>=40) msg='Good start \u2014 the predict cards you slipped on are exactly the exam marks.';
+  else msg='Worth another pass: the traps are where this chapter actually lives.';
+  document.getElementById('chMsg').textContent=msg;
+  renderGrid();
+}
+window.finishChapter=finishChapter;
+
+function goHome(){
+  curCh=null;
+  document.getElementById('brandSub').textContent='{ Liang \u00b7 1\u20139 }';
+  main.innerHTML='';
+  hero.style.display='block';
+  renderGrid();
+  setBars();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.goHome=goHome;
+
+function setBars(){
+  const overall=Object.keys(score).reduce((s,k)=>s+score[k],0);
+  const ot=Object.keys(total).reduce((s,k)=>s+total[k],0);
+  document.getElementById('masteryPct').textContent=(ot?Math.round(overall/ot*100):0)+'%';
+  // progress bar = position within current chapter, or overall completion at home
+  let pct;
+  if(curCh===null){ const startedTotal=Object.keys(visited).reduce((s,k)=>s+(visited[k].size?1:0),0); pct=Math.round(startedTotal/CHAPTERS.length*100); }
+  else { const c=CHAPTERS[curCh]; pct=Math.round(visited[curCh].size/(c.modules.length)*100); }
+  document.getElementById('barFill').style.width=pct+'%';
+}
+
+/* quiz answering */
+document.addEventListener('click',e=>{
+  const opt=e.target.closest('.opt'); if(!opt)return;
+  const key=opt.dataset.key; if(answered.has(key))return;
+  answered.add(key);
+  const chosen=+opt.dataset.i, correct=+opt.dataset.c;
+  opt.parentElement.querySelectorAll('.opt').forEach(o=>{
+    o.classList.add('lock'); const i=+o.dataset.i;
+    if(i===correct){o.classList.add('correct');o.querySelector('.mark').textContent='\u2713';}
+    if(i===chosen&&chosen!==correct){o.classList.add('wrong');o.querySelector('.mark').textContent='\u2717';}
+  });
+  document.getElementById('exp_'+key).classList.add('show');
+  if(chosen===correct && curCh!==null){ score[curCh]++; }
+  setBars();
+});
+
+/* keyboard */
+document.addEventListener('keydown',e=>{
+  if(curCh===null)return;
+  const c=CHAPTERS[curCh];
+  const secs=[...main.querySelectorAll('.module')];
+  const active=secs.find(s=>s.classList.contains('active'));
+  if(!active)return;
+  const idx= active.id==='chDone'? c.modules.length : +active.dataset.idx;
+  if(e.key==='ArrowRight') showModule(Math.min(idx+1,c.modules.length));
+  if(e.key==='ArrowLeft' && idx>0) showModule(idx-1);
+});
+
+document.getElementById('fyear').textContent=new Date().getFullYear();
+renderGrid(); setBars();
+</script>
+</body>
+</html>
