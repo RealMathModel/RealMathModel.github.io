@@ -890,6 +890,19 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
   </div>
 
 
+  <div class="card">
+    <div class="card-title"><span class="icon">12</span>Half &amp; full subtractor</div>
+    <div class="card-body">
+      <p>The subtraction twins of the adder. A <b>half-subtractor</b> computes \(A - B\) for single bits, giving a difference and a borrow:</p>
+      <div class="eqn">\[D = A \oplus B, \qquad B_{out} = A'B\]</div>
+      <p>(The borrow is 1 only when you subtract 1 from 0.) A <b>full-subtractor</b> adds an incoming borrow \(B_{in}\). From its truth table:</p>
+      <div class="eqn">\[D = A \oplus B \oplus B_{in}\]</div>
+      <div class="eqn">\[B_{out} = A'B + A'B_{in} + B\,B_{in}\]</div>
+      <div class="callout trap"><b>Compare to the full adder.</b> The difference \(D\) is <i>identical</i> in form to the sum (\(A\oplus B\oplus C\)). Only the borrow differs from the carry: the borrow complements \(A\) (\(A'B\) vs \(AB\)) — that's the whole distinction. Most subtractor problems are really "build a 2's-complement adder–subtractor" instead; reach for that when you see \(A-B\) on multi-bit numbers.</div>
+    </div>
+  </div>
+
+
 <h2 style="font-family:var(--display);font-size:22px;margin:32px 0 18px">Problems · 9–12 of 24</h2>
 
   <div class="quiz" data-qid="ch4-q1">
@@ -1209,6 +1222,22 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
   </div>
 
 
+  <div class="card">
+    <div class="card-title"><span class="icon">10</span>Flip-flop conversion · make any FF behave as another</div>
+    <div class="card-body">
+      <p>A favorite exam task: wire a JK (or T, or a custom FF) so it acts like a D, and vice-versa. The recipe is always the same — combine the <b>characteristic</b> table of the FF you want with the <b>excitation</b> table of the FF you have.</p>
+      <p><b>Procedure:</b> tabulate \(Q \to Q^{+}\) for the <i>target</i> FF's inputs, then read the <i>source</i> FF's required inputs from its excitation table, then K-map the source inputs in terms of the target inputs and \(Q\).</p>
+      <p><b>JK → D</b> (want \(Q^{+}=D\)). Filling JK's excitation for each \(Q\to Q^{+}=D\) gives:</p>
+      <div class="eqn">\[J = D, \qquad K = D'\]</div>
+      <p>So a JK with its two inputs tied to \(D\) and \(D'\) is a D flip-flop.</p>
+      <p><b>D → JK</b> (want \(Q^{+}=JQ'+K'Q\)). Since \(D=Q^{+}\) directly:</p>
+      <div class="eqn">\[D = JQ' + K'Q\]</div>
+      <p><b>T → D</b> uses \(T = Q \oplus Q^{+} = Q \oplus D\); <b>D → T</b> uses \(D = T \oplus Q\).</p>
+      <div class="callout trap"><b>One rule covers them all:</b> express the <i>target</i>'s next-state \(Q^{+}\), then plug it into the <i>source</i>'s excitation entries. The custom-FF problems (a "PN" or "AB" flip-flop) are the same drill — just use that FF's own excitation table.</div>
+    </div>
+  </div>
+
+
 <h2 style="font-family:var(--display);font-size:22px;margin:32px 0 18px">Problems · 13–16 of 24</h2>
 
   <div class="quiz" data-qid="ch5-q1">
@@ -1446,6 +1475,18 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
       <p>A counter using only some of its \(2^n\) states (e.g. a mod-6 counter in 3 FFs leaves 2 states unused) treats the unused states as <b>don't-cares</b> in the K-maps — great for simplification.</p>
       <p>But you must <b>verify self-correction</b>: trace where each unused state goes. If a glitch lands the counter in an unused state, it should return to the valid cycle within a few clocks. If an unused state loops onto itself, redesign so it feeds back into the sequence.</p>
       <div class="callout trap"><b>Always check the leftovers.</b> "Don't-care" in the math doesn't mean "don't care" in hardware — an unused state that traps the counter is a real bug. Confirm every unused state has a path back home.</div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-title"><span class="icon">09</span>Serial arithmetic · add/subtract one bit per clock</div>
+    <div class="card-body">
+      <p>Instead of \(n\) full adders in parallel, use <b>one</b> full adder and feed the operands bit-by-bit from two shift registers (LSB first). The carry rides a single D flip-flop back into the adder next clock.</p>
+      <p><b>Serial adder.</b> Each clock: \(S = A_0 \oplus B_0 \oplus C\), \(\;C^{+} = A_0B_0 + C(A_0 \oplus B_0)\). The sum bit shifts into register \(A\); both registers shift right; the carry FF holds \(C^{+}\). After \(n\) clocks, \(A\) holds the sum. Trade-off: minimal hardware, but \(n\) clocks instead of one.</p>
+      <p><b>Serial subtractor \(A-B\).</b> Same circuit, two changes: XOR each \(B_i\) with a mode line \(M\), and initialize the carry FF to \(M=1\). Then it computes \(A + \overline{B} + 1 = A - B\) (two's complement) — exactly the parallel adder–subtractor trick, done serially.</p>
+      <p><b>Serial 2's complementer.</b> Scan from the LSB: copy bits unchanged up to and including the first \(1\), then complement every bit after. A single flip-flop remembers "have we passed the first 1 yet" — it's a tiny 2-state machine controlling whether the output bit is \(b\) or \(b'\).</p>
+      <div class="callout trap"><b>Serial transfer costs clocks.</b> Moving or operating on \(n\) bits serially takes \(n\) clock cycles (vs one for parallel). Exam questions love "list register \(A\) and the carry FF after each shift" — just run the full-adder equation one bit at a time and track the carry.</div>
     </div>
   </div>
 
