@@ -1541,11 +1541,27 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
 /* ═══════════ Navigation ═══════════ */
 const tabs = document.querySelectorAll('.tab');
 const sections = document.querySelectorAll('section.chapter');
+function typesetMath(el){
+  try{
+    if(window.MathJax && MathJax.typesetPromise){
+      return MathJax.typesetPromise(el?[el]:undefined).catch(()=>{});
+    }
+  }catch(e){}
+}
 function goTo(id){
   sections.forEach(s=>s.classList.toggle('active', s.id===id));
   tabs.forEach(t=>t.classList.toggle('active', t.dataset.tab===id));
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='ch5') requestAnimationFrame(resizeScope);
+  const sec=document.getElementById(id);
+  if(sec) typesetMath(sec);            // guarantee this chapter's LaTeX is rendered
+}
+// belt-and-suspenders: re-run a full typeset once MathJax has finished loading,
+// in case the bundle initialized after the initial document typeset.
+if(window.MathJax){
+  if(MathJax.startup && MathJax.startup.promise){
+    MathJax.startup.promise.then(()=>typesetMath()).catch(()=>{});
+  } else { setTimeout(()=>typesetMath(), 0); }
 }
 tabs.forEach(t=>t.addEventListener('click',()=>goTo(t.dataset.tab)));
 
