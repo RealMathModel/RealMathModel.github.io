@@ -2309,7 +2309,7 @@ function resetAll(){
   }
   function render(){
     const r=calc(A,B,x);
-    get('sa-da').textContent=r.DA; get('sa-db').textContent=r.DB;
+    get('sa-da').textContent=r.DA; get('sa-db').textContent=r.DB; 
     get('sa-next').textContent=''+r.DA+r.DB; get('sa-y').textContent=r.y;
     let html='<tr><th>A B</th><th>x</th><th>A⁺ B⁺</th><th>y</th></tr>';
     for(let a=0;a<2;a++)for(let b=0;b<2;b++)for(let xx=0;xx<2;xx++){
