@@ -1161,6 +1161,54 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
   </div>
 
 
+  <div class="card">
+    <div class="card-title"><span class="icon">★</span>Interactive FSM · Mealy vs Moore, stepped</div>
+    <div class="card-body">
+      <p>Feed an input bit-stream and watch the machine walk its states. Toggle between a <b class="tl">Moore</b> detector (output lives <i>in the state</i>) and a <b class="tl">Mealy</b> detector (output lives <i>on the transition</i>) — the classic exam distinction, made visible.</p>
+    </div>
+    <div class="demo">
+      <div class="demo-title">State-machine walker</div>
+      <div class="btn-row">
+        <button class="toggle-btn on" id="fsm-mode" data-mode="moore">Moore: &ge;3 ones <span class="knob"></span></button>
+      </div>
+      <svg id="fsm-svg" viewBox="0 0 640 230" style="width:100%;background:#08111F;border:1px solid var(--border);border-radius:8px;margin-top:10px"></svg>
+      <div class="btn-row" style="margin-top:12px;align-items:center">
+        <span style="font-family:var(--mono);font-size:13px;color:var(--muted)">feed input:</span>
+        <button class="btn ghost" id="fsm-in0">0</button>
+        <button class="btn ghost" id="fsm-in1">1</button>
+        <button class="btn" id="fsm-reset">Reset</button>
+      </div>
+      <div style="font-family:var(--mono);font-size:13px;margin-top:10px;color:var(--muted);line-height:1.7">
+        input stream: <span class="tl" id="fsm-stream">&mdash;</span><br/>
+        current state: <span class="gd" id="fsm-state">&mdash;</span> &middot; last output: <span class="hi" id="fsm-out">&mdash;</span><br/>
+        output history: <span class="tl" id="fsm-hist">&mdash;</span>
+      </div>
+      <div class="callout trap" style="margin-top:12px"><b>Watch the timing.</b> In <b>Moore</b> the output is read from the state you land in — it lags the input by one clock. In <b>Mealy</b> the output depends on state <i>and</i> the current input, so it fires on the same edge. Feed <span class="m">1 0 1</span> on Mealy and <span class="m">1 1 1</span> on Moore and compare exactly <i>when</i> the 1 appears.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">★</span>Analyze a circuit · build the state table live</div>
+    <div class="card-body">
+      <p>Given the flip-flop input equations \(D_A = Ax + Bx\), \(D_B = A'x\), and output \(y = (A+B)x'\). Toggle the present state and input — next state and output compute instantly. Fill all eight rows, then sketch the diagram from them.</p>
+    </div>
+    <div class="demo">
+      <div class="demo-title">Present state &amp; input &rarr; next state, output</div>
+      <div class="btn-row">
+        <button class="toggle-btn" id="sa-A">A <span class="knob"></span></button>
+        <button class="toggle-btn" id="sa-B">B <span class="knob"></span></button>
+        <button class="toggle-btn" id="sa-x">x <span class="knob"></span></button>
+      </div>
+      <div style="font-family:var(--mono);font-size:14px;margin-top:12px;color:var(--muted);line-height:1.8">
+        D<sub>A</sub> = Ax+Bx = <span class="tl" id="sa-da">0</span> &middot; D<sub>B</sub> = A&prime;x = <span class="tl" id="sa-db">0</span><br/>
+        next A&#8314;B&#8314; = <span class="gd" id="sa-next">00</span> &middot; output y = (A+B)x&prime; = <span class="hi" id="sa-y">0</span>
+      </div>
+      <table class="table-mini" id="sa-table" style="margin-top:14px;font-size:13px"></table>
+      <div class="callout" style="margin-top:10px">Because \(y\) depends on \(x\), this is a <b class="tl">Mealy</b> machine. If \(y\) depended only on \(A,B\) it would be Moore.</div>
+    </div>
+  </div>
+
+
 <h2 style="font-family:var(--display);font-size:22px;margin:32px 0 18px">Problems · 13–16 of 24</h2>
 
   <div class="quiz" data-qid="ch5-q1">
@@ -2108,6 +2156,133 @@ function resetAll(){
   });
   goTo('intro');
 }
+
+/* ════════════ Interactive FSM walker (Mealy vs Moore) ════════════ */
+(function(){
+  const NS='http://www.w3.org/2000/svg', R=30;
+  const machines={
+    moore:{
+      nodes:[{id:'S0',x:90},{id:'S1',x:230},{id:'S2',x:370},{id:'S3',x:510,accept:true}],
+      y:95, start:'S0',
+      trans:{S0:{'0':'S0','1':'S1'},S1:{'0':'S0','1':'S2'},S2:{'0':'S0','1':'S3'},S3:{'0':'S0','1':'S3'}},
+      stateOut:{S0:0,S1:0,S2:0,S3:1}, mealyOut:null
+    },
+    mealy:{
+      nodes:[{id:'A',x:130},{id:'B',x:330},{id:'C',x:530}],
+      y:95, start:'A',
+      trans:{A:{'0':'A','1':'B'},B:{'0':'C','1':'B'},C:{'0':'A','1':'B'}},
+      stateOut:null, mealyOut:{A:{'0':0,'1':0},B:{'0':0,'1':0},C:{'0':0,'1':1}}
+    }
+  };
+  let mode='moore', cur, stream, hist, lastEdge;
+  const svg=document.getElementById('fsm-svg');
+  if(!svg) return;
+  const get=id=>document.getElementById(id);
+  const nodeOf=(m,id)=>m.nodes.find(n=>n.id===id);
+
+  function mk(tag,attrs){ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e; }
+
+  function drawEdge(a,b,y,lbl,active){
+    const col=active?'#FBBF24':'#3A4D74', lcol=active?'#FBBF24':'#8AA0C6', w=active?2.6:1.5;
+    if(a.id===b.id){
+      const x=a.x;
+      svg.appendChild(mk('path',{d:`M ${x-12} ${y-R+4} C ${x-42} ${y-R-48}, ${x+42} ${y-R-48}, ${x+12} ${y-R+4}`,fill:'none',stroke:col,'stroke-width':w,'marker-end':'url(#fsmArr)'}));
+      const t=mk('text',{x:x,y:y-R-52,'text-anchor':'middle','font-family':'ui-monospace,monospace','font-size':12,fill:lcol}); t.textContent=lbl; svg.appendChild(t);
+      return;
+    }
+    const fwd=b.x>a.x;
+    const x1=a.x+(fwd?R:-R), x2=b.x+(fwd?-R:R);
+    const bend=fwd?-40:48, mx=(x1+x2)/2, my=y+bend;
+    svg.appendChild(mk('path',{d:`M ${x1} ${y} Q ${mx} ${my} ${x2} ${y}`,fill:'none',stroke:col,'stroke-width':w,'marker-end':'url(#fsmArr)'}));
+    const t=mk('text',{x:mx,y:my+(fwd?-6:15),'text-anchor':'middle','font-family':'ui-monospace,monospace','font-size':12,fill:lcol}); t.textContent=lbl; svg.appendChild(t);
+  }
+
+  function draw(){
+    const m=machines[mode];
+    while(svg.firstChild) svg.removeChild(svg.firstChild);
+    const defs=mk('defs',{}); 
+    const mark=mk('marker',{id:'fsmArr',viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:7,markerHeight:7,orient:'auto-start-reverse'});
+    mark.appendChild(mk('path',{d:'M0,0 L10,5 L0,10 z',fill:'#5B7BB4'})); defs.appendChild(mark); svg.appendChild(defs);
+    const y=m.y;
+    for(const from in m.trans) for(const inp in m.trans[from]){
+      const to=m.trans[from][inp], a=nodeOf(m,from), b=nodeOf(m,to);
+      const lbl=m.mealyOut? (inp+'/'+m.mealyOut[from][inp]) : inp;
+      const active=lastEdge && lastEdge.from===from && lastEdge.inp===inp;
+      drawEdge(a,b,y,lbl,active);
+    }
+    m.nodes.forEach(n=>{
+      const isCur=n.id===cur;
+      svg.appendChild(mk('circle',{cx:n.x,cy:y,r:R,fill:isCur?'#143055':'#0E1E36',stroke:n.accept?'#10E090':(isCur?'#2DD4BF':'#2A3B5C'),'stroke-width':n.accept?3:(isCur?3:1.5)}));
+      if(n.accept) svg.appendChild(mk('circle',{cx:n.x,cy:y,r:R-5,fill:'none',stroke:'#10E090','stroke-width':1.2}));
+      const t=mk('text',{x:n.x,y:y+5,'text-anchor':'middle','font-family':'ui-monospace,monospace','font-size':15,'font-weight':600,fill:isCur?'#E8EEF7':'#9DB0CE'}); t.textContent=n.id; svg.appendChild(t);
+      if(m.stateOut){
+        const ot=mk('text',{x:n.x,y:y+R+18,'text-anchor':'middle','font-family':'ui-monospace,monospace','font-size':12,fill:m.stateOut[n.id]?'#10E090':'#5B7BB4'}); ot.textContent='z='+m.stateOut[n.id]; svg.appendChild(ot);
+      }
+    });
+  }
+
+  function feed(bit){
+    const m=machines[mode];
+    const out=m.mealyOut? m.mealyOut[cur][bit] : null;
+    lastEdge={from:cur,inp:bit};
+    stream+=(stream?' ':'')+bit;
+    cur=m.trans[cur][bit];
+    const shown=m.mealyOut? out : m.stateOut[cur];
+    hist+=(hist?' ':'')+shown;
+    get('fsm-stream').textContent=stream||'—';
+    get('fsm-state').textContent=cur;
+    get('fsm-out').textContent=shown;
+    get('fsm-hist').textContent=hist||'—';
+    draw();
+  }
+  function reset(){
+    const m=machines[mode];
+    cur=m.start; stream=''; hist=''; lastEdge=null;
+    get('fsm-stream').textContent='—'; get('fsm-state').textContent=cur;
+    get('fsm-out').textContent='—'; get('fsm-hist').textContent='—';
+    draw();
+  }
+  get('fsm-in0').addEventListener('click',()=>feed('0'));
+  get('fsm-in1').addEventListener('click',()=>feed('1'));
+  get('fsm-reset').addEventListener('click',reset);
+  get('fsm-mode').addEventListener('click',function(){
+    mode = mode==='moore'?'mealy':'moore';
+    this.classList.toggle('on', mode==='moore');
+    this.firstChild.textContent = mode==='moore' ? 'Moore: ≥3 ones ' : 'Mealy: 101 detect ';
+    reset();
+  });
+  reset();
+})();
+
+/* ════════════ Live sequential-circuit analyzer ════════════ */
+(function(){
+  const elA=document.getElementById('sa-A');
+  if(!elA) return;
+  const get=id=>document.getElementById(id);
+  let A=0,B=0,x=0;
+  function calc(a,b,xx){
+    const DA=(a&xx)|(b&xx);
+    const DB=((a?0:1)&xx);
+    const y=((a|b)&(xx?0:1));
+    return {DA,DB,y};
+  }
+  function render(){
+    const r=calc(A,B,x);
+    get('sa-da').textContent=r.DA; get('sa-db').textContent=r.DB;
+    get('sa-next').textContent=''+r.DA+r.DB; get('sa-y').textContent=r.y;
+    let html='<tr><th>A B</th><th>x</th><th>A⁺ B⁺</th><th>y</th></tr>';
+    for(let a=0;a<2;a++)for(let b=0;b<2;b++)for(let xx=0;xx<2;xx++){
+      const rr=calc(a,b,xx), cur=(a===A&&b===B&&xx===x);
+      html+='<tr style="'+(cur?'background:rgba(45,212,191,0.14)':'')+'"><td>'+a+' '+b+'</td><td>'+xx+'</td><td>'+rr.DA+' '+rr.DB+'</td><td class="hi">'+rr.y+'</td></tr>';
+    }
+    get('sa-table').innerHTML=html;
+  }
+  elA.addEventListener('click',function(){A^=1;this.classList.toggle('on',!!A);render();});
+  get('sa-B').addEventListener('click',function(){B^=1;this.classList.toggle('on',!!B);render();});
+  get('sa-x').addEventListener('click',function(){x^=1;this.classList.toggle('on',!!x);render();});
+  render();
+})();
+
 </script>
 </body>
 </html>
