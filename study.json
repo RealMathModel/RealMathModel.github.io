@@ -27,11 +27,8 @@
               "accent": "purple",
               "blurb": "Thomas — limits, derivatives, integrals",
               "resources": [
-                { "label": "Calculus A summary (TikZ / pgfplots notes)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
-                { "label": "Paul's Online Math Notes — Calculus I", "href": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx", "type": "external" },
-                { "label": "Khan Academy — Differential Calculus", "href": "https://www.khanacademy.org/math/differential-calculus", "type": "external" },
-                { "label": "3Blue1Brown — Essence of Calculus", "href": "https://www.3blue1brown.com/topics/calculus", "type": "external" }
-              ]
+                { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external", "note": "" },
+                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external" }              ]
             }
           ]
         },
@@ -51,11 +48,8 @@
               "accent": "purple",
               "blurb": "Thomas — series, polar, conics",
               "resources": [
-                { "label": "Calculus B study lab (offline HTML)", "href": "#", "type": "internal", "note": "add your lab link" },
-                { "label": "Calculus B summary (TikZ / pgfplots notes)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
-                { "label": "Paul's Online Math Notes — Calculus II", "href": "https://tutorial.math.lamar.edu/Classes/CalcII/CalcII.aspx", "type": "external" },
-                { "label": "Khan Academy — Integral Calculus", "href": "https://www.khanacademy.org/math/integral-calculus", "type": "external" },
-                { "label": "3Blue1Brown — Essence of Calculus", "href": "https://www.3blue1brown.com/topics/calculus", "type": "external" }
+                { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "add your lab link" },
+                { "label": "Calculus B summary ", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external", "note": "add your LaTeX PDF" }
               ]
             },
             {
@@ -66,11 +60,9 @@
               "accent": "teal",
               "blurb": "Mano — logic, K-maps, FSMs",
               "resources": [
-                { "label": "DLD study lab (offline HTML)", "href": "#", "type": "internal", "note": "add your lab link" },
-                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
-                { "label": "CircuitVerse — online logic simulator", "href": "https://circuitverse.org/", "type": "external" },
-                { "label": "All About Circuits — digital logic", "href": "https://www.allaboutcircuits.com/textbook/digital/", "type": "external" },
-                { "label": "Nand2Tetris — build a computer from gates", "href": "https://www.nand2tetris.org/", "type": "external" }
+                { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "add your lab link" },
+                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external", "note": "add your LaTeX PDF" },
+                { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external" }
               ]
             },
             {
@@ -81,10 +73,8 @@
               "accent": "blue",
               "blurb": "Liang, chapters 1–9 + exams",
               "resources": [
-                { "label": "C++ Mastery Console — 529 MCQ + 32 coding problems", "href": "cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline" },
-                { "label": "cppreference.com — language & STL reference", "href": "https://en.cppreference.com/", "type": "external" },
-                { "label": "LearnCpp.com — full tutorial", "href": "https://www.learncpp.com/", "type": "external" },
-                { "label": "Liang — Intro to C++ (textbook notes)", "href": "#", "type": "internal", "note": "add your PDF link" }
+                { "label": "C++ Mastery Console — 529 MCQ + 32 coding problems", "href": "Sem2/cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline" },
+                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external", "note": "add your PDF link" }
               ]
             },
             {
@@ -95,9 +85,7 @@
               "accent": "orange",
               "blurb": "PWM, sensors, projects",
               "resources": [
-                { "label": "IoT / ESP32 summary (slide sets + diagrams)", "href": "#", "type": "internal" },
-                { "label": "Espressif — ESP-IDF programming guide", "href": "https://docs.espressif.com/projects/esp-idf/en/latest/", "type": "external" },
-                { "label": "Random Nerd Tutorials — ESP32 projects", "href": "https://randomnerdtutorials.com/projects-esp32/", "type": "external" }
+                { "label": "IoT / ESP32 summary (slide sets + diagrams)", "href": "https://drive.google.com/file/d/1W8XWIcXXM78Hm6jyTkJymSGkRyaKTQdv/view?usp=drive_link", "type": "external" },
               ]
             },
             {
@@ -108,10 +96,8 @@
               "accent": "amber",
               "blurb": "Logisim builds & lab reports",
               "resources": [
-                { "label": "Logic Lab Companion (lab reports + final project)", "href": "#", "type": "internal", "note": "add your PDF link" },
-                { "label": "24-hour digital clock (Logisim .circ)", "href": "#", "type": "internal", "note": "add your circuit file" },
-                { "label": "Logisim Evolution — releases & download", "href": "https://github.com/logisim-evolution/logisim-evolution/releases", "type": "external" },
-                { "label": "CircuitVerse — online logic simulator", "href": "https://circuitverse.org/", "type": "external" }
+                { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external", "note": "add your PDF link" }
+
               ]
             }
           ]
