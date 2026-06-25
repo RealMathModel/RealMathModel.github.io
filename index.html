@@ -214,7 +214,7 @@ h1 .ac{color:var(--amber)}
 <script>
 /* ============================================================================
    realmathmodel — study hub
-   Content lives in study.json (loaded at runtime). Structure:
+   Content lives in  (loaded at runtime). Structure:
      category -> (children:[...] | resources:[...])
      resource: {label, href, type:"internal"|"external", note}
    icons are FontAwesome class strings, e.g. "fa-solid fa-code".
@@ -281,7 +281,7 @@ function renderNode(path){
     var k=c.children.length;
     app.innerHTML=header+'<div class="label">'+k+' area'+(k===1?'':'s')+'</div>'+
       (k?'<div class="grid">'+c.children.map(cardHtml).join('')+'</div>':
-        '<p class="miss">No sub-areas yet — add some under <code>'+esc(c.id)+'</code> in <code>study.json</code>.</p>')+
+        '<p class="miss">No sub-areas yet — add some under <code>'+esc(c.id)+'</code> in <code></code>.</p>')+
       '<p class="foot"><i class="fa-brands fa-github"></i> realmathmodel.github.io</p>';
     return;
   }
@@ -302,7 +302,7 @@ function renderNode(path){
 
   app.innerHTML=header+'<div class="label">'+res.length+' resource'+(res.length===1?'':'s')+'</div>'+
     '<div class="list">'+rows+'</div>'+
-    '<p class="note"><b>INT</b> = page in this repo · <b>EXT</b> = outside site (new tab) · <b>TODO</b> = add the file then set its <code>href</code> in study.json.</p>'+
+    '<p class="note"><b>INT</b> = page in this repo · <b>EXT</b> = outside site (new tab) · <b>TODO</b> = add the file then set its <code>href</code> in .</p>'+
     '<p class="foot"><i class="fa-brands fa-github"></i> realmathmodel.github.io</p>';
 
   /* wire confirm-before-leave on every real resource link */
@@ -368,7 +368,7 @@ function route(){
   renderNode(path);
 }
 
-/* ---------- boot: load study.json ---------- */
+/* ---------- boot: load  ---------- */
 function boot(data){
   cats=data.categories||[];
   owner=data.owner||owner; host=data.host||host; tagline=data.tagline||tagline;
@@ -378,14 +378,14 @@ function boot(data){
 function bootError(detail){
   ttl.innerHTML='<i class="fa-solid fa-triangle-exclamation"></i> error — bash';
   app.innerHTML='<h1>Study <span class="ac">Hub</span></h1>'+
-    '<div class="errbox"><b><i class="fa-solid fa-triangle-exclamation"></i> Could not load study.json</b><br><br>'+
-    'The hub reads its content from <code>study.json</code>, which a browser only fetches over <code>http(s)</code> — not from a <code>file://</code> path.'+
+    '<div class="errbox"><b><i class="fa-solid fa-triangle-exclamation"></i> Could not load </b><br><br>'+
+    'The hub reads its content from <code></code>, which a browser only fetches over <code>http(s)</code> — not from a <code>file://</code> path.'+
     '<br><br><b style="color:var(--muted)">Fix — pick one:</b><br>'+
     '• Push to GitHub Pages (it just works there), or<br>'+
     '• Serve locally: <code>python -m http.server</code> then open <code>http://localhost:8000</code>'+
     '<br><br><span style="color:var(--faint);font-family:var(--mono);font-size:11px">'+esc(detail||'')+'</span></div>';
 }
-fetch('study.json',{cache:'no-store'})
+fetch('',{cache:'no-store'})
   .then(function(res){ if(!res.ok)throw new Error('HTTP '+res.status); return res.json(); })
   .then(boot)
   .catch(function(err){ bootError(String(err&&err.message||err)); });
