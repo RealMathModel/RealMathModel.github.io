@@ -3,7 +3,7 @@
   "host": "iug",
   "tagline": "Pick an area — drill down to its resources.",
   "categories": [
-    { 
+    {
       "id": "university",
       "title": "AI Engineering University",
       "tag": "IUG",
@@ -27,8 +27,9 @@
               "accent": "purple",
               "blurb": "Thomas — limits, derivatives, integrals",
               "resources": [
-                { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external", "note": "" },
-                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external" }              ]
+                { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external" },
+                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external" }
+              ]
             }
           ]
         },
@@ -48,8 +49,8 @@
               "accent": "purple",
               "blurb": "Thomas — series, polar, conics",
               "resources": [
-                { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "add your lab link" },
-                { "label": "Calculus B summary ", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external", "note": "add your LaTeX PDF" }
+                { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "interactive study lab · offline" },
+                { "label": "Calculus B summary", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external" }
               ]
             },
             {
@@ -60,8 +61,8 @@
               "accent": "teal",
               "blurb": "Mano — logic, K-maps, FSMs",
               "resources": [
-                { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "add your lab link" },
-                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external", "note": "add your LaTeX PDF" },
+                { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "interactive study lab · offline" },
+                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external" },
                 { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external" }
               ]
             },
@@ -74,7 +75,7 @@
               "blurb": "Liang, chapters 1–9 + exams",
               "resources": [
                 { "label": "C++ Mastery Console — 529 MCQ + 32 coding problems", "href": "Sem2/cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline" },
-                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external", "note": "add your PDF link" }
+                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external" }
               ]
             },
             {
@@ -85,7 +86,7 @@
               "accent": "orange",
               "blurb": "PWM, sensors, projects",
               "resources": [
-                { "label": "IoT / ESP32 summary (slide sets + diagrams)", "href": "https://drive.google.com/file/d/1W8XWIcXXM78Hm6jyTkJymSGkRyaKTQdv/view?usp=drive_link", "type": "external" },
+                { "label": "IoT / ESP32 summary (slide sets + diagrams)", "href": "https://drive.google.com/file/d/1W8XWIcXXM78Hm6jyTkJymSGkRyaKTQdv/view?usp=drive_link", "type": "external" }
               ]
             },
             {
@@ -96,8 +97,7 @@
               "accent": "amber",
               "blurb": "Logisim builds & lab reports",
               "resources": [
-                { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external", "note": "add your PDF link" }
-
+                { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external" }
               ]
             }
           ]
