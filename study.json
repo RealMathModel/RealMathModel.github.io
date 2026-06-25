@@ -1,9 +1,9 @@
 {
-  "owner": "hasan",
+  "owner": "Hasan Ismail Saleh (MathModel)",
   "host": "iug",
   "tagline": "Pick an area — drill down to its resources.",
   "categories": [
-    {
+    { 
       "id": "university",
       "title": "AI Engineering University",
       "tag": "IUG",
