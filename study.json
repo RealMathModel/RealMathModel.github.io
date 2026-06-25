@@ -17,8 +17,62 @@
           "tag": "S1",
           "icon": "fa-solid fa-1",
           "accent": "amber",
+          "blurb": "foundations",
+          "children": [
+            {
+              "id": "calc-a",
+              "title": "Calculus A",
+              "tag": "MATH",
+              "icon": "fa-solid fa-square-root-variable",
+              "accent": "purple",
+              "blurb": "Thomas — limits, derivatives, integrals",
+              "resources": [
+                { "label": "Calculus A summary (TikZ / pgfplots notes)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
+                { "label": "Paul's Online Math Notes — Calculus I", "href": "https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx", "type": "external" },
+                { "label": "Khan Academy — Differential Calculus", "href": "https://www.khanacademy.org/math/differential-calculus", "type": "external" },
+                { "label": "3Blue1Brown — Essence of Calculus", "href": "https://www.3blue1brown.com/topics/calculus", "type": "external" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "sem2",
+          "title": "Semester 2",
+          "tag": "S2",
+          "icon": "fa-solid fa-2",
+          "accent": "teal",
           "blurb": "current courses",
           "children": [
+            {
+              "id": "calc-b",
+              "title": "Calculus B",
+              "tag": "MATH",
+              "icon": "fa-solid fa-infinity",
+              "accent": "purple",
+              "blurb": "Thomas — series, polar, conics",
+              "resources": [
+                { "label": "Calculus B study lab (offline HTML)", "href": "#", "type": "internal", "note": "add your lab link" },
+                { "label": "Calculus B summary (TikZ / pgfplots notes)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
+                { "label": "Paul's Online Math Notes — Calculus II", "href": "https://tutorial.math.lamar.edu/Classes/CalcII/CalcII.aspx", "type": "external" },
+                { "label": "Khan Academy — Integral Calculus", "href": "https://www.khanacademy.org/math/integral-calculus", "type": "external" },
+                { "label": "3Blue1Brown — Essence of Calculus", "href": "https://www.3blue1brown.com/topics/calculus", "type": "external" }
+              ]
+            },
+            {
+              "id": "logic",
+              "title": "Logic",
+              "tag": "EE",
+              "icon": "fa-solid fa-microchip",
+              "accent": "teal",
+              "blurb": "Mano — logic, K-maps, FSMs",
+              "resources": [
+                { "label": "DLD study lab (offline HTML)", "href": "#", "type": "internal", "note": "add your lab link" },
+                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
+                { "label": "CircuitVerse — online logic simulator", "href": "https://circuitverse.org/", "type": "external" },
+                { "label": "All About Circuits — digital logic", "href": "https://www.allaboutcircuits.com/textbook/digital/", "type": "external" },
+                { "label": "Nand2Tetris — build a computer from gates", "href": "https://www.nand2tetris.org/", "type": "external" }
+              ]
+            },
             {
               "id": "cpp",
               "title": "Programming 1 — C++",
@@ -34,36 +88,6 @@
               ]
             },
             {
-              "id": "calc",
-              "title": "Calculus B",
-              "tag": "MATH",
-              "icon": "fa-solid fa-square-root-variable",
-              "accent": "purple",
-              "blurb": "Thomas — series, polar, conics",
-              "resources": [
-                { "label": "Calculus B study lab (offline HTML)", "href": "#", "type": "internal", "note": "add your lab link" },
-                { "label": "Calculus B summary (TikZ / pgfplots notes)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
-                { "label": "Paul's Online Math Notes — Calculus II", "href": "https://tutorial.math.lamar.edu/Classes/CalcII/CalcII.aspx", "type": "external" },
-                { "label": "Khan Academy — Integral Calculus", "href": "https://www.khanacademy.org/math/integral-calculus", "type": "external" },
-                { "label": "3Blue1Brown — Essence of Calculus", "href": "https://www.3blue1brown.com/topics/calculus", "type": "external" }
-              ]
-            },
-            {
-              "id": "digital",
-              "title": "Digital Logic Design",
-              "tag": "EE",
-              "icon": "fa-solid fa-microchip",
-              "accent": "teal",
-              "blurb": "Mano — logic, K-maps, FSMs",
-              "resources": [
-                { "label": "DLD study lab (offline HTML)", "href": "#", "type": "internal", "note": "add your lab link" },
-                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "#", "type": "internal", "note": "add your LaTeX PDF" },
-                { "label": "CircuitVerse — online logic simulator", "href": "https://circuitverse.org/", "type": "external" },
-                { "label": "All About Circuits — digital logic", "href": "https://www.allaboutcircuits.com/textbook/digital/", "type": "external" },
-                { "label": "Nand2Tetris — build a computer from gates", "href": "https://www.nand2tetris.org/", "type": "external" }
-              ]
-            },
-            {
               "id": "iot",
               "title": "IoT / ESP32",
               "tag": "EMB",
@@ -75,12 +99,23 @@
                 { "label": "Espressif — ESP-IDF programming guide", "href": "https://docs.espressif.com/projects/esp-idf/en/latest/", "type": "external" },
                 { "label": "Random Nerd Tutorials — ESP32 projects", "href": "https://randomnerdtutorials.com/projects-esp32/", "type": "external" }
               ]
+            },
+            {
+              "id": "logic-lab",
+              "title": "Logic Lab",
+              "tag": "LAB",
+              "icon": "fa-solid fa-flask",
+              "accent": "amber",
+              "blurb": "Logisim builds & lab reports",
+              "resources": [
+                { "label": "Logic Lab Companion (lab reports + final project)", "href": "#", "type": "internal", "note": "add your PDF link" },
+                { "label": "24-hour digital clock (Logisim .circ)", "href": "#", "type": "internal", "note": "add your circuit file" },
+                { "label": "Logisim Evolution — releases & download", "href": "https://github.com/logisim-evolution/logisim-evolution/releases", "type": "external" },
+                { "label": "CircuitVerse — online logic simulator", "href": "https://circuitverse.org/", "type": "external" }
+              ]
             }
           ]
-        },
-        { "id": "sem2", "title": "Semester 2", "tag": "S2", "icon": "fa-solid fa-2", "accent": "teal", "blurb": "add courses in study.json", "children": [] },
-        { "id": "sem3", "title": "Semester 3", "tag": "S3", "icon": "fa-solid fa-3", "accent": "purple", "blurb": "add courses in study.json", "children": [] },
-        { "id": "sem4", "title": "Semester 4", "tag": "S4", "icon": "fa-solid fa-4", "accent": "orange", "blurb": "add courses in study.json", "children": [] }
+        }
       ]
     },
     {
