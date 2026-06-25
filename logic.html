@@ -1238,6 +1238,33 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
   </div>
 
 
+  <div class="card">
+    <div class="card-title"><span class="icon">★</span>Past-exam patterns · FF behavior, analysis, conversion</div>
+    <div class="card-body">
+      <p>Distilled from the Moodle/exam question bank — the recall facts they repeat and the calculation traps they love.</p>
+      <p><b>Fast-recall facts (they ask these verbatim):</b></p>
+      <table class="table-mini" style="font-size:13px">
+        <tr><th>Asked</th><th>Answer</th></tr>
+        <tr><td>SR latch is built from…</td><td class="m">cross-coupled NOR or NAND</td></tr>
+        <tr><td>Bubble on the clock input means…</td><td class="m">negative-edge triggered</td></tr>
+        <tr><td>+edge D-FF stores D when clock…</td><td class="m">goes LOW→HIGH (rising)</td></tr>
+        <tr><td>D latch behavior</td><td class="m">Q follows D while En=1 (no toggle)</td></tr>
+        <tr><td>Sequential vs combinational</td><td class="m">sequential is clocked / depends on state</td></tr>
+        <tr><td>Behavior determined by state of…</td><td class="m">its flip-flops</td></tr>
+        <tr><td># types of synch. seq. circuits</td><td class="m">2 (Mealy, Moore)</td></tr>
+        <tr><td>M flip-flops →</td><td class="m">max \(2^{M}\) states</td></tr>
+        <tr><td>S states need…</td><td class="m">\(\lceil \log_2 S \rceil\) FFs (13→4)</td></tr>
+      </table>
+      <p style="margin-top:14px"><b>The analysis trap (most common calc question).</b> Given FF input equations, present state and input → next state. Substitute into the characteristic equation \(Q^{+}=JQ'+K'Q\) (JK) or \(Q^{+}=D\) (D), one FF at a time.</p>
+      <p><b>Worked:</b> three JK FFs, present \(ABC=110\), \(x=0\), with \(J_A=B'x,\,K_A=1\); \(J_B=A+C'x',\,K_B=xC'+Cx\); \(J_C=Ax+A'B'x',\,K_C=x\). Plugging \(x=0\): \(A{:}\,J{=}0,K{=}1\to0\); \(B{:}\,J{=}1,K{=}0\to1\); \(C{:}\,J{=}0,K{=}0\to0\). Next state \(=010\).</p>
+      <p><b>Conversion equations they test directly:</b></p>
+      <div class="eqn">\[\text{D}\to\text{JK}: \; D = JQ' + K'Q \qquad \text{JK}\to\text{D}: \; J=D,\; K=D'\]</div>
+      <div class="eqn">\[\text{JK characteristic}: \; Q^{+} = JQ' + K'Q, \quad \overline{Q^{+}} = J'Q' + KQ\]</div>
+      <div class="callout trap"><b>Wording bait seen on the exam:</b> "behavior determined by the <i>clock</i>" (wrong → it's the <b>flip-flops</b>); D latch "toggles if an input is held high" (wrong → it's <b>transparent</b>, Q=D); converting a custom "PN" FF — same drill, use that FF's excitation table.</div>
+    </div>
+  </div>
+
+
 <h2 style="font-family:var(--display);font-size:22px;margin:32px 0 18px">Problems · 13–16 of 24</h2>
 
   <div class="quiz" data-qid="ch5-q1">
@@ -1487,6 +1514,21 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
       <p><b>Serial subtractor \(A-B\).</b> Same circuit, two changes: XOR each \(B_i\) with a mode line \(M\), and initialize the carry FF to \(M=1\). Then it computes \(A + \overline{B} + 1 = A - B\) (two's complement) — exactly the parallel adder–subtractor trick, done serially.</p>
       <p><b>Serial 2's complementer.</b> Scan from the LSB: copy bits unchanged up to and including the first \(1\), then complement every bit after. A single flip-flop remembers "have we passed the first 1 yet" — it's a tiny 2-state machine controlling whether the output bit is \(b\) or \(b'\).</p>
       <div class="callout trap"><b>Serial transfer costs clocks.</b> Moving or operating on \(n\) bits serially takes \(n\) clock cycles (vs one for parallel). Exam questions love "list register \(A\) and the carry FF after each shift" — just run the full-adder equation one bit at a time and track the carry.</div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="card-title"><span class="icon">★</span>Past-exam patterns · shift &amp; counter "after N pulses"</div>
+    <div class="card-body">
+      <p>The Ch.6 exam questions are almost all <b>"what's the content/state after N clock pulses?"</b> — and they're built on modular arithmetic. Master these three rules and you clear the chapter.</p>
+      <p><b>1 · Circular shift = use \(N \bmod k\).</b> A \(k\)-bit register shifted circularly \(N\) times only moves \(N \bmod k\) places.</p>
+      <div class="callout"><b>Worked:</b> \(1011\) shifted <i>right</i> circularly six times, 4-bit → \(6 \bmod 4 = 2\) shifts. \(1011 \to 1101 \to 1110\). Answer \(1110\) — not whatever 6 literal shifts feels like.</div>
+      <p><b>2 · Ring / Johnson state after N pulses = use the period.</b> A ring counter of \(k\) FFs repeats every \(k\) pulses; a Johnson (twisted-ring) repeats every \(2k\). Take \(N \bmod \text{period}\), then step that many from the start.</p>
+      <div class="callout"><b>Worked:</b> 4-bit Johnson counter, 73 pulses. Period \(=2k=8\), and \(73 \bmod 8 = 1\) → it's just <b>one</b> step past the initial state.</div>
+      <p><b>3 · Serial shift between two registers.</b> When \(SO_A\) feeds \(SI_B\), each clock pushes one bit out of \(A\) into \(B\). Track <i>direction</i> and <i>what enters the open end</i> — after \(n\) pulses, \(n\) bits have transferred.</p>
+      <div class="callout trap"><b>The headline trap: PIPO doesn't shift.</b> "Parallel-in/parallel-out register after 3 pulses" → contents are <b>unchanged</b>. Clocks don't move a register that has no shift path. Read the register <i>type</i> before doing any work.</div>
+      <p><b>Recall facts they repeat:</b> universal shift register = parallel load + bidirectional + shift (not "end-around"); ring counter is started by <span class="m">presetting one FF, clearing the rest</span>; equally-spaced timing pulses are generated by a <span class="m">ring</span> counter; \(M\) FFs give up to \(2^{M}\) states.</p>
     </div>
   </div>
 
