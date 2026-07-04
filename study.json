@@ -113,27 +113,11 @@
       "accent": "amber",
       "blurb": "handbook, algorithms & practice",
       "resources": [
-        { "label": "PSIUG — personal CP handbook", "href": "#", "type": "internal", "note": "add your handbook" },
+        { "label": "Problem Solving Book (Coming Later)", "href": "#", "type": "internal", "note": "add your handbook" },
         { "label": "CP-Algorithms — algorithm reference", "href": "https://cp-algorithms.com/", "type": "external" },
-        { "label": "USACO Guide — structured roadmap", "href": "https://usaco.guide/", "type": "external" },
+        { "label": "Eolymp", "href": "https://eolymp.com/", "type": "external" },
         { "label": "Codeforces — contests & problemset", "href": "https://codeforces.com/", "type": "external" },
         { "label": "AtCoder — contests", "href": "https://atcoder.jp/", "type": "external" }
-      ]
-    },
-    {
-      "id": "math",
-      "title": "General Math Improvement",
-      "tag": "MATH",
-      "icon": "fa-solid fa-infinity",
-      "accent": "purple",
-      "blurb": "sharpen intuition & problem-solving",
-      "resources": [
-        { "label": "3Blue1Brown — visual math", "href": "https://www.3blue1brown.com/", "type": "external" },
-        { "label": "Khan Academy — all math", "href": "https://www.khanacademy.org/math", "type": "external" },
-        { "label": "Paul's Online Math Notes", "href": "https://tutorial.math.lamar.edu/", "type": "external" },
-        { "label": "Project Euler — math + programming problems", "href": "https://projecteuler.net/", "type": "external" },
-        { "label": "Brilliant — guided problem solving", "href": "https://brilliant.org/", "type": "external" },
-        { "label": "Art of Problem Solving", "href": "https://artofproblemsolving.com/", "type": "external" }
       ]
     }
   ]
