@@ -178,6 +178,40 @@ footer .big{font-family:'Chakra Petch';font-size:20px;color:var(--ink);margin-bo
 .count-big{font-family:'IBM Plex Mono';font-size:40px;font-weight:600;color:var(--amber);text-shadow:var(--glow-amber);min-width:70px;text-align:center}
 input[type=range]{-webkit-appearance:none;height:6px;border-radius:6px;background:var(--line2);outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--phos);box-shadow:var(--glow-phos);cursor:pointer}
+/* K-map */
+.kmap{display:inline-block;font-family:'IBM Plex Mono'}
+.kmap .kcap{font-size:12px;color:var(--muted);margin-bottom:6px;text-align:center}
+.kmap table{width:auto}
+.kmap td.cell{width:44px;height:44px;font-size:17px;font-weight:600;background:var(--bg2);position:relative}
+.kmap td.corner{background:transparent;border:none;color:var(--dim);font-size:11px;text-align:right;padding-right:6px}
+.kmap th.h{background:transparent;color:var(--phos);border:none;font-size:12px}
+.kmap td.rl{background:transparent;color:var(--phos);border:none;font-size:12px;padding-right:8px}
+.kmap td.cell.one{color:var(--amber)}
+.kmap td.cell.x{color:var(--indigo)}
+.kmap td.cell.g1{background:rgba(56,226,208,.18);box-shadow:inset 0 0 0 2px var(--phos)}
+.kmap td.cell.g2{background:rgba(255,194,77,.16);box-shadow:inset 0 0 0 2px var(--amber)}
+.kmap td.cell.g3{background:rgba(124,156,255,.16);box-shadow:inset 0 0 0 2px var(--indigo)}
+.kmaps{display:flex;gap:26px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.worked{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:14px}
+.worked .wt{font-family:'Chakra Petch';font-weight:600;font-size:14px;color:var(--phos);margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.worked .wt .s{font-family:'IBM Plex Mono';font-size:11px;background:var(--phos);color:#04121a;border-radius:5px;padding:1px 7px}
+.eqgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px}
+.eqgrid .e{font-family:'IBM Plex Mono';font-size:15px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;text-align:center;color:var(--phos)}
+.eqgrid .e b{color:var(--amber)}
+.calc{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-end;margin-top:8px}
+.calc .fld{display:flex;flex-direction:column;gap:6px}
+.calc .fld label{font-family:'IBM Plex Mono';font-size:12px;color:var(--muted)}
+.calc .out{font-family:'IBM Plex Mono';font-size:15px;color:var(--ink);background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:10px 14px}
+.calc .out b{color:var(--amber);font-size:18px}
+.checklist{display:grid;gap:8px}
+.ci{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;background:var(--bg2);border:1px solid var(--line);border-radius:9px;cursor:pointer;transition:.15s}
+.ci:hover{border-color:var(--phos-dim)}
+.ci .box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--line2);flex-shrink:0;margin-top:2px;display:grid;place-items:center;font-size:13px;color:#04121a;transition:.15s}
+.ci.done .box{background:var(--phos);border-color:var(--phos)}
+.ci.done .box::after{content:"✓"}
+.ci.done .t{color:var(--dim);text-decoration:line-through}
+.ci .t{font-size:14px}
+.ci .p{margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--dim);flex-shrink:0}
 :focus-visible{outline:2px solid var(--phos);outline-offset:2px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
 </style>
@@ -195,10 +229,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <a href="#tables">Tables</a>
       <a href="#analysis">Analysis</a>
       <a href="#design">Design</a>
+      <a href="#jkdesign">JK worked</a>
+      <a href="#reduction">Reduction</a>
+      <a href="#unused">Unused</a>
       <a href="#counters">Ripple vs Sync</a>
+      <a href="#counterdesign">Counter design</a>
+      <a href="#timing">Timing</a>
       <a href="#shift">Shift Reg</a>
       <a href="#johnson">Ring/Johnson</a>
       <a href="#modn">Mod-N</a>
+      <a href="#cheat">Cheat sheet</a>
     </div>
   </div>
 </nav>
@@ -366,6 +406,114 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
     </div>
   </section>
 
+  <!-- JK DESIGN WORKED -->
+  <section id="jkdesign">
+    <div class="eyebrow mono">the four-map technique, fully worked</div>
+    <h2>JK design, start to finish.</h2>
+    <p class="lead">This is the exact skill Problems 5.18 and 6.27 test. We'll design a 2-bit up-counter (00→01→10→11→00) with two JK flip-flops. The point: two flip-flops × two inputs each = <b style="color:var(--amber)">four K-maps</b> — J<sub>A</sub>, K<sub>A</sub>, J<sub>B</sub>, K<sub>B</sub> — each read through the JK excitation table.</p>
+
+    <div class="worked">
+      <div class="wt"><span class="s">1</span> State table — present → next</div>
+      <table style="max-width:360px"><tr><th>A B</th><th>A⁺ B⁺</th></tr>
+      <tr><td>0 0</td><td>0 1</td></tr><tr><td>0 1</td><td>1 0</td></tr>
+      <tr><td>1 0</td><td>1 1</td></tr><tr><td>1 1</td><td>0 0</td></tr></table>
+    </div>
+
+    <div class="worked">
+      <div class="wt"><span class="s">2</span> Excitation — convert each transition to J,K (from the JK excitation table)</div>
+      <table><tr><th>A B</th><th>A→A⁺</th><th>J<sub>A</sub></th><th>K<sub>A</sub></th><th>B→B⁺</th><th>J<sub>B</sub></th><th>K<sub>B</sub></th></tr>
+      <tr><td>0 0</td><td>0→0</td><td>0</td><td class="x">X</td><td>0→1</td><td>1</td><td class="x">X</td></tr>
+      <tr><td>0 1</td><td>0→1</td><td>1</td><td class="x">X</td><td>1→0</td><td class="x">X</td><td>1</td></tr>
+      <tr><td>1 0</td><td>1→1</td><td class="x">X</td><td>0</td><td>0→1</td><td>1</td><td class="x">X</td></tr>
+      <tr><td>1 1</td><td>1→0</td><td class="x">X</td><td>1</td><td>1→0</td><td class="x">X</td><td>1</td></tr></table>
+      <div class="hint" style="margin-top:8px">Read each flip-flop's transition <em>independently</em>: A's row sets J<sub>A</sub>,K<sub>A</sub>; B's row sets J<sub>B</sub>,K<sub>B</sub>. The X's are the JK don't-cares that will collapse the maps.</div>
+    </div>
+
+    <div class="worked">
+      <div class="wt"><span class="s">3</span> Four K-maps over (A, B) — group with the X's</div>
+      <div class="kmaps" id="jkMaps"></div>
+    </div>
+
+    <div class="worked">
+      <div class="wt"><span class="s">4</span> Result — wire these to the two JK flip-flops</div>
+      <div class="eqgrid">
+        <div class="e">J<sub>A</sub> = <b>B</b></div><div class="e">K<sub>A</sub> = <b>B</b></div>
+        <div class="e">J<sub>B</sub> = <b>1</b></div><div class="e">K<sub>B</sub> = <b>1</b></div>
+      </div>
+      <div class="note" style="margin-top:14px"><b>Read the answer back:</b> J<sub>B</sub>=K<sub>B</sub>=1 means B <em>toggles every clock</em> (the LSB of a counter). J<sub>A</sub>=K<sub>A</sub>=B means A <em>toggles only when B=1</em> — exactly a binary up-counter. The four X-riddled maps each collapsed to a single literal. That's why JK beats D here: fewer gates.</div>
+    </div>
+  </section>
+
+  <!-- FF CONVERSION -->
+  <section id="conversion">
+    <div class="eyebrow mono">flip-flop conversion</div>
+    <h2>Turn any flip-flop into any other.</h2>
+    <p class="lead">Problem 5.2 in one recipe. It's the same trick every time — the excitation table of the flip-flop you <em>have</em>, driven by the characteristic equation of the flip-flop you <em>want</em>.</p>
+    <div class="cols c2" style="margin-top:22px">
+      <div class="panel">
+        <div class="panel-title">The recipe <span class="num">works for any pair</span></div>
+        <div class="steps" style="margin-top:12px">
+          <div class="step"><span class="k"></span><div class="t"><b>Write the target's characteristic equation.</b> <span>e.g. want JK → Q⁺ = JQ′ + K′Q.</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>Treat Q and Q⁺ as known; the source FF's inputs are unknowns.</b></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>Use the source's excitation table</b> <span>to express its inputs in terms of Q → Q⁺.</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>K-map / simplify</b> <span>the source inputs as functions of the target inputs + Q.</span></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Worked: JK from a D flip-flop</div>
+        <div class="hint">Want JK behavior; have a D flip-flop (D = Q⁺).</div>
+        <div class="eq" style="text-align:left;margin-top:14px">D = Q⁺ = <b style="color:var(--amber)">JQ′ + K′Q</b></div>
+        <p style="font-size:14px;color:var(--muted);margin-top:12px">Since a D flip-flop latches D → Q⁺, just feed the JK characteristic expression into D. Realize <span class="mono">JQ′ + K′Q</span> with gates — or, as in the flip-flop lab's 5.2 solution, with a 2×1 MUX selected by Q: I<sub>0</sub>=J (when Q=0), I<sub>1</sub>=K′ (when Q=1).</p>
+        <div class="eq" style="margin-top:10px">MUX: Q′·J + Q·K′ = D ✓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATE REDUCTION -->
+  <section id="reduction">
+    <div class="eyebrow mono">state reduction</div>
+    <h2>Shrink the machine before you build it.</h2>
+    <p class="lead">Two states are <b style="color:var(--phos)">equivalent</b> if, for every input, they give the same output <em>and</em> go to equivalent next-states. Merge them — fewer states means fewer flip-flops and less logic. This is Problem 5.12.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="cols c2">
+        <div>
+          <div class="hint mono" style="margin-bottom:6px">BEFORE — 5 states</div>
+          <table><tr><th>State</th><th>next x=0</th><th>next x=1</th><th>out</th></tr>
+          <tr><td>a</td><td>c</td><td>d</td><td>0</td></tr>
+          <tr><td>b</td><td>c</td><td>d</td><td>0</td></tr>
+          <tr><td>c</td><td>a</td><td>d</td><td>0</td></tr>
+          <tr><td>d</td><td>e</td><td>a</td><td>1</td></tr>
+          <tr><td>e</td><td>a</td><td>d</td><td>0</td></tr></table>
+        </div>
+        <div>
+          <div class="hint mono" style="margin-bottom:6px">AFTER — a≡b (same outputs, same next-states), c≡e</div>
+          <table><tr><th>State</th><th>next x=0</th><th>next x=1</th><th>out</th></tr>
+          <tr class="active"><td>a</td><td>c</td><td>d</td><td>0</td></tr>
+          <tr><td>c</td><td>a</td><td>d</td><td>0</td></tr>
+          <tr><td>d</td><td>c</td><td>a</td><td>1</td></tr></table>
+          <div class="hint" style="margin-top:10px">5 → 3 states. b folds into a; e folds into c. A 5-state machine needs 3 flip-flops; a 3-state machine needs only 2.</div>
+        </div>
+      </div>
+      <div class="note"><b>How to find equivalents:</b> group states by output first (only same-output states can be equivalent), then check their next-states land in the same groups. Repeat until groups stop splitting — that's the implication-table method in a nutshell.</div>
+    </div>
+  </section>
+
+  <!-- UNUSED STATES -->
+  <section id="unused">
+    <div class="eyebrow mono">unused states</div>
+    <h2>Don't-cares that can bite.</h2>
+    <p class="lead">With 3 flip-flops you get 8 states — but a design might only use 5 or 6. The leftovers become don't-cares in your K-maps (great — they simplify the logic). But you <b style="color:var(--amber)">must verify</b> the machine can't get stuck in one. This is Problem 5.19 / 6.24.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="steps">
+        <div class="step"><span class="k"></span><div class="t"><b>Mark unused state codes as X</b> <span>in every flip-flop-input K-map — they shrink your groups for free.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>Finish the design</b> <span>with those don't-cares included.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>Now go backward:</b> <span>plug each unused code into your final equations and compute where it actually goes.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>Check it re-enters the valid cycle.</b> <span>If an unused state maps to another unused state that loops forever, the counter is <em>stuck</em> — you must fix the design (force unused states to a known valid state).</span></div></div>
+      </div>
+      <div class="note warn"><b>The trap:</b> treating unused states as don't-cares gives the simplest logic, but if the circuit powers up in one, it might never reach the intended sequence. Always trace the unused states through your <em>final</em> equations — the simplest design isn't always self-correcting.</div>
+    </div>
+  </section>
+
   <!-- COUNTERS -->
   <section id="counters">
     <div class="chapter-tag mono">CHAPTER 6 · counters</div>
@@ -393,6 +541,77 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <button class="btn ghost sm" id="cntReset">Reset</button>
       </div>
       <div class="note"><b>Why it matters:</b> ripple is simpler to wire but its worst-case delay stacks up — <span class="mono">n × t<sub>pd</sub></span> for n flip-flops — which caps the clock frequency (Problem 6.15). Synchronous costs more logic but every output settles together, so it runs faster and cleaner. That trade is the heart of Chapter 6.</div>
+    </div>
+  </section>
+
+  <!-- COUNTER DESIGN -->
+  <section id="counterdesign">
+    <div class="eyebrow mono">counter design</div>
+    <h2>A counter is just a state machine that counts.</h2>
+    <p class="lead">Designing a synchronous counter (Problems 6.17, 6.24, 6.27) is <em>exactly</em> the Chapter 5 design procedure — the states are the count values, and there's usually no external input. Same recipe: state table → excitation → K-map each FF input.</p>
+    <div class="cols c2" style="margin-top:22px">
+      <div class="panel">
+        <div class="panel-title">With T flip-flops <span class="num">simplest for counters</span></div>
+        <div class="hint" style="margin-bottom:10px">2-bit up-counter. T = Q ⊕ Q⁺, so T=1 exactly when the bit must flip.</div>
+        <table style="max-width:340px"><tr><th>A B</th><th>A⁺ B⁺</th><th>T<sub>A</sub></th><th>T<sub>B</sub></th></tr>
+        <tr><td>0 0</td><td>0 1</td><td>0</td><td>1</td></tr>
+        <tr><td>0 1</td><td>1 0</td><td>1</td><td>1</td></tr>
+        <tr><td>1 0</td><td>1 1</td><td>0</td><td>1</td></tr>
+        <tr><td>1 1</td><td>0 0</td><td>1</td><td>1</td></tr></table>
+        <div class="eqgrid" style="margin-top:14px"><div class="e">T<sub>A</sub> = <b>B</b></div><div class="e">T<sub>B</sub> = <b>1</b></div></div>
+        <div class="hint" style="margin-top:8px">B toggles every clock; A toggles when B=1. The classic ripple-carry pattern, made synchronous.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">The general method <span class="num">any sequence</span></div>
+        <div class="steps" style="margin-top:10px">
+          <div class="step"><span class="k"></span><div class="t"><b>List the count sequence</b> <span>as a state table (present count → next count).</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>Pick a flip-flop</b> <span>(T is natural for counters; JK gives most don't-cares).</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>Excitation columns</b> <span>for each FF input.</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>K-map + minimize</b> <span>each input; unused counts = don't-cares (then verify!).</span></div></div>
+        </div>
+        <div class="note" style="margin-top:12px"><b>Arbitrary sequences (6.24):</b> a counter that goes 0,1,3,7,6,4 is designed the same way — just fill the state table with <em>that</em> order, treat the two missing codes as don't-cares, and check they don't trap the machine.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMING CALCULATOR -->
+  <section id="timing">
+    <div class="eyebrow mono">ripple timing</div>
+    <h2>How fast can a ripple counter run?</h2>
+    <p class="lead">In a ripple counter the carry has to propagate through every flip-flop in the worst case (e.g. 0111→1000 flips all four). Total delay = n × t<sub>pd</sub>, and the counter can't be clocked faster than that. This is Problem 6.15 — set the values and see.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="calc">
+        <div class="fld"><label>Flip-flops (n)</label>
+          <input type="range" id="tN" min="2" max="16" value="10" style="width:180px">
+          <div class="hint mono" style="text-align:center">n = <b id="tNlab" style="color:var(--phos)">10</b></div>
+        </div>
+        <div class="fld"><label>Delay per FF (t<sub>pd</sub>)</label>
+          <input type="range" id="tPd" min="1" max="20" value="3" style="width:180px">
+          <div class="hint mono" style="text-align:center"><b id="tPdlab" style="color:var(--phos)">3</b> ns</div>
+        </div>
+        <div class="out">max delay = n × t<sub>pd</sub> = <b id="tDelay">30</b> ns</div>
+        <div class="out">f<sub>max</sub> = 1 / delay = <b id="tFreq">33.3</b> MHz</div>
+      </div>
+      <div class="note"><b>Contrast:</b> a <em>synchronous</em> counter's max delay is just one flip-flop plus the carry logic — it doesn't grow with n the way ripple does. That's the whole reason synchronous counters exist.</div>
+    </div>
+  </section>
+
+  <!-- SERIAL -->
+  <section id="serial">
+    <div class="eyebrow mono">serial arithmetic</div>
+    <h2>Registers that compute one bit at a time.</h2>
+    <p class="lead">Chapter 6's serial adder and serial 2's-complementer (Problems 6.8, 6.10, 6.17) are shift registers with a tiny state machine attached. They trade speed for gate count — one bit per clock instead of all at once.</p>
+    <div class="cols c2" style="margin-top:22px">
+      <div class="panel">
+        <div class="panel-title">Serial adder</div>
+        <p style="font-size:14px;color:var(--muted)">Two shift registers feed a full adder one bit-pair per clock. The <b style="color:var(--amber)">carry</b> is stored in a flip-flop and fed back — so the "state" is literally the carry. Sum bits shift back into register A. After n clocks, A holds the sum.</p>
+        <div class="eq" style="text-align:left">state = carry FF · &nbsp; S = A⊕B⊕C<sub>in</sub>, &nbsp; C<sub>out</sub> stored</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Serial 2's complementer</div>
+        <p style="font-size:14px;color:var(--muted)">Scan from the LSB: copy bits up to and including the first 1, then complement the rest. That "have we passed the first 1 yet?" is a <b style="color:var(--phos)">one-bit state</b> — a 2-state machine driving an XOR. Exactly Problem 5.17 / 6.10.</p>
+        <div class="eq" style="text-align:left">2 states: "before first 1" (copy) · "after" (invert)</div>
+      </div>
     </div>
   </section>
 
@@ -465,6 +684,65 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <button class="btn ghost sm" id="modAuto">Auto-run</button>
       </div>
       <div class="note"><b>The recipe (Problem 6.22):</b> a mod-N counter = a binary counter + a detector for state N-1 (or N) wired to the <span class="mono">load</span>, <span class="mono">clear</span>, or carry input. A NAND gate that fires on the terminal count and clears the flip-flops is the classic BCD (mod-10) trick.</div>
+    </div>
+  </section>
+
+  <!-- CHEAT SHEET + SELF TEST -->
+  <section id="cheat">
+    <div class="eyebrow mono">before the exam</div>
+    <h2>Cheat sheet &amp; self-test.</h2>
+    <p class="lead">The must-know-cold reference, and a gate: tick each row you can do on blank paper. Anything unticked is your remaining work.</p>
+
+    <div class="cols c2" style="margin-top:22px">
+      <div class="panel">
+        <div class="panel-title">Excitation tables — memorize these</div>
+        <div class="hint" style="margin-bottom:10px">Q → Q⁺ ⇒ required inputs. X = don't-care.</div>
+        <table><tr><th>Q→Q⁺</th><th>D</th><th>T</th><th>J K</th><th>S R</th></tr>
+        <tr><td>0→0</td><td>0</td><td>0</td><td>0 <span style="color:var(--indigo)">X</span></td><td>0 <span style="color:var(--indigo)">X</span></td></tr>
+        <tr><td>0→1</td><td>1</td><td>1</td><td>1 <span style="color:var(--indigo)">X</span></td><td>1 0</td></tr>
+        <tr><td>1→0</td><td>0</td><td>1</td><td><span style="color:var(--indigo)">X</span> 1</td><td>0 1</td></tr>
+        <tr><td>1→1</td><td>1</td><td>0</td><td><span style="color:var(--indigo)">X</span> 0</td><td><span style="color:var(--indigo)">X</span> 0</td></tr></table>
+        <div class="eqgrid" style="margin-top:14px">
+          <div class="e">D: Q⁺ = <b>D</b></div>
+          <div class="e">T: Q⁺ = <b>T⊕Q</b></div>
+          <div class="e">JK: Q⁺ = <b>JQ′+K′Q</b></div>
+          <div class="e">SR: Q⁺ = <b>S+R′Q</b></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Design recipe — say it in your sleep</div>
+        <div class="steps" style="margin-top:10px">
+          <div class="step"><span class="k"></span><div class="t"><b>spec / state diagram</b></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>state table</b></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>reduce</b> <span>(merge equivalent states)</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>assign</b> <span>(binary codes → # of FFs)</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>excitation</b> <span>(one column per FF input)</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>K-map each input</b> <span>(vars = FFs + inputs; 1 map per wire)</span></div></div>
+          <div class="step"><span class="k"></span><div class="t"><b>draw circuit</b></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+      <div class="panel-title">Self-test — can you, cold?</div>
+      <div class="hint" style="margin-bottom:14px">Tap each when you can do it on paper without notes. Aim for all green.</div>
+      <div class="checklist" id="checklist">
+        <div class="ci" data-p="5.4"><span class="box"></span><span class="t">Write the D, T, JK, SR characteristic <em>and</em> excitation tables from memory</span><span class="p">5.4</span></div>
+        <div class="ci" data-p="5.2"><span class="t">Convert one flip-flop into another (JK↔D)</span><span class="box"></span><span class="p">5.2</span></div>
+        <div class="ci" data-p="5.6"><span class="box"></span><span class="t">Analyze a circuit: equations → state table → state diagram</span><span class="p">5.6</span></div>
+        <div class="ci" data-p="5.8"><span class="box"></span><span class="t">Read T-flip-flop inputs off a schematic (mind the T⊕Q step)</span><span class="p">5.8</span></div>
+        <div class="ci" data-p="5.12"><span class="box"></span><span class="t">Reduce a state table by merging equivalent states</span><span class="p">5.12</span></div>
+        <div class="ci" data-p="5.16"><span class="box"></span><span class="t">Design with D flip-flops (fold inputs into the map)</span><span class="p">5.16</span></div>
+        <div class="ci" data-p="5.18"><span class="box"></span><span class="t">Design with JK: four maps (J<sub>A</sub>,K<sub>A</sub>,J<sub>B</sub>,K<sub>B</sub>) via excitation</span><span class="p">5.18</span></div>
+        <div class="ci" data-p="5.19"><span class="box"></span><span class="t">Design with unused states as don't-cares, then verify no trap</span><span class="p">5.19</span></div>
+        <div class="ci" data-p="6.17"><span class="box"></span><span class="t">Design a synchronous binary counter (D or T)</span><span class="p">6.17</span></div>
+        <div class="ci" data-p="6.24"><span class="box"></span><span class="t">Design an arbitrary-sequence counter with T flip-flops</span><span class="p">6.24</span></div>
+        <div class="ci" data-p="6.27"><span class="box"></span><span class="t">Design a counter with JK flip-flops</span><span class="p">6.27</span></div>
+        <div class="ci" data-p="6.15"><span class="box"></span><span class="t">Compute ripple-counter max delay and f<sub>max</sub></span><span class="p">6.15</span></div>
+        <div class="ci" data-p="6.22"><span class="box"></span><span class="t">Build a mod-N counter (load / clear / carry methods)</span><span class="p">6.22</span></div>
+        <div class="ci" data-p="6.30"><span class="box"></span><span class="t">Explain ring (n) vs Johnson (2n) counter state counts</span><span class="p">6.30</span></div>
+      </div>
+      <div class="hint" id="clScore" style="margin-top:14px;text-align:center;font-size:14px">0 / 14 confirmed — tap the ones you can do cold.</div>
     </div>
   </section>
 
@@ -870,6 +1148,50 @@ document.addEventListener('keydown',e=>{
     if(vis){ e.preventDefault(); vis.click(); vis.animate([{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:150}); }
   }
 });
+
+/* ---------- JK WORKED K-MAPS ---------- */
+(function(){
+  const host=$('#jkMaps'); if(!host)return;
+  function km2(title, cells, group, term){
+    // cells indexed [A][B]; group: array of "AB" strings to tint
+    const cell=(a,b)=>{ const v=cells[a][b];
+      const cls='cell'+(v==='1'?' one':v==='X'?' x':'')+(group.includes(''+a+b)?' g1':'');
+      return `<td class="${cls}">${v}</td>`; };
+    return `<div class="kmap"><div class="kcap">${title}</div><table>
+      <tr><td class="corner">A\\B</td><th class="h">0</th><th class="h">1</th></tr>
+      <tr><td class="rl">0</td>${cell(0,0)}${cell(0,1)}</tr>
+      <tr><td class="rl">1</td>${cell(1,0)}${cell(1,1)}</tr>
+      </table><div class="kcap" style="color:var(--phos);margin-top:6px">${term}</div></div>`;
+  }
+  host.innerHTML =
+    km2('J<sub>A</sub>', [['0','1'],['X','X']], ['01','11'], 'J_A = B') +
+    km2('K<sub>A</sub>', [['X','X'],['0','1']], ['01','11'], 'K_A = B') +
+    km2('J<sub>B</sub>', [['1','X'],['1','X']], ['00','01','10','11'], 'J_B = 1') +
+    km2('K<sub>B</sub>', [['X','1'],['X','1']], ['00','01','10','11'], 'K_B = 1');
+})();
+
+/* ---------- RIPPLE TIMING CALCULATOR ---------- */
+(function(){
+  const n=$('#tN'), pd=$('#tPd'), nl=$('#tNlab'), pl=$('#tPdlab'), del=$('#tDelay'), fr=$('#tFreq');
+  if(!n)return;
+  function calc(){
+    const N=+n.value, P=+pd.value; nl.textContent=N; pl.textContent=P;
+    const d=N*P; del.textContent=d;
+    fr.textContent=(1000/d).toFixed(1);
+  }
+  n.addEventListener('input',calc); pd.addEventListener('input',calc); calc();
+})();
+
+/* ---------- SELF-TEST CHECKLIST ---------- */
+(function(){
+  const list=$('#checklist'), score=$('#clScore'); if(!list)return;
+  const items=$$('.ci',list);
+  function upd(){ const d=items.filter(i=>i.classList.contains('done')).length;
+    score.textContent=`${d} / ${items.length} confirmed`+(d===items.length?' — Ch5 & 6 clobbered. 💪':' — tap the ones you can do cold.'); }
+  items.forEach(i=>{ i.addEventListener('click',()=>{i.classList.toggle('done');upd();});
+    i.setAttribute('tabindex','0');
+    i.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();i.classList.toggle('done');upd();}}); });
+})();
 })();
 </script>
 </body>
