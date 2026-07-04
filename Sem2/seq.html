@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Logic Lab — Chapters 5 & 6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070d1c; --bg2:#0c1730; --panel:#0f1c3a; --panel2:#132349;
+  --ink:#e3ebfa; --muted:#8698c0; --dim:#5b6b93;
+  --line:#1d2f56; --line2:#274069;
+  --phos:#38e2d0;        /* phosphor teal */
+  --phos-dim:#1d7c76;
+  --amber:#ffc24d;       /* HIGH / logic-1 LED */
+  --amber-dim:#5a4a24;
+  --indigo:#7c9cff;      /* signal / edge */
+  --navy:#2a5bd0;
+  --danger:#ff6b6b;
+  --glow-phos:0 0 12px rgba(56,226,208,.55), 0 0 32px rgba(56,226,208,.25);
+  --glow-amber:0 0 10px rgba(255,194,77,.7), 0 0 26px rgba(255,194,77,.3);
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:
+    radial-gradient(1200px 700px at 80% -10%, rgba(42,91,208,.18), transparent 60%),
+    radial-gradient(900px 600px at 0% 20%, rgba(56,226,208,.08), transparent 55%),
+    var(--bg);
+  color:var(--ink); font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+.mono{font-family:'IBM Plex Mono',monospace}
+h1,h2,h3,.disp{font-family:'Chakra Petch',sans-serif;letter-spacing:.01em}
+a{color:var(--phos);text-decoration:none}
+::selection{background:rgba(56,226,208,.3);color:#fff}
+
+/* grid backdrop */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.4;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px; mask-image:radial-gradient(circle at 50% 30%,#000,transparent 85%);}
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:linear-gradient(180deg,rgba(7,13,28,.9),rgba(7,13,28,.55));border-bottom:1px solid var(--line);}
+.nav-in{max-width:1180px;margin:0 auto;padding:12px 22px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{font-family:'Chakra Petch';font-weight:700;font-size:15px;color:var(--ink);display:flex;align-items:center;gap:9px}
+.brand .dot{width:10px;height:10px;border-radius:50%;background:var(--phos);box-shadow:var(--glow-phos);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.nav-links{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.nav-links a{font-size:12.5px;color:var(--muted);padding:6px 11px;border-radius:8px;transition:.15s;font-weight:500}
+.nav-links a:hover{color:var(--phos);background:rgba(56,226,208,.08)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+section{padding:64px 0;border-bottom:1px solid rgba(29,47,86,.5)}
+.eyebrow{font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--phos);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--phos);box-shadow:var(--glow-phos)}
+h2{font-size:clamp(26px,4vw,40px);margin:.1em 0 .3em;font-weight:600;line-height:1.12}
+.lead{color:var(--muted);font-size:17px;max-width:64ch;margin-bottom:8px}
+.chapter-tag{display:inline-block;font-family:'IBM Plex Mono';font-size:11px;padding:3px 9px;border:1px solid var(--line2);border-radius:20px;color:var(--dim);margin-bottom:20px}
+
+/* HERO */
+.hero{padding:70px 0 48px;position:relative}
+.hero h1{font-size:clamp(38px,7vw,76px);font-weight:700;line-height:1.02;margin:0 0 18px;letter-spacing:-.01em}
+.hero h1 .glow{color:var(--phos);text-shadow:var(--glow-phos)}
+.hero p{font-size:19px;color:var(--muted);max-width:60ch}
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.badge{font-family:'IBM Plex Mono';font-size:12.5px;padding:8px 14px;border:1px solid var(--line2);border-radius:10px;color:var(--ink);background:rgba(15,28,58,.5)}
+.badge b{color:var(--phos)}
+
+/* panel / cards */
+.panel{background:linear-gradient(180deg,var(--panel),rgba(12,23,48,.7));border:1px solid var(--line);border-radius:var(--r);padding:22px;position:relative;overflow:hidden}
+.panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--phos-dim),transparent);opacity:.6}
+.cols{display:grid;gap:20px}
+@media(min-width:820px){.cols.c2{grid-template-columns:1fr 1fr}.cols.c3{grid-template-columns:1fr 1fr 1fr}}
+.panel-title{font-family:'Chakra Petch';font-weight:600;font-size:18px;margin:0 0 4px;display:flex;align-items:center;gap:9px}
+.panel-title .num{font-family:'IBM Plex Mono';font-size:12px;color:var(--phos);border:1px solid var(--phos-dim);border-radius:6px;padding:2px 7px}
+.hint{font-size:13.5px;color:var(--dim);margin-top:2px}
+.note{background:rgba(124,156,255,.07);border-left:3px solid var(--indigo);padding:12px 16px;border-radius:8px;font-size:14.5px;color:#c9d6f5;margin-top:16px}
+.note b{color:var(--indigo)}
+.warn{border-left-color:var(--amber);background:rgba(255,194,77,.08)}
+.warn b{color:var(--amber)}
+
+/* buttons + toggles */
+.btn{font-family:'Chakra Petch';font-weight:600;font-size:14px;border:none;border-radius:10px;padding:11px 18px;cursor:pointer;transition:.15s;color:#04121a;background:var(--phos);box-shadow:var(--glow-phos);letter-spacing:.02em}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--phos);border:1px solid var(--phos-dim);box-shadow:none}
+.btn.ghost:hover{background:rgba(56,226,208,.1)}
+.btn.sm{padding:8px 13px;font-size:12.5px}
+.clockbtn{font-family:'Chakra Petch';font-weight:700;font-size:15px;border:none;border-radius:12px;padding:14px 26px;cursor:pointer;color:#04121a;
+  background:linear-gradient(180deg,#4ff0de,#2bbfb0);box-shadow:var(--glow-phos);display:inline-flex;align-items:center;gap:10px;transition:.12s}
+.clockbtn:hover{transform:translateY(-1px)}
+.clockbtn:active{transform:scale(.97)}
+.clockbtn .ico{font-family:'IBM Plex Mono';font-size:17px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:var(--bg2)}
+.seg button{font-family:'Chakra Petch';font-weight:600;background:transparent;color:var(--muted);border:none;padding:9px 15px;cursor:pointer;font-size:13.5px;transition:.15s}
+.seg button.on{background:var(--phos);color:#04121a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)}
+.seg button:not(.on):hover{color:var(--phos)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.spread{justify-content:space-between}
+
+/* input toggle switch */
+.tog{display:inline-flex;flex-direction:column;align-items:center;gap:7px}
+.tog .lab{font-family:'IBM Plex Mono';font-size:14px;color:var(--muted);font-weight:600}
+.switch{width:60px;height:32px;border-radius:20px;border:1px solid var(--line2);background:var(--bg2);position:relative;cursor:pointer;transition:.2s}
+.switch .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--dim);transition:.2s}
+.switch.hi{background:rgba(255,194,77,.15);border-color:var(--amber)}
+.switch.hi .knob{left:31px;background:var(--amber);box-shadow:var(--glow-amber)}
+.switch .st{position:absolute;font-family:'IBM Plex Mono';font-size:11px;top:9px;color:var(--dim)}
+.switch .st.z{right:9px}.switch .st.o{left:9px;color:var(--amber);opacity:0}
+.switch.hi .st.o{opacity:1}.switch.hi .st.z{opacity:0}
+
+/* LED bit */
+.led{width:46px;height:56px;border-radius:10px;border:1px solid var(--line2);background:var(--bg2);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-weight:600;font-size:22px;color:var(--dim);transition:background .18s,color .18s,box-shadow .18s,border-color .18s;position:relative}
+.led.on{background:rgba(255,194,77,.14);color:var(--amber);border-color:var(--amber);box-shadow:var(--glow-amber)}
+.led.flash{animation:flash .35s}
+@keyframes flash{0%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+.led .sub{position:absolute;bottom:-20px;font-size:11px;color:var(--dim);font-weight:500}
+.ledrow{display:flex;gap:12px;align-items:flex-end}
+.ledrow.lbl{margin-bottom:26px}
+
+/* Q output display */
+.qbox{display:flex;gap:16px;align-items:center}
+.qled{width:74px;height:74px;border-radius:14px;border:2px solid var(--line2);background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'IBM Plex Mono';transition:.2s;position:relative}
+.qled .v{font-size:34px;font-weight:600;color:var(--dim)}
+.qled .n{font-size:11px;color:var(--dim);letter-spacing:.1em}
+.qled.on{border-color:var(--amber);background:rgba(255,194,77,.13);box-shadow:var(--glow-amber)}
+.qled.on .v{color:var(--amber)}
+
+/* tables */
+table{border-collapse:collapse;width:100%;font-family:'IBM Plex Mono';font-size:13.5px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:center}
+th{background:var(--bg2);color:var(--phos);font-weight:600;font-size:12px;letter-spacing:.04em}
+td{color:var(--ink)}
+tr.active td{background:rgba(56,226,208,.14);color:#fff}
+td.x{color:var(--indigo);font-weight:600}
+.eq{font-family:'IBM Plex Mono';font-size:16px;color:var(--phos);background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:12px 16px;margin-top:14px;text-align:center;letter-spacing:.02em}
+.eq b{color:var(--amber)}
+
+/* clock waveform */
+.scope{background:var(--bg);border:1px solid var(--line2);border-radius:12px;padding:6px}
+.scope svg{display:block;width:100%;height:auto}
+
+/* state diagram */
+.stated svg{width:100%;height:auto;max-width:460px;margin:0 auto;display:block}
+.stnode{transition:.2s}
+.stnode.cur circle{fill:rgba(255,194,77,.18);stroke:var(--amber);filter:drop-shadow(0 0 8px rgba(255,194,77,.5))}
+.stnode.cur text{fill:var(--amber)}
+
+/* procedure steps */
+.steps{counter-reset:s;display:grid;gap:10px}
+.step{display:flex;gap:14px;align-items:flex-start;padding:13px 16px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;transition:.15s}
+.step:hover{border-color:var(--phos-dim)}
+.step .k{counter-increment:s;font-family:'IBM Plex Mono';font-weight:600;color:#04121a;background:var(--phos);min-width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:13px}
+.step .k::before{content:counter(s)}
+.step .t{font-size:14.5px}.step .t b{color:var(--ink)}.step .t span{color:var(--muted)}
+
+/* compare counters */
+.cmp{display:grid;gap:18px}
+@media(min-width:760px){.cmp{grid-template-columns:1fr 1fr}}
+.cmp .unit{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:18px}
+.cmp .unit h4{margin:0 0 4px;font-family:'Chakra Petch';font-size:15px}
+.tick{font-family:'IBM Plex Mono';font-size:12px;color:var(--dim);margin-top:10px}
+
+/* chip */
+.chip{font-family:'IBM Plex Mono';font-size:12px;padding:3px 9px;border-radius:20px;border:1px solid var(--line2);color:var(--muted)}
+.chip.a{color:var(--amber);border-color:var(--amber-dim)}
+.chip.p{color:var(--phos);border-color:var(--phos-dim)}
+
+footer{padding:50px 0 70px;text-align:center;color:var(--dim);font-size:13.5px}
+footer .big{font-family:'Chakra Petch';font-size:20px;color:var(--ink);margin-bottom:8px}
+
+.kbd{font-family:'IBM Plex Mono';font-size:12px;background:var(--bg2);border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;padding:2px 7px;color:var(--phos)}
+.count-big{font-family:'IBM Plex Mono';font-size:40px;font-weight:600;color:var(--amber);text-shadow:var(--glow-amber);min-width:70px;text-align:center}
+input[type=range]{-webkit-appearance:none;height:6px;border-radius:6px;background:var(--line2);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--phos);box-shadow:var(--glow-phos);cursor:pointer}
+:focus-visible{outline:2px solid var(--phos);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-in">
+    <div class="brand"><span class="dot"></span>SEQUENTIAL LOGIC LAB</div>
+    <div class="nav-links">
+      <a href="#idea">State</a>
+      <a href="#ff">Flip-Flops</a>
+      <a href="#clock">Clock</a>
+      <a href="#tables">Tables</a>
+      <a href="#analysis">Analysis</a>
+      <a href="#design">Design</a>
+      <a href="#counters">Ripple vs Sync</a>
+      <a href="#shift">Shift Reg</a>
+      <a href="#johnson">Ring/Johnson</a>
+      <a href="#modn">Mod-N</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="chapter-tag mono">DLD · CHAPTERS 5 & 6 · interactive</div>
+    <h1>Circuits that <span class="glow">remember</span>.<br>Clocked, one pulse at a time.</h1>
+    <p>Combinational logic answers <em>now</em>. Sequential logic remembers <em>the past</em> — its output depends on stored <b style="color:var(--ink)">state</b>, updated on each clock edge. Everything below is live: flip the inputs, press the pulse, and watch the machine move.</p>
+    <div class="hero-badges">
+      <div class="badge">4 flip-flops · <b>D T JK SR</b></div>
+      <div class="badge">analysis <b>↔</b> design</div>
+      <div class="badge">ripple <b>vs</b> synchronous</div>
+      <div class="badge">shift · ring · Johnson</div>
+    </div>
+    <div class="scope" style="margin-top:30px" aria-hidden="true">
+      <svg id="heroScope" viewBox="0 0 1100 120" preserveAspectRatio="none"></svg>
+    </div>
+  </header>
+
+  <!-- IDEA -->
+  <section id="idea">
+    <div class="eyebrow mono">the whole idea</div>
+    <h2>State is memory. The clock is the heartbeat.</h2>
+    <p class="lead">A combinational circuit is a function: same inputs → same output, instantly. Add a flip-flop and the circuit gains a <em>present state</em> — so the same input can do different things depending on what came before. The clock decides <em>when</em> state is allowed to change.</p>
+    <div class="cols c2" style="margin-top:26px">
+      <div class="panel">
+        <div class="panel-title">Combinational</div>
+        <div class="hint">output = f(inputs)</div>
+        <p style="font-size:14.5px;color:var(--muted)">No memory. A full adder always gives the same SUM for the same A, B, C<sub>in</sub>. Chapters 1–4 lived here.</p>
+        <div class="eq" style="color:var(--muted)">Y = f(X)</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Sequential</div>
+        <div class="hint">output = f(inputs, <b style="color:var(--amber)">present state</b>)</div>
+        <p style="font-size:14.5px;color:var(--muted)">Has memory in flip-flops. The <em>next state</em> is computed now but only latched on the clock edge. Chapters 5–6 live here.</p>
+        <div class="eq">Y = f(X, <b>Q</b>) &nbsp;·&nbsp; Q<sub>next</sub> = g(X, Q)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLIP-FLOP LAB -->
+  <section id="ff">
+    <div class="chapter-tag mono">CHAPTER 5 · the engine</div>
+    <div class="eyebrow mono">flip-flop lab</div>
+    <h2>Drive it, clock it, watch Q latch.</h2>
+    <p class="lead">Pick a flip-flop, set its inputs, then press <b style="color:var(--phos)">CLOCK</b>. The output <b>Q</b> only changes on the edge — that's what makes it memory. The live row in the characteristic table is the operation you're about to perform.</p>
+
+    <div class="panel" style="margin-top:24px">
+      <div class="row spread" style="margin-bottom:22px">
+        <div class="seg" id="ffType" role="tablist" aria-label="Flip-flop type">
+          <button data-t="D" class="on">D</button>
+          <button data-t="T">T</button>
+          <button data-t="JK">JK</button>
+          <button data-t="SR">SR</button>
+        </div>
+        <div class="seg" id="ffMode" aria-label="Table mode">
+          <button data-m="char" class="on">Characteristic</button>
+          <button data-m="exc">Excitation</button>
+        </div>
+      </div>
+
+      <div class="cols c2" style="align-items:center">
+        <div>
+          <div class="row" id="ffInputs" style="gap:26px;margin-bottom:26px"></div>
+          <div class="row" style="gap:20px">
+            <button class="clockbtn" id="ffClock"><span class="ico">↻</span> CLOCK ▲</button>
+            <div class="qbox">
+              <div class="qled" id="qQ"><div class="v">0</div><div class="n">Q</div></div>
+              <div class="qled" id="qQn"><div class="v">1</div><div class="n">Q′</div></div>
+            </div>
+          </div>
+          <div class="eq" id="ffEq"></div>
+          <div class="hint" id="ffDesc" style="margin-top:12px"></div>
+        </div>
+        <div>
+          <div class="hint mono" id="tblCap" style="margin-bottom:8px"></div>
+          <div id="ffTable"></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><b>Two directions, don't mix them.</b> The <em>characteristic</em> table answers “given the inputs, what is Q<sub>next</sub>?” — you use it for <b>analysis</b>. The <em>excitation</em> table answers “I want Q → Q<sub>next</sub>, what inputs do I need?” — you use it for <b>design</b>. Flip the toggle above to see the same flip-flop from both sides.</div>
+  </section>
+
+  <!-- CLOCK -->
+  <section id="clock">
+    <div class="eyebrow mono">edge triggering</div>
+    <h2>The edge is the moment.</h2>
+    <p class="lead">An edge-triggered flip-flop samples its input only at the instant the clock rises (▲). Between edges the input can wiggle all it wants — nothing latches. Move the input line and watch: the output only steps at the rising edges.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="scope"><svg id="clkScope" viewBox="0 0 1100 260"></svg></div>
+      <div class="row spread" style="margin-top:16px">
+        <div class="row">
+          <button class="btn sm" id="clkToggle">Toggle D input</button>
+          <button class="btn sm ghost" id="clkPlay">Pause sweep</button>
+        </div>
+        <div class="row">
+          <span class="chip p">▲ rising edge = sample</span>
+          <span class="chip a">Q follows D at the edge</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLES -->
+  <section id="tables">
+    <div class="eyebrow mono">memorize these</div>
+    <h2>The four flip-flops, both directions.</h2>
+    <p class="lead">These are the tables that carry all of Chapter 5. The <span class="chip">X</span> don't-cares in the excitation tables are JK's superpower — they collapse your design K-maps. Get the excitation side reflexive.</p>
+    <div class="cols c2" style="margin-top:22px">
+      <div class="panel">
+        <div class="panel-title">Characteristic <span class="num">analysis</span></div>
+        <div class="hint" style="margin-bottom:12px">inputs → Q<sub>next</sub></div>
+        <div id="charAll"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Excitation <span class="num">design</span></div>
+        <div class="hint" style="margin-bottom:12px">Q → Q<sub>next</sub> → required inputs</div>
+        <div id="excAll"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANALYSIS -->
+  <section id="analysis">
+    <div class="eyebrow mono">analysis direction</div>
+    <h2>Circuit → state table → state diagram.</h2>
+    <p class="lead">Analysis reads a machine and figures out what it does. Here's a 2-bit up-counter built from two D flip-flops. Press <b style="color:var(--phos)">CLOCK</b> to walk the states; the table row and the diagram node light up together, so you can see how one describes the other.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="cols c2" style="align-items:center">
+        <div class="stated">
+          <svg id="stateSvg" viewBox="0 0 400 320"></svg>
+          <div class="row" style="justify-content:center;margin-top:12px">
+            <button class="clockbtn" id="stClock"><span class="ico">↻</span> CLOCK ▲</button>
+            <button class="btn ghost sm" id="stReset">Reset to 00</button>
+          </div>
+        </div>
+        <div>
+          <div class="eq" style="text-align:left">D<sub>A</sub> = A ⊕ B &nbsp;&nbsp; D<sub>B</sub> = B′</div>
+          <div class="hint" style="margin:6px 0 12px">Present state <b class="mono" style="color:var(--amber)" id="stNow">00</b> → next state on the edge.</div>
+          <table id="stTable"></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESIGN -->
+  <section id="design">
+    <div class="eyebrow mono">design direction</div>
+    <h2>Spec → circuit. Follow the recipe.</h2>
+    <p class="lead">Design runs the other way: from a word problem to gates. The skeleton never changes — memorize the order like a recipe. Steps 5–6 are where your K-map skill and the excitation tables do the work.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="steps">
+        <div class="step"><span class="k"></span><div class="t"><b>State diagram / word spec.</b> <span>Translate the requirement into states and transitions.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>State table.</b> <span>Present state + inputs → next state + outputs.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>State reduction.</b> <span>Merge equivalent states so you don't build a bloated machine.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>State assignment.</b> <span>Give each state a binary code → fixes how many flip-flops.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>Excitation table.</b> <span>For each transition, look up the FF inputs (D, or J/K, or T…).</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>K-map each flip-flop input.</b> <span>Variables = all state bits <em>and</em> all external inputs. One map per input wire.</span></div></div>
+        <div class="step"><span class="k"></span><div class="t"><b>Draw the circuit.</b> <span>Wire the minimized input equations to the flip-flops.</span></div></div>
+      </div>
+      <div class="note warn"><b>The map-size rule.</b> Every flip-flop input is a function of <em>all present-state bits + all external inputs</em>, so each K-map has <span class="mono">(#flip-flops + #inputs)</span> variables. And you draw <b>one map per input wire</b>: a D flip-flop has 1 input → 1 map; a JK has 2 (J and K) → 2 maps. Two JK flip-flops = four maps.</div>
+    </div>
+  </section>
+
+  <!-- COUNTERS -->
+  <section id="counters">
+    <div class="chapter-tag mono">CHAPTER 6 · counters</div>
+    <div class="eyebrow mono">ripple vs synchronous</div>
+    <h2>Same count. Very different timing.</h2>
+    <p class="lead">Both counters reach the same value — but watch <em>how</em>. In the ripple (asynchronous) counter each flip-flop clocks the next, so the change crawls left-to-right like a wave. In the synchronous counter every flip-flop shares the clock and flips at once. Press the pulse and watch the difference.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="cmp">
+        <div class="unit">
+          <h4 style="color:var(--amber)">Ripple counter <span class="chip a">asynchronous</span></h4>
+          <div class="hint">FF0 clocks FF1 clocks FF2… — carry ripples with delay.</div>
+          <div class="ledrow" id="rippleBits" style="margin-top:18px;justify-content:center"></div>
+          <div class="tick" id="rippleTick">value 0 · propagation visible left→right</div>
+        </div>
+        <div class="unit">
+          <h4 style="color:var(--phos)">Synchronous counter <span class="chip p">one clock</span></h4>
+          <div class="hint">Every flip-flop shares the clock — all bits update together.</div>
+          <div class="ledrow" id="syncBits" style="margin-top:18px;justify-content:center"></div>
+          <div class="tick" id="syncTick">value 0 · all bits latch on the same edge</div>
+        </div>
+      </div>
+      <div class="row" style="justify-content:center;margin-top:22px;gap:16px">
+        <button class="clockbtn" id="cntClock"><span class="ico">↻</span> CLOCK ▲</button>
+        <button class="btn ghost sm" id="cntAuto">Auto-run</button>
+        <button class="btn ghost sm" id="cntReset">Reset</button>
+      </div>
+      <div class="note"><b>Why it matters:</b> ripple is simpler to wire but its worst-case delay stacks up — <span class="mono">n × t<sub>pd</sub></span> for n flip-flops — which caps the clock frequency (Problem 6.15). Synchronous costs more logic but every output settles together, so it runs faster and cleaner. That trade is the heart of Chapter 6.</div>
+    </div>
+  </section>
+
+  <!-- SHIFT REGISTER -->
+  <section id="shift">
+    <div class="eyebrow mono">registers</div>
+    <h2>Shift register: bits march right.</h2>
+    <p class="lead">A shift register is flip-flops in a chain — each clock, every bit steps to its neighbor. Set the serial input, press the pulse, and watch data walk through. This is the backbone of serial adders, serial 2's-complementers, and ring counters.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="row" style="justify-content:center;gap:10px;margin-bottom:8px">
+        <div class="hint mono">serial in →</div>
+        <div class="ledrow" id="shiftBits"></div>
+        <div class="hint mono">→ serial out <b id="shiftOut" style="color:var(--amber)">0</b></div>
+      </div>
+      <div class="row" style="justify-content:center;margin-top:22px;gap:14px">
+        <div class="tog">
+          <div class="lab">SERIAL IN</div>
+          <div class="switch" id="shiftIn" role="switch" tabindex="0"><div class="knob"></div><span class="st o">1</span><span class="st z">0</span></div>
+        </div>
+        <button class="clockbtn" id="shiftClock"><span class="ico">→</span> SHIFT ▲</button>
+        <button class="btn ghost sm" id="shiftClear">Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RING / JOHNSON -->
+  <section id="johnson">
+    <div class="eyebrow mono">circular counters</div>
+    <h2>Ring &amp; Johnson: shift registers that eat their own tail.</h2>
+    <p class="lead">Feed a shift register's output back to its input and it counts by circulating a pattern. A <b style="color:var(--phos)">ring</b> counter walks a single 1 around (n states). A <b style="color:var(--amber)">Johnson</b> counter feeds back the <em>inverted</em> output, doubling the count to 2n states. Auto-run them and watch the patterns cycle.</p>
+    <div class="cols c2" style="margin-top:22px">
+      <div class="panel">
+        <div class="panel-title">Ring counter <span class="num">n states</span></div>
+        <div class="hint" style="margin-bottom:16px">One hot bit circulates: 1000 → 0100 → 0010 → 0001 → …</div>
+        <div class="ledrow" id="ringBits" style="justify-content:center"></div>
+        <div class="row" style="justify-content:center;margin-top:22px;gap:12px">
+          <button class="clockbtn" id="ringClock"><span class="ico">↻</span> CLOCK</button>
+          <button class="btn ghost sm" id="ringAuto">Auto</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Johnson counter <span class="num">2n states</span></div>
+        <div class="hint" style="margin-bottom:16px">Inverted feedback fills then empties: 0000→1000→1100→1110→1111→0111→…</div>
+        <div class="ledrow" id="johnBits" style="justify-content:center"></div>
+        <div class="row" style="justify-content:center;margin-top:22px;gap:12px">
+          <button class="clockbtn" id="johnClock"><span class="ico">↻</span> CLOCK</button>
+          <button class="btn ghost sm" id="johnAuto">Auto</button>
+        </div>
+      </div>
+    </div>
+    <div class="note"><b>Count the states:</b> with 4 flip-flops a ring counter gives <b class="mono">4</b> states, a Johnson counter gives <b class="mono">8</b> = 2n (Problem 6.30). That's why Johnson counters are a cheap way to double your count without adding flip-flops.</div>
+  </section>
+
+  <!-- MOD-N -->
+  <section id="modn">
+    <div class="eyebrow mono">mod-N</div>
+    <h2>Any modulus: count, detect, reset.</h2>
+    <p class="lead">A binary counter naturally counts to 2ⁿ. To make a mod-N counter you detect the moment the count hits N and force it back to 0. Drag the slider to set N and run it — the counter loops through exactly N states.</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="row" style="justify-content:center;gap:26px;flex-wrap:wrap">
+        <div class="count-big" id="modVal">0</div>
+        <div class="ledrow" id="modBits"></div>
+      </div>
+      <div class="row" style="justify-content:center;gap:18px;margin-top:24px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+          <div class="hint mono">MODULUS N = <b id="modNlab" style="color:var(--phos)">10</b></div>
+          <input type="range" id="modN" min="2" max="16" value="10" style="width:200px">
+        </div>
+        <button class="clockbtn" id="modClock"><span class="ico">↻</span> CLOCK</button>
+        <button class="btn ghost sm" id="modAuto">Auto-run</button>
+      </div>
+      <div class="note"><b>The recipe (Problem 6.22):</b> a mod-N counter = a binary counter + a detector for state N-1 (or N) wired to the <span class="mono">load</span>, <span class="mono">clear</span>, or carry input. A NAND gate that fires on the terminal count and clears the flip-flops is the classic BCD (mod-10) trick.</div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="big">That's the whole of Chapters 5 &amp; 6 in your hands.</div>
+    <p style="max-width:60ch;margin:0 auto;color:var(--muted)">Flip-flops in both directions · analysis ↔ design · ripple vs synchronous timing · shift · ring · Johnson · mod-N. Play until the pulse feels obvious — then the problems are just bookkeeping.</p>
+    <p style="margin-top:22px" class="mono">DIGITAL LOGIC DESIGN · sequential logic lab · press <span class="kbd">SPACE</span> anywhere to pulse the focused clock</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- FLIP-FLOP DEFINITIONS ---------- */
+const FF={
+  D:{ inputs:['D'],
+      next:(Q,i)=>i.D,
+      eq:'Q<sub>next</sub> = <b>D</b>',
+      desc:'The simplest memory: Q just copies D at the edge. Design-friendly because D = Q_next directly.',
+      char:[['0','0'],['1','1']], charCols:['D','Q<sub>next</sub>'],
+      exc:[['0','0','0'],['1','1','1']], excCols:['Q','Q<sub>next</sub>','D'] },
+  T:{ inputs:['T'],
+      next:(Q,i)=>i.T?Q^1:Q,
+      eq:'Q<sub>next</sub> = <b>T ⊕ Q</b>',
+      desc:'Toggle: T=1 flips the state, T=0 holds. The natural counter flip-flop.',
+      char:[['0','Q'],['1','Q′']], charCols:['T','Q<sub>next</sub>'],
+      exc:[['0','0','0'],['0','1','1'],['1','0','1'],['1','1','0']], excCols:['Q','Q<sub>next</sub>','T'] },
+  JK:{ inputs:['J','K'],
+      next:(Q,i)=> (i.J&&i.K)?Q^1 : i.J?1 : i.K?0 : Q,
+      eq:'Q<sub>next</sub> = <b>JQ′ + K′Q</b>',
+      desc:'The universal one: hold (00), reset (01), set (10), toggle (11). Its excitation X’s shrink design maps.',
+      char:[['0','0','Q'],['0','1','0'],['1','0','1'],['1','1','Q′']], charCols:['J','K','Q<sub>next</sub>'],
+      exc:[['0','0','0','X'],['0','1','1','X'],['1','0','X','1'],['1','1','X','0']], excCols:['Q','Q<sub>next</sub>','J','K'] },
+  SR:{ inputs:['S','R'],
+      next:(Q,i)=> (i.S&&i.R)?'!' : i.S?1 : i.R?0 : Q,
+      eq:'Q<sub>next</sub> = <b>S + R′Q</b> &nbsp;(SR=11 forbidden)',
+      desc:'Set (10), reset (01), hold (00). S=R=1 is invalid — the reason JK exists.',
+      char:[['0','0','Q'],['0','1','0'],['1','0','1'],['1','1','—']], charCols:['S','R','Q<sub>next</sub>'],
+      exc:[['0','0','0','X'],['0','1','1','0'],['1','0','0','1'],['1','1','X','0']], excCols:['Q','Q<sub>next</sub>','S','R'] }
+};
+
+/* ---------- FLIP-FLOP LAB ---------- */
+let ffType='D', ffMode='char', ffQ=0, ffIn={D:0,T:0,J:0,K:0,S:0,R:0};
+const inputsEl=$('#ffInputs'), qQ=$('#qQ'), qQn=$('#qQn'), ffEq=$('#ffEq'), ffDesc=$('#ffDesc'),
+      ffTableEl=$('#ffTable'), tblCap=$('#tblCap');
+
+function makeSwitch(name){
+  const wrap=document.createElement('div'); wrap.className='tog';
+  wrap.innerHTML=`<div class="lab">${name}</div>
+    <div class="switch" role="switch" tabindex="0" aria-label="${name} input">
+      <div class="knob"></div><span class="st o">1</span><span class="st z">0</span></div>`;
+  const sw=wrap.querySelector('.switch');
+  const toggle=()=>{ ffIn[name]^=1; sw.classList.toggle('hi',!!ffIn[name]); renderFFTable(); };
+  sw.addEventListener('click',toggle);
+  sw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggle();}});
+  return wrap;
+}
+function renderFFInputs(){
+  inputsEl.innerHTML='';
+  FF[ffType].inputs.forEach(n=>inputsEl.appendChild(makeSwitch(n)));
+}
+function renderFFTable(){
+  const def=FF[ffType];
+  if(ffMode==='char'){
+    tblCap.innerHTML='CHARACTERISTIC — inputs → next state';
+    let cols=def.charCols.map(c=>`<th>${c}</th>`).join('');
+    let curKey=def.inputs.map(n=>ffIn[n]).join('');
+    let rows=def.char.map(r=>{
+      const key=r.slice(0,def.inputs.length).join('');
+      const active=(key===curKey)?' class="active"':'';
+      return `<tr${active}>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`;
+    }).join('');
+    ffTableEl.innerHTML=`<table><tr>${cols}</tr>${rows}</table>`;
+  }else{
+    tblCap.innerHTML='EXCITATION — desired transition → inputs';
+    let cols=def.excCols.map(c=>`<th>${c}</th>`).join('');
+    let rows=def.exc.map(r=>`<tr>${r.map((c,i)=>{
+      const isX=(c==='X'); return `<td${isX?' class="x"':''}>${c}</td>`;
+    }).join('')}</tr>`).join('');
+    ffTableEl.innerHTML=`<table><tr>${cols}</tr>${rows}</table>`;
+  }
+}
+function renderQ(){
+  qQ.classList.toggle('on',ffQ===1); qQ.querySelector('.v').textContent=ffQ;
+  qQn.classList.toggle('on',ffQ===0); qQn.querySelector('.v').textContent=ffQ^1;
+}
+function ffClock(){
+  const nx=FF[ffType].next(ffQ,ffIn);
+  if(nx==='!'||nx==='—'){ // invalid SR
+    qQ.animate([{boxShadow:'0 0 0 2px var(--danger)'},{boxShadow:'none'}],{duration:500});
+    ffDesc.innerHTML='<span style="color:var(--danger)">SR = 1,1 is forbidden — output undefined.</span>';
+    return;
+  }
+  ffQ=nx; renderQ();
+  qQ.querySelector('.v').animate([{transform:'translateY(-6px)',opacity:.4},{transform:'none',opacity:1}],{duration:reduce?1:260});
+  ffDesc.innerHTML=FF[ffType].desc;
+}
+function setType(t){
+  ffType=t; ffIn={D:0,T:0,J:0,K:0,S:0,R:0};
+  $$('#ffType button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  ffEq.innerHTML=FF[t].eq; ffDesc.innerHTML=FF[t].desc;
+  renderFFInputs(); renderFFTable();
+}
+$$('#ffType button').forEach(b=>b.addEventListener('click',()=>setType(b.dataset.t)));
+$$('#ffMode button').forEach(b=>b.addEventListener('click',()=>{
+  ffMode=b.dataset.m; $$('#ffMode button').forEach(x=>x.classList.toggle('on',x===b)); renderFFTable();
+}));
+$('#ffClock').addEventListener('click',ffClock);
+setType('D'); renderQ();
+
+/* ---------- REFERENCE TABLES ---------- */
+function refTable(def,mode){
+  if(mode==='char'){
+    const cols=def.charCols.map(c=>`<th>${c}</th>`).join('');
+    const rows=def.char.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('');
+    return `<table><tr>${cols}</tr>${rows}</table>`;
+  }else{
+    const cols=def.excCols.map(c=>`<th>${c}</th>`).join('');
+    const rows=def.exc.map(r=>`<tr>${r.map(c=>`<td${c==='X'?' class="x"':''}>${c}</td>`).join('')}</tr>`).join('');
+    return `<table><tr>${cols}</tr>${rows}</table>`;
+  }
+}
+function buildRefs(el,mode){
+  el.innerHTML=['D','T','JK','SR'].map(t=>
+    `<div style="margin-bottom:16px"><div class="mono" style="color:var(--amber);font-size:13px;margin-bottom:6px">${t} flip-flop</div>${refTable(FF[t],mode)}</div>`
+  ).join('');
+}
+buildRefs($('#charAll'),'char'); buildRefs($('#excAll'),'exc');
+
+/* ---------- CLOCK SCOPE (edge triggering) ---------- */
+(function(){
+  const svg=$('#clkScope'); const W=1100,H=260;
+  const cy=70, dy=180; const amp=40; let t=0, playing=!reduce, dHigh=0;
+  const edges=[]; // x positions of rising edges
+  let path1,path2,play=null,sweep;
+  function build(){
+    svg.innerHTML='';
+    // labels
+    const mk=(x,y,txt,cls)=>{const e=document.createElementNS('http://www.w3.org/2000/svg','text');e.setAttribute('x',x);e.setAttribute('y',y);e.setAttribute('fill',cls);e.setAttribute('font-family','IBM Plex Mono');e.setAttribute('font-size','15');e.textContent=txt;svg.appendChild(e);};
+    mk(10,cy-46,'CLK','#38e2d0'); mk(10,dy-46,'D → Q','#ffc24d');
+    path1=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path1.setAttribute('fill','none');path1.setAttribute('stroke','#38e2d0');path1.setAttribute('stroke-width','2.5');svg.appendChild(path1);
+    path2=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path2.setAttribute('fill','none');path2.setAttribute('stroke','#ffc24d');path2.setAttribute('stroke-width','2.5');svg.appendChild(path2);
+    sweep=document.createElementNS('http://www.w3.org/2000/svg','line');
+    sweep.setAttribute('stroke','rgba(124,156,255,.6)');sweep.setAttribute('stroke-width','2');sweep.setAttribute('y1',20);sweep.setAttribute('y2',H-20);svg.appendChild(sweep);
+  }
+  // clock: period 120px. rising edge at start of each period
+  const P=120;
+  function clkAt(x){ return (x % P) < P/2 ? 0 : 1; } // low first half, high second half -> rising edge at P/2
+  // D input timeline: piecewise from stored toggles; we simulate D following a random-ish user pattern
+  let dTimeline=[{x:0,v:0}];
+  function dAt(x){ let v=0; for(const seg of dTimeline){ if(seg.x<=x) v=seg.v; } return v; }
+  // Q follows D sampled at rising edges (x = k*P + P/2)
+  function qAt(x){
+    let q=0;
+    for(let e=P/2;e<=x;e+=P){ q=dAt(e-1); }
+    return q;
+  }
+  function draw(){
+    // clock path
+    let d1='M0 '+(cy+amp*0);
+    let prev=null;
+    for(let x=0;x<=W;x+=2){
+      const y=cy-(clkAt(x)? amp : -amp*0)+ (clkAt(x)?-0:0);
+      const yy=cy-(clkAt(x)?amp:0);
+      if(prev!==null && prev!==clkAt(x)){ d1+=`L${x} ${cy-(prev?amp:0)}L${x} ${cy-(clkAt(x)?amp:0)}`;}
+      d1+=`L${x} ${yy}`; prev=clkAt(x);
+    }
+    path1.setAttribute('d',d1);
+    // D/Q path (show Q, the latched output)
+    let d2=''; prev=null;
+    for(let x=0;x<=W;x+=2){
+      const yy=dy-(qAt(x)?amp:0);
+      if(prev!==null && prev!==qAt(x)){ d2+=`L${x} ${dy-(prev?amp:0)}L${x} ${dy-(qAt(x)?amp:0)}`; }
+      d2+=(d2===''?'M':'L')+`${x} ${yy}`; prev=qAt(x);
+    }
+    path2.setAttribute('d',d2);
+    // edge markers
+    $$('.edgeMark',svg).forEach(e=>e.remove());
+    for(let x=P/2;x<=W;x+=P){
+      const m=document.createElementNS('http://www.w3.org/2000/svg','line');
+      m.setAttribute('class','edgeMark');m.setAttribute('x1',x);m.setAttribute('x2',x);m.setAttribute('y1',cy-amp-6);m.setAttribute('y2',dy+6);
+      m.setAttribute('stroke','rgba(56,226,208,.18)');m.setAttribute('stroke-dasharray','3 5');svg.appendChild(m);
+    }
+  }
+  function frame(){
+    if(playing){ t=(t+3)%W; sweep.setAttribute('x1',t);sweep.setAttribute('x2',t); }
+    requestAnimationFrame(frame);
+  }
+  build(); draw(); if(!reduce) requestAnimationFrame(frame);
+  let dcur=0;
+  $('#clkToggle').addEventListener('click',()=>{
+    dcur^=1; const x=Math.round(t); dTimeline.push({x,v:dcur}); if(dTimeline.length>40)dTimeline.splice(0,20); draw();
+  });
+  $('#clkPlay').addEventListener('click',(e)=>{ playing=!playing; e.target.textContent=playing?'Pause sweep':'Resume sweep'; });
+})();
+
+/* ---------- HERO SCOPE (ambient clock trace) ---------- */
+(function(){
+  const svg=$('#heroScope'); if(!svg)return; const W=1100,H=120,P=90,amp=30,cy=70;
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('fill','none');p.setAttribute('stroke','#38e2d0');p.setAttribute('stroke-width','2.5');
+  p.setAttribute('opacity','.85');svg.appendChild(p);
+  const p2=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p2.setAttribute('fill','none');p2.setAttribute('stroke','#ffc24d');p2.setAttribute('stroke-width','2');p2.setAttribute('opacity','.5');svg.appendChild(p2);
+  let off=0;
+  function sq(x,per,a,base){ return ((x%per)<per/2)?base:base-a; }
+  function build(shift){
+    let d='',prev=null;
+    for(let x=0;x<=W;x+=2){const v=(((x+shift)%P)<P/2)?0:1;const yy=cy-(v?amp:0);
+      if(prev!==null&&prev!==v){d+=`L${x} ${cy-(prev?amp:0)}L${x} ${yy}`;} d+=(d===''?'M':'L')+`${x} ${yy}`;prev=v;}
+    return d;
+  }
+  function build2(shift){
+    let d='',prev=null,per=180;
+    for(let x=0;x<=W;x+=2){const v=(((x+shift)%per)<per/2)?0:1;const yy=cy-(v?amp*.7:0);
+      if(prev!==null&&prev!==v){d+=`L${x} ${cy-(prev?amp*.7:0)}L${x} ${yy}`;} d+=(d===''?'M':'L')+`${x} ${yy}`;prev=v;}
+    return d;
+  }
+  function frame(){ off=(off+2)%P; p.setAttribute('d',build(off)); p2.setAttribute('d',build2(off*.5)); requestAnimationFrame(frame);}
+  p.setAttribute('d',build(0)); p2.setAttribute('d',build2(0));
+  if(!reduce) requestAnimationFrame(frame);
+})();
+
+/* ---------- STATE DIAGRAM (2-bit up counter) ---------- */
+(function(){
+  const svg=$('#stateSvg'); const states=['00','01','10','11'];
+  const pos=[[200,70],[330,200],[200,300],[70,200]]; // ring positions for 00,01,10,11 (visual order)
+  let cur=0; // index into states as binary value 0..3
+  const idxOf=v=>v; // state value == index
+  function build(){
+    svg.innerHTML='';
+    const NS='http://www.w3.org/2000/svg';
+    // arrows around the ring 0->1->2->3->0
+    const order=[0,1,2,3];
+    for(let i=0;i<4;i++){
+      const a=pos[i], b=pos[(i+1)%4];
+      const ln=document.createElementNS(NS,'path');
+      const mx=(a[0]+b[0])/2, my=(a[1]+b[1])/2;
+      const cx=200+(mx-200)*1.35, cy=185+(my-185)*1.35;
+      ln.setAttribute('d',`M${a[0]} ${a[1]} Q ${cx} ${cy} ${b[0]} ${b[1]}`);
+      ln.setAttribute('fill','none');ln.setAttribute('stroke','#274069');ln.setAttribute('stroke-width','2');ln.setAttribute('marker-end','url(#arr)');
+      svg.appendChild(ln);
+    }
+    const defs=document.createElementNS(NS,'defs');
+    defs.innerHTML='<marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#274069"/></marker>';
+    svg.appendChild(defs);
+    states.forEach((s,i)=>{
+      const g=document.createElementNS(NS,'g'); g.setAttribute('class','stnode'); g.dataset.i=i;
+      const c=document.createElementNS(NS,'circle');
+      c.setAttribute('cx',pos[i][0]);c.setAttribute('cy',pos[i][1]);c.setAttribute('r',34);
+      c.setAttribute('fill','#0c1730');c.setAttribute('stroke','#274069');c.setAttribute('stroke-width','2');
+      const t=document.createElementNS(NS,'text');
+      t.setAttribute('x',pos[i][0]);t.setAttribute('y',pos[i][1]+6);t.setAttribute('text-anchor','middle');
+      t.setAttribute('fill','#8698c0');t.setAttribute('font-family','IBM Plex Mono');t.setAttribute('font-size','19');t.setAttribute('font-weight','600');
+      t.textContent=s;
+      g.appendChild(c);g.appendChild(t);svg.appendChild(g);
+    });
+    highlight();
+  }
+  function highlight(){
+    $$('.stnode',svg).forEach(g=>g.classList.toggle('cur',+g.dataset.i===cur));
+    $('#stNow').textContent=states[cur];
+    buildTable();
+  }
+  function buildTable(){
+    const t=$('#stTable');
+    let rows=states.map((s,i)=>{
+      const nx=(i+1)%4;
+      return `<tr class="${i===cur?'active':''}"><td>${s}</td><td>${states[nx]}</td></tr>`;
+    }).join('');
+    t.innerHTML=`<tr><th>present</th><th>next</th></tr>${rows}`;
+  }
+  $('#stClock').addEventListener('click',()=>{ cur=(cur+1)%4; highlight(); });
+  $('#stReset').addEventListener('click',()=>{ cur=0; highlight(); });
+  build();
+})();
+
+/* ---------- LED helpers ---------- */
+function ledEl(sub){ const d=document.createElement('div'); d.className='led'; d.innerHTML='0'+(sub!==undefined?`<span class="sub">${sub}</span>`:''); return d; }
+function renderBits(container,bits,subs){ // bits MSB..LSB order as given
+  container.innerHTML='';
+  bits.forEach((b,i)=>{ const d=document.createElement('div'); d.className='led'+(b?' on':'');
+    d.innerHTML=b+(subs?`<span class="sub">${subs[i]}</span>`:''); container.appendChild(d); });
+}
+
+/* ---------- RIPPLE vs SYNC COUNTERS ---------- */
+(function(){
+  const rEl=$('#rippleBits'), sEl=$('#syncBits'), rT=$('#rippleTick'), sT=$('#syncTick');
+  let val=0; let auto=null;
+  const N=4;
+  function toBits(v){ return [3,2,1,0].map(i=>(v>>i)&1); } // MSB..LSB
+  function renderSync(){ renderBits(sEl,toBits(val),['b3','b2','b1','b0']); sT.textContent='value '+val+' · all bits latch on the same edge'; }
+  function renderRippleStatic(){ renderBits(rEl,toBits(val),['b3','b2','b1','b0']); rT.textContent='value '+val+' · propagation visible left→right'; }
+  function rippleAnimate(){
+    // increment bit0 first, carry toggles higher bits with stagger
+    const old=val; val=(val+1)&15;
+    const bitsOld=[0,1,2,3].map(i=>(old>>i)&1); // LSB..MSB
+    let delay=0, carry=1;
+    const cells=[...rEl.children]; // index 0 = MSB (b3)
+    for(let i=0;i<N && carry;i++){
+      const msbIndex=N-1-i; // map LSB index i -> DOM index (MSB first)
+      const at=delay;
+      setTimeout(()=>{
+        const nv=(val>> i)&1;
+        const c=cells[msbIndex];
+        c.className='led'+(nv?' on':'')+' flash'; c.firstChild ? c.innerHTML=nv+'<span class="sub">b'+i+'</span>' : null;
+        setTimeout(()=>c.classList.remove('flash'),300);
+      }, reduce?0:at);
+      const oldbit=bitsOld[i];
+      carry = oldbit===1?1:0;
+      delay+=reduce?0:170;
+    }
+    rT.textContent='value '+val+' · carry rippled through '+Math.max(1,Math.ceil(delay/170))+' stage(s)';
+  }
+  function syncTickFn(){ val===0; renderSync();
+    [...sEl.children].forEach(c=>{c.classList.add('flash');setTimeout(()=>c.classList.remove('flash'),300);}); }
+  function clock(){
+    // sync updates instantly to new val; ripple animates to same val
+    const next=(val+1)&15;
+    // do sync first visually (uses val before ripple mutates) -> compute from a shared counter
+    // We keep a single val; render sync to next, ripple animates from old to next.
+    // Snapshot:
+    const target=next;
+    // ripple animate (mutates val to target)
+    rippleAnimate();
+    // sync: set to same target
+    // (val already == target after rippleAnimate)
+    renderSync();
+    [...sEl.children].forEach(c=>{c.classList.add('flash');setTimeout(()=>c.classList.remove('flash'),300);});
+  }
+  $('#cntClock').addEventListener('click',clock);
+  $('#cntReset').addEventListener('click',()=>{ val=0; renderRippleStatic(); renderSync(); });
+  $('#cntAuto').addEventListener('click',e=>{
+    if(auto){clearInterval(auto);auto=null;e.target.textContent='Auto-run';}
+    else{auto=setInterval(clock,900);e.target.textContent='Stop';}
+  });
+  renderRippleStatic(); renderSync();
+})();
+
+/* ---------- SHIFT REGISTER ---------- */
+(function(){
+  const el=$('#shiftBits'), inSw=$('#shiftIn'), outEl=$('#shiftOut');
+  let cells=[0,0,0,0]; let sin=0;
+  function render(){ renderBits(el,cells,['Q0','Q1','Q2','Q3']); }
+  function shift(){
+    const out=cells[3]; outEl.textContent=out;
+    cells=[sin,cells[0],cells[1],cells[2]];
+    render();
+    [...el.children].forEach((c,i)=>{c.animate([{transform:'translateX(-14px)',opacity:.4},{transform:'none',opacity:1}],{duration:reduce?1:220,delay:i*30});});
+  }
+  inSw.addEventListener('click',()=>{sin^=1;inSw.classList.toggle('hi',!!sin);});
+  inSw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();sin^=1;inSw.classList.toggle('hi',!!sin);}});
+  $('#shiftClock').addEventListener('click',shift);
+  $('#shiftClear').addEventListener('click',()=>{cells=[0,0,0,0];render();outEl.textContent='0';});
+  render();
+})();
+
+/* ---------- RING & JOHNSON ---------- */
+function circular(elId,init,step,label){
+  const el=$('#'+elId); let cells=init.slice(); let auto=null;
+  function render(){ renderBits(el,cells); }
+  function clk(){ cells=step(cells); render();
+    [...el.children].forEach(c=>{c.animate([{transform:'scale(1.12)'},{transform:'scale(1)'}],{duration:reduce?1:200});}); }
+  render();
+  return {clk,toggleAuto:(btn)=>{ if(auto){clearInterval(auto);auto=null;btn.textContent='Auto';} else {auto=setInterval(clk,650);btn.textContent='Stop';} }};
+}
+const ring=circular('ringBits',[1,0,0,0], c=>[c[3],c[0],c[1],c[2]]); // rotate right
+$('#ringClock').addEventListener('click',ring.clk);
+$('#ringAuto').addEventListener('click',e=>ring.toggleAuto(e.target));
+const john=circular('johnBits',[0,0,0,0], c=>[c[3]^1,c[0],c[1],c[2]]); // inverted feedback
+$('#johnClock').addEventListener('click',john.clk);
+$('#johnAuto').addEventListener('click',e=>john.toggleAuto(e.target));
+
+/* ---------- MOD-N ---------- */
+(function(){
+  const valEl=$('#modVal'), bitsEl=$('#modBits'), slider=$('#modN'), nLab=$('#modNlab');
+  let N=10, val=0, auto=null;
+  function bits(v){ return [3,2,1,0].map(i=>(v>>i)&1); }
+  function render(){ valEl.textContent=val; renderBits(bitsEl,bits(val),['b3','b2','b1','b0']); }
+  function clk(){ val++; if(val>=N){ val=0;
+      bitsEl.animate([{filter:'brightness(2)'},{filter:'none'}],{duration:reduce?1:300}); } render(); }
+  slider.addEventListener('input',()=>{ N=+slider.value; nLab.textContent=N; if(val>=N)val=0; render(); });
+  $('#modClock').addEventListener('click',clk);
+  $('#modAuto').addEventListener('click',e=>{ if(auto){clearInterval(auto);auto=null;e.target.textContent='Auto-run';}
+    else{auto=setInterval(clk,600);e.target.textContent='Stop';} });
+  render();
+})();
+
+/* ---------- SPACE pulses the focused clock (or first visible) ---------- */
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space' && !/INPUT|TEXTAREA/.test(document.activeElement.tagName) && document.activeElement.getAttribute('role')!=='switch'){
+    // find nearest clock button in viewport
+    const clocks=$$('.clockbtn');
+    const vis=clocks.find(b=>{const r=b.getBoundingClientRect();return r.top>0&&r.top<innerHeight-40;});
+    if(vis){ e.preventDefault(); vis.click(); vis.animate([{transform:'scale(.94)'},{transform:'scale(1)'}],{duration:150}); }
+  }
+});
+})();
+</script>
+</body>
+</html>
