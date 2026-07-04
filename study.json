@@ -63,7 +63,8 @@
               "resources": [
                 { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "interactive study lab · offline" },
                 { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external" },
-                { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external" }
+                { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external" } ,
+                { "label" : "Sequential Logic Study Lab","Sem2/seq.html","href": "Sem2/seq.html", "type": "internal", "note": "interactive study lab · offline" }
               ]
             },
             {
