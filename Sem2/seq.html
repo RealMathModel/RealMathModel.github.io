@@ -212,8 +212,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .ci.done .t{color:var(--dim);text-decoration:line-through}
 .ci .t{font-size:14px}
 .ci .p{margin-left:auto;font-family:'IBM Plex Mono';font-size:11px;color:var(--dim);flex-shrink:0}
-:focus-visible{outline:2px solid var(--phos);outline-offset:2px}
+/* checkpoints */
+.ckpt{margin-top:24px;background:linear-gradient(180deg,rgba(56,226,208,.07),rgba(12,23,48,.35));border:1px solid var(--phos-dim);border-radius:12px;padding:16px 18px}
+.ckpt .ch{font-family:'Chakra Petch';font-weight:600;font-size:12px;color:var(--phos);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.ckpt .ch::before{content:"◇";font-size:14px}
+.ckpt .q{font-size:15px;color:var(--ink);margin-bottom:6px}
+.ckpt .a{font-size:14px;color:#c9d6f5;background:var(--bg2);border-left:3px solid var(--phos);border-radius:8px;padding:11px 14px;margin:10px 0 4px;display:none}
+.ckpt.open .a{display:block;animation:fadein .3s}
+@keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.ckpt .go{font-family:'IBM Plex Mono';font-size:13px;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.probchip{font-family:'IBM Plex Mono';font-size:12px;background:rgba(255,194,77,.12);border:1px solid var(--amber-dim);color:var(--amber);border-radius:6px;padding:3px 9px;font-weight:500}
+/* scroll reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+/* definitions */
+.defs{display:grid;gap:14px}
+@media(min-width:760px){.defs{grid-template-columns:1fr 1fr}}
+.def{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:16px 18px;border-left:3px solid var(--indigo)}
+.def h4{font-family:'Chakra Petch';font-size:15px;margin:0 0 6px;color:var(--ink)}
+.def p{font-size:14px;color:var(--muted);margin:0}
+.def .vs{color:var(--phos);font-weight:600}
+/* clocked loop */
+#loopSvg{width:100%;height:auto}
+.loopbox{transition:.15s}
+.loopbox.flash rect{fill:rgba(255,194,77,.2);stroke:var(--amber);filter:drop-shadow(0 0 10px rgba(255,194,77,.6))}
+.loopbox.flash text{fill:var(--amber)}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
+:focus-visible{outline:2px solid var(--phos);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -226,12 +251,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <a href="#idea">State</a>
       <a href="#ff">Flip-Flops</a>
       <a href="#clock">Clock</a>
+      <a href="#loop">The loop</a>
       <a href="#tables">Tables</a>
       <a href="#analysis">Analysis</a>
       <a href="#design">Design</a>
       <a href="#jkdesign">JK worked</a>
       <a href="#reduction">Reduction</a>
       <a href="#unused">Unused</a>
+      <a href="#concepts">Definitions</a>
       <a href="#counters">Ripple vs Sync</a>
       <a href="#counterdesign">Counter design</a>
       <a href="#timing">Timing</a>
@@ -343,6 +370,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- CLOCKED LOOP -->
+  <section id="loop">
+    <div class="eyebrow mono">the clocked loop</div>
+    <h2>A feedback loop, broken by the clock.</h2>
+    <p class="lead">This is what makes it sequential. The stored state is <em>always</em> fed back to the logic, which is <em>always</em> computing the next inputs. But nothing moves through the flip-flops until the edge — then everything latches <b style="color:var(--amber)">at once</b>. Watch one lap: read state → compute → edge latches → new state → repeat.</p>
+    <div class="panel" style="margin-top:22px">
+      <svg id="loopSvg" viewBox="0 0 900 260"></svg>
+      <div class="row spread" style="margin-top:14px">
+        <button class="btn sm" id="loopPlay">Pause</button>
+        <div class="row"><span class="chip p">present state feeds back continuously</span><span class="chip a">edge = everyone latches together</span></div>
+      </div>
+    </div>
+    <div class="note"><b>Why the break matters:</b> wire an output straight back to its input with no flip-flop and you get a race — it spins or latches unpredictably. The flip-flop cuts the loop so signals only pass on the edge, turning a chaotic instant-loop into an orderly <em>one-step-per-clock</em> sequence. That's the whole idea of <em>synchronous</em> sequential logic.</div>
   </section>
 
   <!-- TABLES -->
@@ -684,6 +726,23 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         <button class="btn ghost sm" id="modAuto">Auto-run</button>
       </div>
       <div class="note"><b>The recipe (Problem 6.22):</b> a mod-N counter = a binary counter + a detector for state N-1 (or N) wired to the <span class="mono">load</span>, <span class="mono">clear</span>, or carry input. A NAND gate that fires on the terminal count and clears the flip-flops is the classic BCD (mod-10) trick.</div>
+    </div>
+  </section>
+
+  <!-- CONCEPTS & DEFINITIONS -->
+  <section id="concepts">
+    <div class="eyebrow mono">know it or not</div>
+    <h2>The definitions, stated plainly.</h2>
+    <p class="lead">These are the "define this / true or false" exam points — the ones no problem drills. Be able to <em>say</em> each, not just use it.</p>
+    <div class="defs" style="margin-top:22px">
+      <div class="def"><h4>Moore <span class="vs">vs</span> Mealy</h4><p><b>Moore:</b> output depends on the <em>present state only</em> — output is glitch-free and changes only on the clock. <b>Mealy:</b> output depends on state <em>and</em> current input — reacts one clock sooner and often needs fewer states, but its output can change mid-cycle.</p></div>
+      <div class="def"><h4>Synchronous <span class="vs">vs</span> asynchronous</h4><p><b>Synchronous:</b> every flip-flop shares one common clock — all update together. <b>Asynchronous (ripple):</b> a flip-flop's clock comes from another flip-flop's output, so changes propagate with delay. Synchronous is faster and race-free; ripple is simpler but slower.</p></div>
+      <div class="def"><h4>Latch <span class="vs">vs</span> flip-flop</h4><p><b>Latch:</b> level-sensitive — transparent whenever the enable is active, so the output tracks the input during that whole level. <b>Flip-flop:</b> edge-triggered — samples only at the clock edge. Flip-flops are what you build synchronous machines from.</p></div>
+      <div class="def"><h4>Master–slave</h4><p>Two latches in series with opposite clock phases. The master captures while the clock is high; the slave passes it out when the clock goes low. Net effect: the flip-flop behaves as if it captured on one edge and is immune to input changes during the active level (avoids the "ones-catching" problem).</p></div>
+      <div class="def"><h4>Setup &amp; hold time</h4><p>The data input must be <b>stable</b> for a <em>setup</em> window <em>before</em> the clock edge and a <em>hold</em> window <em>after</em> it. Violate either and the flip-flop can go <b>metastable</b> — settling to an unpredictable value.</p></div>
+      <div class="def"><h4>State equivalence</h4><p>Two states are <b>equivalent</b> if, for <em>every</em> input, they produce the same output <em>and</em> transition to equivalent next-states. Equivalent states can be merged — that's state reduction, and it cuts the flip-flop count.</p></div>
+      <div class="def"><h4>Characteristic <span class="vs">vs</span> excitation</h4><p><b>Characteristic:</b> inputs → Q<sub>next</sub> (used in analysis). <b>Excitation:</b> desired Q → Q<sub>next</sub> → required inputs (used in design). Inverse views of the same flip-flop.</p></div>
+      <div class="def"><h4>Register <span class="vs">vs</span> counter</h4><p>A <b>register</b> is a group of flip-flops that store/shift a word. A <b>counter</b> is a register whose state advances through a fixed sequence on each clock. Every counter is a state machine; not every register counts.</p></div>
     </div>
   </section>
 
@@ -1191,6 +1250,97 @@ document.addEventListener('keydown',e=>{
   items.forEach(i=>{ i.addEventListener('click',()=>{i.classList.toggle('done');upd();});
     i.setAttribute('tabindex','0');
     i.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();i.classList.toggle('done');upd();}}); });
+})();
+
+/* ---------- CHECKPOINTS ---------- */
+(function(){
+  const CK={
+   ff:{q:'A JK flip-flop has J=K=1 and currently Q=1. What is Q after the next clock edge — and what is the JK characteristic equation?',
+       a:'J=K=1 means toggle, so Q goes 1→0. Characteristic equation: Q(t+1) = J·Q′ + K′·Q.', p:['5.2','5.4']},
+   tables:{q:'From memory: for a JK flip-flop, what J,K force each transition — 0→0, 0→1, 1→0, 1→1?',
+       a:'0→0: J=0, K=X · 0→1: J=1, K=X · 1→0: J=X, K=1 · 1→1: J=X, K=0. (K only matters when leaving a 1; J only when leaving a 0.)', p:['5.4']},
+   analysis:{q:'A machine has D_A = A⊕B, D_B = B′. From present state AB = 10, what is the next state?',
+       a:'D_A = 1⊕0 = 1, D_B = 0′ = 1 → next state AB = 11. (It is a 2-bit up-counter: 00→01→10→11→00.)', p:['5.6','5.8']},
+   jkdesign:{q:'You are designing with two JK flip-flops and two external inputs. How many K-maps do you draw, and how many variables each?',
+       a:'Four maps — J_A, K_A, J_B, K_B (one per flip-flop input). Each has 2+2 = 4 variables: 2 state bits + 2 inputs.', p:['5.18','6.27']},
+   conversion:{q:'To convert a D flip-flop into a T flip-flop, what do you feed into the D input?',
+       a:'D = T ⊕ Q (the T characteristic equation). Then Q(t+1) = T⊕Q — it toggles when T=1, holds when T=0.', p:['5.2']},
+   reduction:{q:'When are two states equivalent, and why do you care?',
+       a:'Equivalent iff for every input they give the same output AND go to equivalent next-states. Merging them reduces the state count — often fewer flip-flops.', p:['5.12']},
+   unused:{q:'You used the unused state codes as don’t-cares to simplify the maps. What must you still do before you are finished?',
+       a:'Plug each unused code into your FINAL equations and trace where it goes. If every unused state funnels into the valid cycle → self-correcting, done. If one loops among unused states → it can get stuck; force unused states to a valid state.', p:['5.19','6.24']},
+   counters:{q:'The same 4-bit value is reached — what is the visible difference between a ripple and a synchronous counter?',
+       a:'Ripple: each flip-flop clocks the next, so the carry propagates with delay (a left-to-right wave). Synchronous: all share one clock, update together. Ripple max delay = n·t_pd.', p:['6.12','6.13']},
+   counterdesign:{q:'List the steps to design a synchronous counter for a given sequence.',
+       a:'State table (present → next count) → pick a flip-flop (T is natural) → excitation columns → K-map & minimize each input (unused counts = don’t-cares) → draw circuit → verify unused states recover.', p:['6.17','6.24','6.27']},
+   timing:{q:'A 10-bit ripple counter uses flip-flops with 3 ns delay each. Max delay and max clock frequency?',
+       a:'Max delay = n·t_pd = 10×3 = 30 ns. f_max = 1 / 30 ns ≈ 33.3 MHz.', p:['6.15']},
+   shift:{q:'A 4-bit register holds 0110 and is shifted right with serial input 1. What does it hold after, and what shifts out?',
+       a:'New content = [serial-in, old bits] = 1011; the old rightmost bit (0) shifts out.', p:['6.4','6.8']},
+   johnson:{q:'How many distinct states does a Johnson counter with n flip-flops produce, versus a ring counter?',
+       a:'Johnson: 2n states. Ring: n states. Johnson doubles the count for the same flip-flops by feeding back the inverted output.', p:['6.30']},
+   modn:{q:'How do you turn a binary counter into a mod-10 (BCD) counter?',
+       a:'Detect the terminal count (e.g. 1010) with a gate and use it to clear or parallel-load the counter back to 0. Three routes: AND+load, output carry, or NAND+async clear.', p:['6.22']}
+  };
+  Object.entries(CK).forEach(([id,c])=>{
+    const sec=document.getElementById(id); if(!sec)return;
+    const d=document.createElement('div'); d.className='ckpt';
+    d.innerHTML=`<div class="ch">Checkpoint</div><div class="q">${c.q}</div>
+      <div class="a">${c.a}</div>
+      <button class="btn ghost sm">Reveal answer</button>
+      <div class="go">Ready? Now solve in the book: ${c.p.map(x=>`<span class="probchip">${x}</span>`).join(' ')}</div>`;
+    sec.appendChild(d);
+    const btn=d.querySelector('button');
+    btn.addEventListener('click',()=>{ d.classList.toggle('open'); btn.textContent=d.classList.contains('open')?'Hide answer':'Reveal answer'; });
+  });
+})();
+
+/* ---------- SCROLL REVEAL ---------- */
+(function(){
+  const revs=[...document.querySelectorAll('.panel, .worked, .ckpt, .def')];
+  revs.forEach(r=>r.classList.add('reveal'));
+  if(reduce){ revs.forEach(r=>r.classList.add('in')); return; }
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  revs.forEach(r=>io.observe(r));
+})();
+
+/* ---------- CLOCKED LOOP ANIMATION ---------- */
+(function(){
+  const svg=$('#loopSvg'); if(!svg)return; const NS='http://www.w3.org/2000/svg';
+  const defs=document.createElementNS(NS,'defs');
+  defs.innerHTML='<marker id="la" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#38e2d0"/></marker><marker id="lb" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#7c9cff"/></marker>';
+  svg.appendChild(defs);
+  function box(x,y,w,h,title,sub,id){
+    const g=document.createElementNS(NS,'g'); g.setAttribute('class','loopbox'); if(id)g.id=id;
+    const r=document.createElementNS(NS,'rect'); r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',w);r.setAttribute('height',h);r.setAttribute('rx',10);r.setAttribute('fill','#0f1c3a');r.setAttribute('stroke','#274069');r.setAttribute('stroke-width','1.5');
+    const t=document.createElementNS(NS,'text');t.setAttribute('x',x+w/2);t.setAttribute('y',y+h/2-(sub?6:0));t.setAttribute('text-anchor','middle');t.setAttribute('fill','#e3ebfa');t.setAttribute('font-family','Chakra Petch');t.setAttribute('font-size','15');t.setAttribute('font-weight','600');t.textContent=title;
+    g.appendChild(r);g.appendChild(t);
+    if(sub){const s=document.createElementNS(NS,'text');s.setAttribute('x',x+w/2);s.setAttribute('y',y+h/2+14);s.setAttribute('text-anchor','middle');s.setAttribute('fill','#8698c0');s.setAttribute('font-family','IBM Plex Mono');s.setAttribute('font-size','11');s.textContent=sub;g.appendChild(s);}
+    svg.appendChild(g); return g;
+  }
+  function arrow(x1,y1,x2,y2,m){const p=document.createElementNS(NS,'path');p.setAttribute('d',`M${x1} ${y1} L${x2} ${y2}`);p.setAttribute('stroke',m==='lb'?'#7c9cff':'#38e2d0');p.setAttribute('stroke-width','2');p.setAttribute('fill','none');p.setAttribute('marker-end',`url(#${m||'la'})`);svg.appendChild(p);}
+  box(50,105,160,64,'Present state','Q = A, B');
+  box(360,105,190,64,'Next-state logic','combinational');
+  const ff=box(700,105,150,64,'Flip-flops','latch on ▲','loopFF');
+  arrow(212,137,358,137); arrow(552,137,698,137);
+  // feedback over the top
+  const fb=document.createElementNS(NS,'path'); fb.setAttribute('d','M775 105 L775 46 L130 46 L130 105');fb.setAttribute('stroke','#7c9cff');fb.setAttribute('stroke-width','2');fb.setAttribute('fill','none');fb.setAttribute('marker-end','url(#lb)');svg.appendChild(fb);
+  const fl=document.createElementNS(NS,'text');fl.setAttribute('x',452);fl.setAttribute('y',38);fl.setAttribute('text-anchor','middle');fl.setAttribute('fill','#7c9cff');fl.setAttribute('font-family','IBM Plex Mono');fl.setAttribute('font-size','11');fl.textContent='feedback — present state fed back continuously';svg.appendChild(fl);
+  const dot=document.createElementNS(NS,'circle');dot.setAttribute('r','7');dot.setAttribute('fill','#ffc24d');svg.appendChild(dot);
+  const W=[[212,137],[360,137],[552,137],[700,137],[775,137],[775,46],[130,46],[130,137],[212,137]];
+  let segs=[],total=0;
+  for(let i=0;i<W.length-1;i++){const dx=W[i+1][0]-W[i][0],dy=W[i+1][1]-W[i][1];const L=Math.hypot(dx,dy);segs.push({a:W[i],b:W[i+1],L,acc:total});total+=L;}
+  const ffDist=segs[3].acc+segs[3].L;
+  function pos(d){let x=((d%total)+total)%total;for(const s of segs){if(x<=s.acc+s.L){const t=(x-s.acc)/s.L;return[s.a[0]+(s.b[0]-s.a[0])*t,s.a[1]+(s.b[1]-s.a[1])*t];}}return W[0];}
+  let dist=0,playing=!reduce,last=performance.now(),flashed=false;const speed=150;
+  function frame(now){const dt=(now-last)/1000;last=now;if(playing)dist+=speed*dt;const p=pos(dist);dot.setAttribute('cx',p[0]);dot.setAttribute('cy',p[1]);
+    const lap=((dist%total)+total)%total;
+    if(Math.abs(lap-ffDist)<7&&!flashed){ff.classList.add('flash');setTimeout(()=>ff.classList.remove('flash'),260);flashed=true;}
+    if(Math.abs(lap-ffDist)>20)flashed=false;
+    requestAnimationFrame(frame);}
+  const p0=pos(0);dot.setAttribute('cx',p0[0]);dot.setAttribute('cy',p0[1]);
+  if(!reduce)requestAnimationFrame(frame);
+  const pb=$('#loopPlay'); if(pb)pb.addEventListener('click',e=>{playing=!playing;e.target.textContent=playing?'Pause':'Play';last=performance.now();});
 })();
 })();
 </script>
