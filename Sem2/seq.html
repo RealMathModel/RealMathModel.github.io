@@ -237,6 +237,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .loopbox{transition:.15s}
 .loopbox.flash rect{fill:rgba(255,194,77,.2);stroke:var(--amber);filter:drop-shadow(0 0 10px rgba(255,194,77,.6))}
 .loopbox.flash text{fill:var(--amber)}
+/* shift-register modes */
+.srgrid{display:grid;gap:16px;margin-top:6px}
+@media(min-width:720px){.srgrid{grid-template-columns:1fr 1fr}}
+.srcard{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:15px 16px}
+.srcard h4{font-family:'Chakra Petch';margin:0;font-size:16px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.srcard h4 .full{color:var(--muted);font-size:12px;font-weight:400;font-family:'IBM Plex Mono'}
+.srcard .use{font-size:13px;color:var(--dim);margin-top:6px}
+.srcard .use b{color:var(--phos)}
+.srsvg svg{width:100%;height:auto;max-width:270px;display:block;margin:8px auto 2px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
 :focus-visible{outline:2px solid var(--phos);outline-offset:2px}
 </style>
@@ -263,6 +272,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       <a href="#counterdesign">Counter design</a>
       <a href="#timing">Timing</a>
       <a href="#shift">Shift Reg</a>
+      <a href="#srtypes">SR types</a>
       <a href="#johnson">Ring/Johnson</a>
       <a href="#modn">Mod-N</a>
       <a href="#cheat">Cheat sheet</a>
@@ -675,6 +685,60 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
         </div>
         <button class="clockbtn" id="shiftClock"><span class="ico">→</span> SHIFT ▲</button>
         <button class="btn ghost sm" id="shiftClear">Clear</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHIFT REGISTER TYPES -->
+  <section id="srtypes">
+    <div class="eyebrow mono">the four modes</div>
+    <h2>SISO, SIPO, PISO, PIPO — how data gets in and out.</h2>
+    <p class="lead">A shift register is classified by <em>how data enters</em> (serially, one bit per clock, or in parallel, all at once) and <em>how it leaves</em>. That's two choices × two = four modes. <span style="color:var(--phos)">Teal = serial</span> (one wire, n clocks); <span style="color:var(--amber)">amber = parallel</span> (n wires, one clock).</p>
+    <div class="panel" style="margin-top:22px">
+      <div class="srgrid">
+        <div class="srcard">
+          <h4>SISO <span class="full">serial-in, serial-out</span></h4>
+          <div class="srsvg" data-in="serial" data-out="serial"></div>
+          <div class="use"><b>Use:</b> delay line / time buffer — a bit that goes in comes out n clocks later. Pure serial data movement.</div>
+        </div>
+        <div class="srcard">
+          <h4>SIPO <span class="full">serial-in, parallel-out</span></h4>
+          <div class="srsvg" data-in="serial" data-out="parallel"></div>
+          <div class="use"><b>Use:</b> serial→parallel conversion — a receiver clocks bits in one at a time, then reads the whole word at once.</div>
+        </div>
+        <div class="srcard">
+          <h4>PISO <span class="full">parallel-in, serial-out</span></h4>
+          <div class="srsvg" data-in="parallel" data-out="serial"></div>
+          <div class="use"><b>Use:</b> parallel→serial conversion — a transmitter loads a word in one clock, then shifts it out bit by bit onto one line.</div>
+        </div>
+        <div class="srcard">
+          <h4>PIPO <span class="full">parallel-in, parallel-out</span></h4>
+          <div class="srsvg" data-in="parallel" data-out="parallel"></div>
+          <div class="use"><b>Use:</b> a plain storage register / buffer — load all bits, read all bits. No shifting needed to move data.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols c2" style="margin-top:20px">
+      <div class="panel">
+        <div class="panel-title">Universal shift register <span class="num">6.7</span></div>
+        <div class="hint" style="margin-bottom:8px">Does everything, chosen by a 2-bit mode control (s₁s₀).</div>
+        <table style="max-width:340px"><tr><th>s₁ s₀</th><th>operation</th></tr>
+        <tr><td>0 0</td><td>hold (no change)</td></tr>
+        <tr><td>0 1</td><td>shift right</td></tr>
+        <tr><td>1 0</td><td>shift left</td></tr>
+        <tr><td>1 1</td><td>parallel load</td></tr></table>
+        <div class="note" style="margin-top:12px"><b>How it's built:</b> put a <b>4×1 MUX in front of each flip-flop's D input</b>, selected by s₁s₀. The four data lines are: the FF's own output (hold), the right neighbour (shift right), the left neighbour (shift left), and the external parallel bit (load). One MUX per bit = a register that can do all four modes.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Parallel load &amp; transfer <span class="num">6.2, 6.6</span></div>
+        <p style="font-size:14px;color:var(--muted);margin-top:4px"><b style="color:var(--ink)">Parallel load:</b> a <em>load</em> control picks, per flip-flop, between keeping the old bit (hold) and taking a new external bit — a 2×1 MUX (or gated D) on each input. Loads a whole word in <em>one</em> clock.</p>
+        <div class="eq" style="text-align:left;margin-top:10px">D<sub>i</sub> = load′·Q<sub>i</sub> + load·(data<sub>i</sub>)</div>
+        <p style="font-size:14px;color:var(--muted);margin-top:14px"><b style="color:var(--ink)">Serial vs parallel transfer:</b></p>
+        <div class="cols c2" style="gap:10px;margin-top:6px">
+          <div style="background:rgba(56,226,208,.07);border:1px solid var(--phos-dim);border-radius:8px;padding:10px"><div class="mono" style="color:var(--phos);font-size:12px;margin-bottom:4px">SERIAL</div><div style="font-size:13px;color:var(--muted)">1 bit/clock · n clocks · <b>1 wire</b> · slow, cheap</div></div>
+          <div style="background:rgba(255,194,77,.07);border:1px solid var(--amber-dim);border-radius:8px;padding:10px"><div class="mono" style="color:var(--amber);font-size:12px;margin-bottom:4px">PARALLEL</div><div style="font-size:13px;color:var(--muted)">all bits/1 clock · <b>n wires</b> · fast, more hardware</div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1280,7 +1344,9 @@ document.addEventListener('keydown',e=>{
    johnson:{q:'How many distinct states does a Johnson counter with n flip-flops produce, versus a ring counter?',
        a:'Johnson: 2n states. Ring: n states. Johnson doubles the count for the same flip-flops by feeding back the inverted output.', p:['6.30']},
    modn:{q:'How do you turn a binary counter into a mod-10 (BCD) counter?',
-       a:'Detect the terminal count (e.g. 1010) with a gate and use it to clear or parallel-load the counter back to 0. Three routes: AND+load, output carry, or NAND+async clear.', p:['6.22']}
+       a:'Detect the terminal count (e.g. 1010) with a gate and use it to clear or parallel-load the counter back to 0. Three routes: AND+load, output carry, or NAND+async clear.', p:['6.22']},
+   srtypes:{q:'Name the four shift-register modes, and say which one converts serial data into a parallel word.',
+       a:'SISO, SIPO, PISO, PIPO (serial/parallel IN × serial/parallel OUT). SIPO (serial-in, parallel-out) does serial→parallel conversion — a receiver. PISO does the reverse (parallel→serial, a transmitter).', p:['6.6','6.7']}
   };
   Object.entries(CK).forEach(([id,c])=>{
     const sec=document.getElementById(id); if(!sec)return;
@@ -1341,6 +1407,28 @@ document.addEventListener('keydown',e=>{
   const p0=pos(0);dot.setAttribute('cx',p0[0]);dot.setAttribute('cy',p0[1]);
   if(!reduce)requestAnimationFrame(frame);
   const pb=$('#loopPlay'); if(pb)pb.addEventListener('click',e=>{playing=!playing;e.target.textContent=playing?'Pause':'Play';last=performance.now();});
+})();
+
+/* ---------- SHIFT-REGISTER MODE DIAGRAMS ---------- */
+(function(){
+  function diagram(inMode,outMode){
+    const cells=[42,82,122,162]; const cy=52,ch=34,cw=34;
+    let s='<svg viewBox="0 0 244 122">';
+    s+='<defs>'
+      +'<marker id="art" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0 0 L5 2.5 L0 5 Z" fill="#38e2d0"/></marker>'
+      +'<marker id="ara" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0 0 L5 2.5 L0 5 Z" fill="#ffc24d"/></marker>'
+      +'<marker id="ars" markerWidth="7" markerHeight="7" refX="5" refY="2.5" orient="auto"><path d="M0 0 L5 2.5 L0 5 Z" fill="#3a4d70"/></marker></defs>';
+    for(let i=0;i<3;i++){ s+=`<path d="M${cells[i]+cw} ${cy+ch/2} L${cells[i+1]-1} ${cy+ch/2}" stroke="#3a4d70" stroke-width="1.2" marker-end="url(#ars)"/>`; }
+    cells.forEach((x,i)=>{ s+=`<rect x="${x}" y="${cy}" width="${cw}" height="${ch}" rx="4" fill="#0f1c3a" stroke="#274069" stroke-width="1.3"/>`;
+      s+=`<text x="${x+cw/2}" y="${cy+ch/2+4}" text-anchor="middle" fill="#8698c0" font-family="IBM Plex Mono" font-size="10">Q${i}</text>`; });
+    const arr=(x1,y1,x2,y2,c,m)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="1.8" marker-end="url(#${m})"/>`;
+    if(inMode==='serial'){ s+=arr(8,cy+ch/2,40,cy+ch/2,'#38e2d0','art'); s+=`<text x="6" y="${cy+ch/2-8}" fill="#38e2d0" font-family="IBM Plex Mono" font-size="9">serial in</text>`; }
+    else { cells.forEach(x=>{ s+=arr(x+cw/2,15,x+cw/2,cy-1,'#ffc24d','ara'); }); s+='<text x="122" y="11" text-anchor="middle" fill="#ffc24d" font-family="IBM Plex Mono" font-size="9">parallel in</text>'; }
+    if(outMode==='serial'){ s+=arr(198,cy+ch/2,230,cy+ch/2,'#38e2d0','art'); s+=`<text x="236" y="${cy+ch/2-8}" text-anchor="end" fill="#38e2d0" font-family="IBM Plex Mono" font-size="9">serial out</text>`; }
+    else { cells.forEach(x=>{ s+=arr(x+cw/2,cy+ch+1,x+cw/2,cy+ch+28,'#ffc24d','ara'); }); s+='<text x="122" y="120" text-anchor="middle" fill="#ffc24d" font-family="IBM Plex Mono" font-size="9">parallel out</text>'; }
+    return s+'</svg>';
+  }
+  document.querySelectorAll('.srsvg').forEach(el=>{ el.innerHTML=diagram(el.dataset.in,el.dataset.out); });
 })();
 })();
 </script>
