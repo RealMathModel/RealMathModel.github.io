@@ -719,6 +719,33 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
       </div>
     </div>
 
+    <div class="panel" style="margin-top:20px">
+      <div class="panel-title">Simulate it — the universal shift register <span class="num">live</span></div>
+      <div class="hint" style="margin-bottom:16px">Pick a mode, set the inputs, press CLOCK. <b style="color:var(--phos)">Repeat shift-right</b> with a serial stream = SISO (watch serial out) / SIPO (read all cells). <b style="color:var(--amber)">Load then shift</b> = PISO. <b style="color:var(--amber)">Load then read</b> = PIPO.</div>
+      <div class="row" style="justify-content:center;margin-bottom:18px">
+        <div class="seg" id="srMode">
+          <button data-m="hold">Hold 00</button>
+          <button data-m="right" class="on">Shift → 01</button>
+          <button data-m="left">← Shift 10</button>
+          <button data-m="load">Load 11</button>
+        </div>
+      </div>
+      <div class="row" style="justify-content:center;gap:14px;margin-bottom:6px">
+        <div class="hint mono">serial in →</div>
+        <div class="ledrow" id="srCells"></div>
+        <div class="hint mono">→ out <b id="srOut" style="color:var(--amber)">–</b></div>
+      </div>
+      <div class="row" id="srParallel" style="justify-content:center;gap:12px;margin-top:18px;display:none"></div>
+      <div class="row" id="srSerialWrap" style="justify-content:center;gap:14px;margin-top:18px">
+        <div class="tog"><div class="lab">SERIAL IN</div><div class="switch" id="srSerial" role="switch" tabindex="0"><div class="knob"></div><span class="st o">1</span><span class="st z">0</span></div></div>
+      </div>
+      <div class="row" style="justify-content:center;gap:14px;margin-top:20px">
+        <button class="clockbtn" id="srClock"><span class="ico">↻</span> CLOCK ▲</button>
+        <button class="btn ghost sm" id="srClear">Clear</button>
+      </div>
+      <div class="note" id="srNote" style="margin-top:18px"></div>
+    </div>
+
     <div class="cols c2" style="margin-top:20px">
       <div class="panel">
         <div class="panel-title">Universal shift register <span class="num">6.7</span></div>
@@ -1429,6 +1456,49 @@ document.addEventListener('keydown',e=>{
     return s+'</svg>';
   }
   document.querySelectorAll('.srsvg').forEach(el=>{ el.innerHTML=diagram(el.dataset.in,el.dataset.out); });
+})();
+
+/* ---------- UNIVERSAL SHIFT-REGISTER SIMULATOR ---------- */
+(function(){
+  const cellsEl=$('#srCells'); if(!cellsEl)return;
+  const outEl=$('#srOut'), noteEl=$('#srNote'), parWrap=$('#srParallel'), serWrap=$('#srSerialWrap');
+  let cells=[0,0,0,0], mode='right', sin=0, par=[0,0,0,0];
+  ['P0','P1','P2','P3'].forEach((n,i)=>{
+    const t=document.createElement('div'); t.className='tog';
+    t.innerHTML=`<div class="lab">${n}</div><div class="switch" role="switch" tabindex="0"><div class="knob"></div><span class="st o">1</span><span class="st z">0</span></div>`;
+    const sw=t.querySelector('.switch');
+    const tog=()=>{par[i]^=1;sw.classList.toggle('hi',!!par[i]);};
+    sw.addEventListener('click',tog); sw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog();}});
+    parWrap.appendChild(t);
+  });
+  const serSw=$('#srSerial');
+  const togS=()=>{sin^=1;serSw.classList.toggle('hi',!!sin);};
+  serSw.addEventListener('click',togS); serSw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();togS();}});
+  function render(){ renderBits(cellsEl,cells,['Q0','Q1','Q2','Q3']); }
+  function setMode(m){ mode=m; $$('#srMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+    parWrap.style.display = m==='load'?'flex':'none';
+    serWrap.style.display = (m==='right'||m==='left')?'flex':'none';
+    const notes={
+      hold:'<b>Hold (s₁s₀=00):</b> the register keeps its value — each flip-flop feeds its own output back through the MUX.',
+      right:'<b>Shift right (s₁s₀=01):</b> serial-in enters Q0, every bit moves one place right, Q3 shifts out. Clock a 4-bit stream through and you have SISO (serial out) / SIPO (read all cells).',
+      left:'<b>Shift left (s₁s₀=10):</b> serial-in enters Q3, every bit moves one place left, Q0 shifts out.',
+      load:'<b>Parallel load (s₁s₀=11):</b> all four cells take the P inputs in ONE clock. Load then read = PIPO; load then shift out = PISO.'};
+    noteEl.innerHTML=notes[m];
+  }
+  $$('#srMode button').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.m)));
+  function clock(){
+    let out='–', desc='';
+    if(mode==='hold'){ desc='Held — no change.'; }
+    else if(mode==='right'){ out=cells[3]; cells=[sin,cells[0],cells[1],cells[2]]; desc=`Shift right: <b>${sin}</b> entered Q0, bits moved right, <b>${out}</b> shifted out.`; }
+    else if(mode==='left'){ out=cells[0]; cells=[cells[1],cells[2],cells[3],sin]; desc=`Shift left: <b>${sin}</b> entered Q3, bits moved left, <b>${out}</b> shifted out.`; }
+    else { cells=par.slice(); desc=`Parallel load: all four bits set to <b>${par.join('')}</b> in one clock.`; }
+    render(); outEl.textContent=out;
+    noteEl.innerHTML=desc+' &nbsp;<span style="color:var(--dim);font-family:\'IBM Plex Mono\'">register = '+cells.join('')+'</span>';
+    [...cellsEl.children].forEach((c,i)=>c.animate([{transform:'translateY(-5px)',opacity:.5},{transform:'none',opacity:1}],{duration:reduce?1:200,delay:i*25}));
+  }
+  $('#srClock').addEventListener('click',clock);
+  $('#srClear').addEventListener('click',()=>{cells=[0,0,0,0];render();outEl.textContent='–';});
+  setMode('right'); render();
 })();
 })();
 </script>
