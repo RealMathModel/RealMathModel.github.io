@@ -246,6 +246,23 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 .srcard .use{font-size:13px;color:var(--dim);margin-top:6px}
 .srcard .use b{color:var(--phos)}
 .srsvg svg{width:100%;height:auto;max-width:270px;display:block;margin:8px auto 2px}
+/* dedicated mode simulators */
+.simgrid{display:grid;gap:16px}
+@media(min-width:760px){.simgrid{grid-template-columns:1fr 1fr}}
+.simcard{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px}
+.simcard h4{font-family:'Chakra Petch';margin:0 0 12px;font-size:15px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.simcard h4 .full{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono'}
+.simcard .sn{font-size:12.5px;color:var(--muted);margin-top:12px;min-height:34px;line-height:1.5}
+.simcard .sn b{color:var(--ink)}
+.simcard .led{width:38px;height:46px;font-size:18px}
+.ptap{display:flex;gap:10px;justify-content:center;margin-top:10px}
+.ptap .t{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ptap .t .ar{color:var(--amber);font-size:13px;line-height:1}
+.ptap .t .v{width:30px;height:26px;border-radius:6px;border:1px solid var(--line2);background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-size:13px;color:var(--dim);transition:.15s}
+.ptap .t .v.on{background:rgba(255,194,77,.16);color:var(--amber);border-color:var(--amber);box-shadow:var(--glow-amber)}
+.sout{display:flex;gap:5px;justify-content:center;margin-top:10px;min-height:26px;flex-wrap:wrap;align-items:center}
+.sout .lb{font-family:'IBM Plex Mono';font-size:11px;color:var(--dim)}
+.sout .b{width:23px;height:23px;border-radius:6px;background:rgba(56,226,208,.12);border:1px solid var(--phos-dim);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono';font-size:12px;color:var(--phos)}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important}}
 :focus-visible{outline:2px solid var(--phos);outline-offset:2px}
 </style>
@@ -717,6 +734,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
           <div class="use"><b>Use:</b> a plain storage register / buffer — load all bits, read all bits. No shifting needed to move data.</div>
         </div>
       </div>
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+      <div class="panel-title">Simulate each mode <span class="num">interactive</span></div>
+      <div class="hint" style="margin-bottom:16px">Each type driven its own way — feed data how that mode expects, clock it, and read the note. <span style="color:var(--phos)">Teal = serial</span>, <span style="color:var(--amber)">amber = parallel</span>.</div>
+      <div class="simgrid" id="srSims"></div>
     </div>
 
     <div class="panel" style="margin-top:20px">
@@ -1499,6 +1522,88 @@ document.addEventListener('keydown',e=>{
   $('#srClock').addEventListener('click',clock);
   $('#srClear').addEventListener('click',()=>{cells=[0,0,0,0];render();outEl.textContent='–';});
   setMode('right'); render();
+})();
+
+/* ---------- FOUR DEDICATED MODE SIMULATORS ---------- */
+(function(){
+  const host=$('#srSims'); if(!host)return;
+  const META={
+    siso:{title:'SISO',full:'serial-in · serial-out', sIn:true, pIn:false, sOut:true, pOut:false,
+      hint:'Toggle the serial input, press CLOCK to push it in at Q0. Each clock, one bit exits at Q3 (serial out).'},
+    sipo:{title:'SIPO',full:'serial-in · parallel-out', sIn:true, pIn:false, sOut:false, pOut:true,
+      hint:'Clock four bits in serially. After each clock all four cells are readable at once at the parallel taps — that is the serial→parallel conversion.'},
+    piso:{title:'PISO',full:'parallel-in · serial-out', sIn:false, pIn:true, sOut:true, pOut:false,
+      hint:'Set the four P bits, press LOAD (all in on one clock), then press CLOCK to shift them out one bit per clock — parallel→serial.'},
+    pipo:{title:'PIPO',full:'parallel-in · parallel-out', sIn:false, pIn:true, sOut:false, pOut:true,
+      hint:'Set the four P bits and press LOAD. All four go in and are readable at once — a one-clock storage register.'}
+  };
+  function mkSwitch(label,cb){
+    const t=document.createElement('div');t.className='tog';
+    t.innerHTML=`<div class="lab">${label}</div><div class="switch" role="switch" tabindex="0"><div class="knob"></div><span class="st o">1</span><span class="st z">0</span></div>`;
+    const sw=t.querySelector('.switch');let v=0;
+    const tog=()=>{v^=1;sw.classList.toggle('hi',!!v);cb(v);};
+    sw.addEventListener('click',tog);sw.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tog();}});
+    return t;
+  }
+  function build(mode){
+    const M=META[mode];
+    const cells=[0,0,0,0]; let par=[0,0,0,0]; let sin=0; let hist=[];
+    const card=document.createElement('div'); card.className='simcard';
+    const h=document.createElement('h4'); h.innerHTML=`${M.title} <span class="full">${M.full}</span>`; card.appendChild(h);
+    // cell row
+    const rw=document.createElement('div'); rw.className='row'; rw.style.justifyContent='center'; rw.style.gap='8px';
+    if(M.sIn){const a=document.createElement('span');a.className='hint mono';a.style.color='var(--phos)';a.textContent='in →';rw.appendChild(a);}
+    const row=document.createElement('div'); row.className='ledrow';
+    for(let i=0;i<4;i++){const d=document.createElement('div');d.className='led';d.innerHTML='0';row.appendChild(d);}
+    rw.appendChild(row);
+    if(M.sOut){const o=document.createElement('span');o.className='hint mono';o.style.color='var(--phos)';o.textContent='→ out';rw.appendChild(o);}
+    card.appendChild(rw);
+    // parallel-out taps
+    let taps=null;
+    if(M.pOut){ taps=document.createElement('div'); taps.className='ptap';
+      for(let i=0;i<4;i++){const t=document.createElement('div');t.className='t';t.innerHTML='<span class="ar">↓</span><span class="v">0</span>';taps.appendChild(t);} card.appendChild(taps);
+      const cap=document.createElement('div');cap.className='hint mono';cap.style.textAlign='center';cap.style.color='var(--amber)';cap.style.fontSize='10px';cap.textContent='parallel out';card.appendChild(cap);
+    }
+    // serial-out strip
+    let sout=null;
+    if(M.sOut){ sout=document.createElement('div'); sout.className='sout'; sout.innerHTML='<span class="lb">serial out:</span>'; card.appendChild(sout); }
+    // controls
+    if(M.pIn){
+      const pr=document.createElement('div');pr.className='row';pr.style.justifyContent='center';pr.style.gap='8px';pr.style.marginTop='14px';
+      par.forEach((_,i)=>pr.appendChild(mkSwitch('P'+i,v=>{par[i]=v;})));
+      card.appendChild(pr);
+    }
+    const ctl=document.createElement('div');ctl.className='row';ctl.style.justifyContent='center';ctl.style.gap='10px';ctl.style.marginTop='16px';ctl.style.flexWrap='wrap';
+    if(M.sIn){ ctl.appendChild(mkSwitch('SERIAL IN',v=>{sin=v;})); }
+    if(M.pIn){ const lb=document.createElement('button');lb.className='btn sm';lb.textContent='LOAD';lb.addEventListener('click',doLoad);ctl.appendChild(lb); }
+    const ck=document.createElement('button');ck.className='clockbtn';ck.innerHTML='<span class="ico">↻</span> CLOCK ▲';ck.addEventListener('click',doClock);
+    if(mode!=='pipo') ctl.appendChild(ck);
+    const cl=document.createElement('button');cl.className='btn ghost sm';cl.textContent='Clear';cl.addEventListener('click',doClear);ctl.appendChild(cl);
+    card.appendChild(ctl);
+    // note
+    const sn=document.createElement('div');sn.className='sn';sn.innerHTML=M.hint;card.appendChild(sn);
+
+    function paint(){ [...row.children].forEach((c,i)=>{c.className='led'+(cells[i]?' on':'');c.textContent=cells[i];});
+      if(taps)[...taps.children].forEach((t,i)=>{const v=t.querySelector('.v');v.textContent=cells[i];v.classList.toggle('on',!!cells[i]);}); }
+    function paintSout(){ if(sout)sout.innerHTML='<span class="lb">serial out:</span>'+hist.slice(-8).map(b=>`<div class="b">${b}</div>`).join(''); }
+    function flash(){ [...row.children].forEach((c,i)=>c.animate([{transform:'translateY(-5px)',opacity:.5},{transform:'none',opacity:1}],{duration:reduce?1:200,delay:i*25})); }
+    function doClock(){
+      if(mode==='siso'||mode==='sipo'){ const out=cells[3]; cells.unshift(sin); cells.pop();
+        if(mode==='siso'){ hist.push(out); paintSout(); sn.innerHTML=`Shift: <b>${sin}</b> entered Q0, bits moved right, <b>${out}</b> exited at Q3.`; }
+        else { sn.innerHTML=`Shifted <b>${sin}</b> in. All four cells are now available in parallel: <b>${cells.join('')}</b>.`; }
+      } else if(mode==='piso'){ const out=cells[3]; cells.unshift(0); cells.pop(); hist.push(out); paintSout();
+        sn.innerHTML=`Shifting out: <b>${out}</b> left at Q3 (0 fills in at Q0). Keep clocking to stream all bits out.`; }
+      paint(); flash();
+    }
+    function doLoad(){ cells.splice(0,4,...par); paint(); flash();
+      if(mode==='pipo') sn.innerHTML=`Loaded <b>${par.join('')}</b> in one clock — all four bits are out at once (parallel in, parallel out).`;
+      else sn.innerHTML=`Loaded <b>${par.join('')}</b> in parallel. Now press CLOCK to shift them out serially.`;
+    }
+    function doClear(){ cells.splice(0,4,0,0,0,0); hist=[]; paint(); paintSout(); sn.innerHTML=M.hint; }
+    paint(); paintSout();
+    return card;
+  }
+  ['siso','sipo','piso','pipo'].forEach(m=>host.appendChild(build(m)));
 })();
 })();
 </script>
