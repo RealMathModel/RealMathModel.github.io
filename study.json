@@ -64,7 +64,10 @@
                 { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "interactive study lab · offline" },
                 { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external" },
                 { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external" } ,
-                { "label" : "Sequential Logic Study Lab","href": "Sem2/seq.html", "type": "internal", "note": "interactive study lab · offline" }
+                { "label" : "Sequential Logic Study Lab","href": "Sem2/seq.html", "type": "internal", "note": "interactive study lab · offline" },
+                {"label":"Chapter 4 Video","href":"https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing","type":"external","note":"Chapter 4 Video"},
+                {"label":"Chapter 5 Video","href":"https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing","type":"external","note":"Chapter 5 Video"},
+                {"label":"Chapter 6 Video","href":"https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing","type":"external","note":"Chapter 6 Video"}
               ]
             },
             {
@@ -76,7 +79,11 @@
               "blurb": "Liang, chapters 1–9 + exams",
               "resources": [
                 { "label": "C++ Mastery Console — 529 MCQ + 32 coding problems", "href": "Sem2/cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline" },
-                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external" }
+                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external" },
+                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1V7_f7831SGAuq76a4z2CtRpQI-Y55Lzs/view?usp=sharing", "type": "external" },
+                { "label": "Chapter 9 Video", "href": "https://drive.google.com/file/d/1TSmv5q5549u4kQ2VLlRi_ez1lMcDnoBa/view?usp=sharing", "type": "external" },
+                { "label": "Selection Sort Video", "href": "https://drive.google.com/file/d/11fj3p9XETc0s8JQuav0s8fHgbtpUSXHl/view?usp=sharing", "type": "external" },
+                { "label": "Binary Search Video", "href": "https://drive.google.com/file/d/1pg6dWaNJ0-_CrLa_6arRym3LVJbK43gf/view?usp=sharing", "type": "external" }
               ]
             },
             {
@@ -99,9 +106,12 @@
               "blurb": "Logisim builds & lab reports",
               "resources": [
                 { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external" }
-              ]
+                {"label":"Chapter 4 Video","href":"https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing","type":"external","note":"Chapter 4 Video"},
+                {"label":"Chapter 5 Video","href":"https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing","type":"external","note":"Chapter 5 Video"},
+                {"label":"Chapter 6 Video","href":"https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing","type":"external","note":"Chapter 6 Video"}  
+            ]
             }
-          ]
+          ] 
         }
       ]
     },
