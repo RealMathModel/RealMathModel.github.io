@@ -63,7 +63,7 @@
               "accent": "green",
               "blurb": "Programming",
               "resources": [
-                { "label": "Porgamming Basics with Python summary", "href": "https://drive.google.com/file/d/1CgBpaztko98iItkfWR815WVXvHgrzgwP/view?usp=sharing", "type": "external" }
+                { "label": "Porgamming Basics with Python summary", "href": "https://drive.google.com/file/d/1CgBpaztko98iItkfWR815WVXvHgrzgwP/view?usp=sharing", "type": "external" , "note":"شكر للزميل المهندس محمود ابو دقة على تزويد السلايدات للمادة"}
               ]
             }
           ]
