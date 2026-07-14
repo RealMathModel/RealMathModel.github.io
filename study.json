@@ -17,7 +17,7 @@
           "tag": "S1",
           "icon": "fa-solid fa-1",
           "accent": "amber",
-          "blurb": "foundations",
+          "blurb": "Foundations Confirmation",
           "children": [
             {
               "id": "calc-a",
@@ -63,7 +63,7 @@
               "accent": "green",
               "blurb": "Programming",
               "resources": [
-                { "label": "Porgamming Basics with Python summary", "href": "https://drive.google.com/file/d/1CgBpaztko98iItkfWR815WVXvHgrzgwP/view?usp=sharing", "type": "external" , "note":"شكر للزميل المهندس محمود ابو دقة على تزويد السلايدات للمادة"}
+                { "label": "Porgamming Basics with Python summary", "href": "https://drive.google.com/file/d/1CgBpaztko98iItkfWR815WVXvHgrzgwP/view?usp=sharing", "type": "external", "note": "شكر للزميل المهندس محمود ابو دقة على تزويد السلايدات للمادة" }
               ]
             }
           ]
@@ -74,7 +74,7 @@
           "tag": "S2",
           "icon": "fa-solid fa-2",
           "accent": "teal",
-          "blurb": "current courses",
+          "blurb": "Sharpening Foundations",
           "children": [
             {
               "id": "calc-b",
@@ -149,6 +149,61 @@
                 { "label": "Chapter 5 Video", "href": "https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing", "type": "external", "note": "Chapter 5 Video" },
                 { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing", "type": "external", "note": "Chapter 6 Video" }
               ]
+            }
+          ]
+        },
+        {
+          "id": "sem3",
+          "title": "Semester 3",
+          "tag": "S3",
+          "icon": "fa-solid fa-3",
+          "accent": "blue",
+          "blurb": "Math and CS Building for Specialization",
+          "children": [
+            {
+              "id": "discrete-math",
+              "title": "Discrete Math",
+              "tag": "MATH",
+              "icon": "fa-solid fa-diagram-project",
+              "accent": "blue",
+              "blurb": "Logic, sets, graphs, combinatorics",
+              "resources": []
+            },
+            {
+              "id": "linear-algebra",
+              "title": "Linear Algebra",
+              "tag": "MATH",
+              "icon": "fa-solid fa-vector-square",
+              "accent": "purple",
+              "blurb": "Matrices, vector spaces, eigenvalues",
+              "resources": []
+            },
+            {
+              "id": "programming-2",
+              "title": "Programming II",
+              "tag": "CS",
+              "icon": "fa-solid fa-laptop-code",
+              "accent": "green",
+              "blurb": "Data structures & OOP continuation",
+              "resources": []
+            },
+            {
+              "id": "technical-english",
+              "title": "Technical English",
+              "tag": "ENG",
+              "icon": "fa-solid fa-language",
+              "accent": "teal",
+              "blurb": "Technical writing & communication",
+              "resources": []
+            },
+            {
+              "id": "engineering-drawing",
+              "title": "Engineering Drawing",
+              "tag": "DRAW",
+              "icon": "fa-solid fa-drafting-compass",
+              "accent": "orange",
+              "blurb": "Projections, sketching, CAD basics",
+              "resources": []
             }
           ]
         }
