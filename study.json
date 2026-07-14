@@ -24,7 +24,7 @@
               "title": "Calculus A",
               "tag": "MATH",
               "icon": "fa-solid fa-square-root-variable",
-              "accent": "cyan",
+              "accent": "blue",
               "blurb": "Thomas — limits, derivatives, integrals",
               "resources": [
                 { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external" },
@@ -42,6 +42,18 @@
               "blurb": "Physics",
               "resources": [
                 { "label": "Physics A summary", "href": "https://drive.google.com/file/d/1EjoeZa87syQ853VUBy3dkaPxfL0ij6Os/view?usp=sharing", "type": "external" }
+              ]
+
+            },
+                        {
+              "id": "circuits-a",
+              "title": "Electrical Circuits A",
+              "tag": "EELE",
+              "icon": "fa-solid fa-bolt",
+              "accent": "green",
+              "blurb": "Electric",
+              "resources": [
+                { "label": "Electric Circuits A summary", "href": "https://drive.google.com/file/d/1cWmIJ-XSlGFHOUldgGKwPV94RM53cfh6/view?usp=sharing", "type": "external" }
               ]
 
             }
