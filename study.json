@@ -28,7 +28,9 @@
               "blurb": "Thomas — limits, derivatives, integrals",
               "resources": [
                 { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external" },
-                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external" }
+                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external" },
+                { "label": "Mid Term Exam 2026", "href": "https://drive.google.com/file/d/1m0t2o14kDRxT8cPozwQRNh4Qt8UE0G2V/view?usp=sharing", "type": "external" },
+                { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1eJarjleXdZKKE2E9ywtMibAGUzAUTlSX/view?usp=sharing", "type": "external" }
               ]
             }
           ]
@@ -118,18 +120,15 @@
       ]
     },
     {
-      "id": "cp",
-      "title": "Competitive Programming",
-      "tag": "CP",
-      "icon": "fa-solid fa-trophy",
+      "id": "problemsetting",
+      "title": "Problemsetting",
+      "tag": "Problemsetting",
+      "icon": "fa-solid fa-lightbulb",
       "accent": "amber",
-      "blurb": "handbook, algorithms & practice",
+      "blurb": "Every Problem I've authored so far",
       "resources": [
-        { "label": "Problem Solving Book (Coming Later)", "href": "#", "type": "internal", "note": "add your handbook" },
-        { "label": "CP-Algorithms — algorithm reference", "href": "https://cp-algorithms.com/", "type": "external" },
-        { "label": "Eolymp", "href": "https://eolymp.com/", "type": "external" },
-        { "label": "Codeforces — contests & problemset", "href": "https://codeforces.com/", "type": "external" },
-        { "label": "AtCoder — contests", "href": "https://atcoder.jp/", "type": "external" }
+        { "label": "Full List of Contests", "href": "", "type": "internal" },
+        { "label": "Full List of Problems", "href": "", "type": "internal" }
       ]
     }
   ]
