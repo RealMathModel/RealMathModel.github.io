@@ -206,6 +206,290 @@
               "resources": []
             }
           ]
+        },
+        {
+          "id": "sem4",
+          "title": "Semester 4",
+          "tag": "S4",
+          "icon": "fa-solid fa-4",
+          "accent": "purple",
+          "blurb": "Data, Signals & First Steps into ML",
+          "children": [
+            {
+              "id": "prob-stats",
+              "title": "Probability and Statistics Theory",
+              "tag": "MATH",
+              "icon": "fa-solid fa-chart-simple",
+              "accent": "blue",
+              "blurb": "Distributions, inference, estimation",
+              "resources": []
+            },
+            {
+              "id": "dsa",
+              "title": "Data Structures and Algorithms",
+              "tag": "CS",
+              "icon": "fa-solid fa-sitemap",
+              "accent": "green",
+              "blurb": "Trees, graphs, complexity, core algorithms",
+              "resources": []
+            },
+            {
+              "id": "python-programming",
+              "title": "Python Programming",
+              "tag": "CS",
+              "icon": "fa-brands fa-python",
+              "accent": "teal",
+              "blurb": "Applied Python beyond the basics",
+              "resources": []
+            },
+            {
+              "id": "dsp",
+              "title": "Digital Signals Processing",
+              "tag": "SIG",
+              "icon": "fa-solid fa-wave-square",
+              "accent": "orange",
+              "blurb": "Sampling, filters, transforms",
+              "resources": []
+            },
+            {
+              "id": "dsp-lab",
+              "title": "Digital Signals Processing Lab",
+              "tag": "LAB",
+              "icon": "fa-solid fa-flask-vial",
+              "accent": "amber",
+              "blurb": "Hands-on DSP implementation",
+              "resources": []
+            },
+            {
+              "id": "intro-ml",
+              "title": "Ideal Machine Learning",
+              "tag": "ML",
+              "icon": "fa-solid fa-brain",
+              "accent": "red",
+              "blurb": "First formal introduction to ML",
+              "resources": []
+            }
+          ]
+        },
+        {
+          "id": "sem5",
+          "title": "Semester 5",
+          "tag": "S5",
+          "icon": "fa-solid fa-5",
+          "accent": "teal",
+          "blurb": "Intelligence, Language & Architecture",
+          "children": [
+            {
+              "id": "comp-arch",
+              "title": "Computer Architecture",
+              "tag": "SYS",
+              "icon": "fa-solid fa-server",
+              "accent": "blue",
+              "blurb": "CPU design, memory hierarchy, pipelines",
+              "resources": []
+            },
+            {
+              "id": "ai",
+              "title": "AI",
+              "tag": "AI",
+              "icon": "fa-solid fa-microchip",
+              "accent": "red",
+              "blurb": "Search, reasoning, knowledge representation",
+              "resources": []
+            },
+            {
+              "id": "nlp",
+              "title": "NLP",
+              "tag": "NLP",
+              "icon": "fa-solid fa-comment-dots",
+              "accent": "purple",
+              "blurb": "Text processing, language models",
+              "resources": []
+            },
+            {
+              "id": "info-retrieval",
+              "title": "Information Retrieval",
+              "tag": "IR",
+              "icon": "fa-solid fa-magnifying-glass",
+              "accent": "amber",
+              "blurb": "Search engines, ranking, indexing",
+              "resources": []
+            },
+            {
+              "id": "chatbot-dev",
+              "title": "ChatBot Development",
+              "tag": "APP",
+              "icon": "fa-solid fa-robot",
+              "accent": "green",
+              "blurb": "Conversational AI systems, applied build",
+              "resources": []
+            }
+          ]
+        },
+        {
+          "id": "sem6",
+          "title": "Semester 6",
+          "tag": "S6",
+          "icon": "fa-solid fa-6",
+          "accent": "orange",
+          "blurb": "Low-Level Systems to Deep Learning",
+          "children": [
+            {
+              "id": "assembly",
+              "title": "Assembly Language",
+              "tag": "SYS",
+              "icon": "fa-solid fa-terminal",
+              "accent": "blue",
+              "blurb": "Low-level programming & instruction sets",
+              "resources": []
+            },
+            {
+              "id": "data-analysis",
+              "title": "Data Analysis",
+              "tag": "DATA",
+              "icon": "fa-solid fa-chart-line",
+              "accent": "teal",
+              "blurb": "EDA, cleaning, statistical analysis",
+              "resources": []
+            },
+            {
+              "id": "ml",
+              "title": "Machine Learning",
+              "tag": "ML",
+              "icon": "fa-solid fa-brain",
+              "accent": "red",
+              "blurb": "Core ML algorithms & theory",
+              "resources": []
+            },
+            {
+              "id": "dl",
+              "title": "Deep Learning",
+              "tag": "DL",
+              "icon": "fa-solid fa-network-wired",
+              "accent": "purple",
+              "blurb": "Neural networks, backprop, architectures",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-1",
+              "title": "OPT SPEC 1",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-star",
+              "accent": "amber",
+              "blurb": "Optional specialization track — theory",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-1-practical",
+              "title": "OPT SPEC 1 (PRACTICAL)",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-screwdriver-wrench",
+              "accent": "green",
+              "blurb": "Optional specialization track — hands-on",
+              "resources": []
+            }
+          ]
+        },
+        {
+          "id": "sem7",
+          "title": "Semester 7",
+          "tag": "S7",
+          "icon": "fa-solid fa-7",
+          "accent": "red",
+          "blurb": "Deepening Specialization & Research",
+          "children": [
+            {
+              "id": "opt-spec-2",
+              "title": "OPT SPEC 2",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-star",
+              "accent": "amber",
+              "blurb": "Optional specialization track — theory",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-2-practical",
+              "title": "OPT SPEC 2 (PRACTICAL)",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-screwdriver-wrench",
+              "accent": "green",
+              "blurb": "Optional specialization track — hands-on",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-3",
+              "title": "OPT SPEC 3",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-star-half-stroke",
+              "accent": "purple",
+              "blurb": "Optional specialization track — theory",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-3-practical",
+              "title": "OPT SPEC 3 (PRACTICAL)",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-gears",
+              "accent": "teal",
+              "blurb": "Optional specialization track — hands-on",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-4",
+              "title": "OPT SPEC 4",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-meteor",
+              "accent": "orange",
+              "blurb": "Optional specialization track — theory",
+              "resources": []
+            },
+            {
+              "id": "research-paper",
+              "title": "Research Paper",
+              "tag": "RESEARCH",
+              "icon": "fa-solid fa-file-lines",
+              "accent": "blue",
+              "blurb": "Independent research & academic writing",
+              "resources": []
+            }
+          ]
+        },
+        {
+          "id": "sem8",
+          "title": "Semester 8",
+          "tag": "S8",
+          "icon": "fa-solid fa-8",
+          "accent": "green",
+          "blurb": "Final Specialization & Graduation",
+          "children": [
+            {
+              "id": "opt-spec-5",
+              "title": "OPT SPEC 5",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-crown",
+              "accent": "amber",
+              "blurb": "Optional specialization track — theory",
+              "resources": []
+            },
+            {
+              "id": "opt-spec-5-practical",
+              "title": "OPT SPEC 5 (PRACTICAL)",
+              "tag": "ELECTIVE",
+              "icon": "fa-solid fa-toolbox",
+              "accent": "teal",
+              "blurb": "Optional specialization track — hands-on",
+              "resources": []
+            },
+            {
+              "id": "graduation-project",
+              "title": "Graduation Project",
+              "tag": "CAPSTONE",
+              "icon": "fa-solid fa-trophy",
+              "accent": "red",
+              "blurb": "",
+              "resources": []
+            }
+          ]
         }
       ]
     },
