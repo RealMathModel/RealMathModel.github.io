@@ -32,6 +32,18 @@
                 { "label": "Mid Term Exam 2026", "href": "https://drive.google.com/file/d/1m0t2o14kDRxT8cPozwQRNh4Qt8UE0G2V/view?usp=sharing", "type": "external" },
                 { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1eJarjleXdZKKE2E9ywtMibAGUzAUTlSX/view?usp=sharing", "type": "external" }
               ]
+            },
+            {
+              "id": "physc-a",
+              "title": "Physics A",
+              "tag": "PHYS",
+              "icon": "fa-solid fa-atom",
+              "accent": "purple",
+              "blurb": "Physics",
+              "resources": [
+                { "label": "Physics A summary", "href": "https://drive.google.com/file/d/1EjoeZa87syQ853VUBy3dkaPxfL0ij6Os/view?usp=sharing", "type": "external" }
+              ]
+
             }
           ]
         },
