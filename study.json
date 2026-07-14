@@ -53,6 +53,7 @@
               "resources": [
                 { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "interactive study lab · offline" },
                 { "label": "Calculus B summary", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external" },
+                { "label": "Formulas Sheet", "href": "https://drive.google.com/file/d/1RpS-sYEb4hWkLsazEy3wcaGyf-IQb_92/view?usp=sharing", "type": "external" },
                 { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1Vut11bepSwlMOq2_BvCcN6V-HOXGfJsU/view?usp=sharing", "type": "external" }
               ]
             },
@@ -87,6 +88,7 @@
                 { "label": "Chapter 9 Video", "href": "https://drive.google.com/file/d/1TSmv5q5549u4kQ2VLlRi_ez1lMcDnoBa/view?usp=sharing", "type": "external" },
                 { "label": "Selection Sort Video", "href": "https://drive.google.com/file/d/11fj3p9XETc0s8JQuav0s8fHgbtpUSXHl/view?usp=sharing", "type": "external" },
                 { "label": "Binary Search Video", "href": "https://drive.google.com/file/d/1pg6dWaNJ0-_CrLa_6arRym3LVJbK43gf/view?usp=sharing", "type": "external" },
+                { "label": "Implementation Problems", "href": "https://drive.google.com/file/d/1d3aXJHtMfkPcEAXpm4KRW7DzleY0un3M/view?usp=drive_link", "type": "external" },
                 { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1rtIvs0K3cqL2le5AHTwwiFFEoHpZFXva/view?usp=sharing", "type": "external" }
               ]
             },
