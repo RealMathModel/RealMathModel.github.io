@@ -496,8 +496,8 @@
       ]
     },
      {
-      "id": "Computer Sciences Educational Content",
-      "title": "CSEAI",
+      "id": "CSEAI",
+      "title": "Computer Sciences Educational Content",
       "tag": "CSEAI",
       "icon": "fa-solid fa-microchip",
       "accent": "blue",
