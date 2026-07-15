@@ -87,7 +87,8 @@
                 { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "interactive study lab · offline" },
                 { "label": "Calculus B summary", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external" },
                 { "label": "Formulas Sheet", "href": "https://drive.google.com/file/d/1RpS-sYEb4hWkLsazEy3wcaGyf-IQb_92/view?usp=sharing", "type": "external" },
-                { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1Vut11bepSwlMOq2_BvCcN6V-HOXGfJsU/view?usp=sharing", "type": "external" }
+                { "label": "Final Exam 2026 (Unsolved)", "href": "https://drive.google.com/file/d/1DcGgVctItzURdWz_O58zmFjxcL1_7tkZ/view?usp=sharing", "type": "external" },
+                { "label": "Final Exam 2026 (Solved)", "href": "https://drive.google.com/file/d/1Vut11bepSwlMOq2_BvCcN6V-HOXGfJsU/view?usp=sharing", "type": "external" }
               ]
             },
             {
