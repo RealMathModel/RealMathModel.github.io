@@ -527,8 +527,7 @@
       "accent": "amber",
       "blurb": "Every Problem I've authored so far",
       "resources": [
-        { "label": "Full List of Contests", "href": "", "type": "internal" },
-        { "label": "Full List of Problems", "href": "", "type": "internal" }
+        { "label": "Full List of Problems", "href": "problemset.html", "type": "internal" }
       ]
     }
   ]
