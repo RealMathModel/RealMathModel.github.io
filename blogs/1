@@ -1,0 +1,17 @@
+Welcome to the Blog
+
+This is where I write up the things I am working through — mostly \it{mathematics}, some physics, and the occasional note on computation. Nothing here is meant to be polished; it is a \bf{working notebook} that happens to be public.
+
+Each post is a plain text file. The first line is the title, and everything after it is the body. Writing math is the whole point, so it works the way you would expect: inline expressions like $e^{i\pi} + 1 = 0$ sit inside the sentence, while larger results get their own line.
+
+$$\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}$$
+
+That last identity — the \it{Basel problem} — is the kind of thing you will find discussed here: a result that looks almost arbitrary at first, then turns out to be inevitable once you see why. Expect a lot of \bf{"why"} and less \bf{"what"}.
+
+You can also mix symbols freely, whether it is a derivative $\frac{dy}{dx}$, an integral $\int_0^\infty e^{-x^2}\,dx = \frac{\sqrt{\pi}}{2}$, or a full display block:
+
+$$\prod_{p\ \text{prime}} \frac{1}{1 - p^{-s}} = \sum_{n=1}^{\infty} \frac{1}{n^s}$$
+
+If you want to know what tools power all of this, the rendering is handled by \href{https://www.mathjax.org/}{MathJax}, and the whole site is a static page hosted on \href{https://pages.github.com/}{GitHub Pages}.
+
+Thanks for reading. More soon.
