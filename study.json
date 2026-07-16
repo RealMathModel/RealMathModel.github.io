@@ -496,6 +496,18 @@
       ]
     },
      {
+      "id": "uk",
+      "title": "Mathematics and CS Courses for UK",
+      "tag": "CSEAI",
+      "icon": "fa-solid fa-leaf-oak",
+      "accent": "red",
+      "blurb": "Qualifiers for Math/CS Major in UK Courses",
+      "resources": [
+        { "label": "Mathematics Sumamry", "href": "", "type": "internal" },
+        { "label": "Further Mathematics Sumamry", "href": "", "type": "internal" }
+      ]
+    },
+     {
       "id": "CSEAI",
       "title": "Computer Sciences Educational Content",
       "tag": "CSEAI",
