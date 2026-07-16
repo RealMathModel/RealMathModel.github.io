@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Study Hub">
-<title>realmathmodel — study hub</title>
+<title>RealMathModel Page</title>
 
 <!-- FontAwesome (icons referenced by class in study.json) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -220,7 +220,7 @@ h1 .ac{color:var(--amber)}
    ========================================================================== */
 
 var app=document.getElementById('app'), ttl=document.getElementById('ttl');
-var cats=[], owner='hasan', host='iug', tagline='Pick an area — drill down to its resources.';
+var cats=[], owner='hasan', host='iug', tagline='All What a Computer/AI Engineer needs in one place !';
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
@@ -241,8 +241,8 @@ function cardHtml(c){return '<a class="card" href="#'+encodeURIComponent(c.id)+'
 
 /* ---------- views ---------- */
 function renderHub(){
-  ttl.innerHTML='<i class="fa-solid fa-terminal"></i> realmathmodel — bash — 80×24';
-  document.title='realmathmodel — study hub';
+  ttl.innerHTML='<i class="fa-solid fa-terminal"></i> realmathmodel';
+  document.title='RealMathModel Page';
   app.innerHTML=
     '<p class="prompt"><span class="u">'+esc(owner)+'</span>@<span class="p">'+esc(host)+'</span>:<span class="d">~</span>$ ls ./study<span class="cursor"></span></p>'+
     '<h1>Study <span class="ac">Hub</span></h1><p class="sub">'+esc(tagline)+'</p>'+
