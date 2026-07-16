@@ -152,6 +152,20 @@ h1 .ac{color:var(--amber)}
              #2       -> post number 2
    ========================================================================== */
 var app=document.getElementById('app'), ttl=document.getElementById('ttl');
+
+/* ---- surface ANY error on the page instead of failing silently ---- */
+function showFatal(kind,msg,extra){
+  if(!app) return;
+  app.innerHTML='<div class="errbox"><b><i class="fa-solid fa-triangle-exclamation"></i> '+kind+'</b><br><br>'+
+    String(msg||'')+(extra?'<br><span style="color:var(--faint);font-family:var(--mono);font-size:11px">'+String(extra)+'</span>':'')+'</div>';
+}
+window.addEventListener('error',function(e){
+  showFatal('JavaScript error', (e&&e.message)||e, (e&&e.filename?e.filename+':'+e.lineno:''));
+});
+window.addEventListener('unhandledrejection',function(e){
+  var r=e&&e.reason; showFatal('Fetch / async error', (r&&r.message)||r||'unknown');
+});
+
 var BLOG_DIR='blogs', MAX_SCAN=500;
 var owner='hasan', host='iug';
 var ACCENTS=['amber','blue','teal','purple'];
