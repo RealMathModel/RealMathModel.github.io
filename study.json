@@ -498,9 +498,9 @@
      {
       "id": "uk",
       "title": "Mathematics and CS Courses for UK",
-      "tag": "CSEAI",
-      "icon": "fa-solid fa-leaf-oak",
-      "accent": "red",
+      "tag": "UKqual",
+      "icon": "fa-solid fa-leaf",
+      "accent": "purple",
       "blurb": "Qualifiers for Math/CS Major in UK Courses",
       "resources": [
         { "label": "Mathematics Sumamry", "href": "", "type": "internal" },
