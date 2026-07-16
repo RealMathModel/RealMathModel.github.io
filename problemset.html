@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1220">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Problemsetting">
+<title>RealMathModel — Problemsetting</title>
+
+<!-- fully standalone: no external requests, no CDNs -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Crect width='32' height='32' rx='7' fill='%230B1220'/%3E%3Ctext x='4' y='23' font-family='monospace' font-size='18' fill='%23E0B23C'%3E%26gt;_%3C/text%3E%3C/svg%3E">
+
+<style>
+:root{
+  --bg:#0B1220; --bg2:#0E1726; --panel:#141E33; --panel2:#192541;
+  --line:#26334E; --line2:#33425f;
+  --ink:#E7ECF7; --muted:#8A97AD; --faint:#5C6981;
+  --amber:#E7B53D; --good:#4FC08A; --bad:#EB6A4E; --blue:#6F9BE8;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box} html,body{margin:0;padding:0}
+body{background:var(--bg); color:var(--ink); font-family:var(--sans);
+  -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100vh; min-height:100dvh;}
+#mathbg{position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; display:block; opacity:.9;}
+.bgveil{position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(1100px 620px at 72% -8%, rgba(231,181,61,.07), transparent 60%),
+    radial-gradient(900px 520px at -8% 112%, rgba(79,184,154,.07), transparent 55%),
+    radial-gradient(700px 700px at 50% 45%, rgba(11,18,32,.55), rgba(11,18,32,.0) 70%);}
+.wrap{position:relative; z-index:2; max-width:860px; margin:0 auto;
+  padding:0 16px env(safe-area-inset-bottom) 16px; padding-top:calc(14px + env(safe-area-inset-top));}
+.term{position:relative; border:1px solid var(--line); border-radius:14px; overflow:hidden;
+  background:linear-gradient(180deg, rgba(20,30,51,.82), rgba(14,23,38,.9));
+  -webkit-backdrop-filter:blur(9px) saturate(115%); backdrop-filter:blur(9px) saturate(115%);
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.02) inset, 0 1px 0 rgba(255,255,255,.04) inset;}
+.termbar{display:flex; align-items:center; gap:8px; padding:11px 14px;
+  background:rgba(255,255,255,.025); border-bottom:1px solid var(--line);}
+.dot{width:11px;height:11px;border-radius:50%}.dot.r{background:#e8654b}.dot.y{background:#e7b53d}.dot.g{background:#4fc08a}
+.termtitle{font-family:var(--mono); font-size:12px; color:var(--faint); margin-left:8px; letter-spacing:.02em;
+  display:flex; align-items:center; gap:7px}
+.termbody{padding:18px 16px 24px}
+@media(min-width:560px){.termbody{padding:26px 26px 32px}}
+
+.back{display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:12.5px;
+  color:var(--muted); text-decoration:none; margin-bottom:12px; transition:color .15s}
+.back:hover{color:var(--amber)} .back i{font-size:11px}
+.prompt{font-family:var(--mono); font-size:13px; color:var(--muted); margin:0 0 6px}
+.prompt .u{color:var(--good)} .prompt .p{color:var(--blue)} .prompt .d{color:var(--amber)}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--amber);vertical-align:-2px;margin-left:3px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+h1{font-family:var(--mono); font-weight:700; font-size:27px; letter-spacing:-.01em; margin:6px 0 2px; line-height:1.12}
+@media(min-width:560px){h1{font-size:32px}}
+h1 .ac{color:var(--amber)}
+.sub{color:var(--muted); font-size:14px; margin:0 0 16px}
+
+/* stats */
+.stats{display:flex; flex-wrap:wrap; gap:8px; margin:2px 0 16px}
+.stat{flex:1 1 auto; min-width:96px; background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:11px 13px}
+.stat .n{font-family:var(--mono); font-size:20px; font-weight:700; color:var(--amber); line-height:1}
+.stat .k{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-top:5px}
+
+/* controls */
+.search{display:flex; align-items:center; gap:10px; background:var(--bg2); border:1px solid var(--line);
+  border-radius:10px; padding:11px 13px; margin:2px 0 10px; transition:border-color .15s, box-shadow .15s}
+.search:focus-within{border-color:var(--line2); box-shadow:0 0 0 3px rgba(231,181,61,.08)}
+.search .si{color:var(--amber); font-size:16px; line-height:1}
+.search input{flex:1; background:none; border:none; outline:none; color:var(--ink); font-family:var(--mono); font-size:13px}
+.search input::placeholder{color:var(--faint)}
+.filters{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; align-items:center}
+.chip{font-family:var(--mono); font-size:11.5px; padding:6px 11px; border-radius:8px; cursor:pointer;
+  background:var(--panel); border:1px solid var(--line); color:var(--muted); transition:all .13s; user-select:none}
+.chip:hover{border-color:var(--line2); color:var(--ink)}
+.chip.on{background:rgba(231,181,61,.15); border-color:rgba(231,181,61,.45); color:var(--amber)}
+.chip .c{opacity:.7; margin-left:4px}
+.spacer{flex:1 1 auto}
+.sortbtn{font-family:var(--mono); font-size:11.5px; padding:6px 11px; border-radius:8px; cursor:pointer;
+  background:var(--panel); border:1px solid var(--line); color:var(--muted); transition:all .13s; display:inline-flex; align-items:center; gap:6px}
+.sortbtn:hover{border-color:var(--line2); color:var(--ink)} .sortbtn.on{color:var(--amber); border-color:rgba(231,181,61,.45)}
+
+.label{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--faint); margin:6px 0 10px; display:flex; align-items:center; gap:9px}
+.label::before{content:""; width:16px; height:1px; background:var(--line2)}
+
+/* problem rows */
+.list{display:flex; flex-direction:column; gap:8px}
+.prow{display:flex; gap:12px; padding:13px 14px; background:var(--panel); border:1px solid var(--line);
+  border-radius:11px; transition:border-color .15s, background .15s}
+.prow:hover{border-color:var(--line2); background:linear-gradient(var(--panel),var(--panel2))}
+.pid{font-family:var(--mono); font-size:12px; color:var(--faint); flex:0 0 auto; min-width:26px; padding-top:2px}
+.pmain{flex:1 1 auto; min-width:0}
+.ptitle{display:flex; align-items:center; gap:9px; flex-wrap:wrap}
+.pname{font-size:15px; font-weight:600; color:var(--ink); text-decoration:none}
+.pname:hover{color:var(--amber)}
+.rate{font-family:var(--mono); font-size:11.5px; font-weight:700; padding:2px 7px; border-radius:6px; border:1px solid; flex:0 0 auto}
+.divtag{font-family:var(--mono); font-size:10px; letter-spacing:.05em; color:var(--muted); border:1px solid var(--line2);
+  padding:2px 6px; border-radius:5px; flex:0 0 auto}
+.pmeta{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:5px; font-family:var(--mono); font-size:11.5px}
+.plat{font-weight:700; font-size:9.5px; letter-spacing:.05em; padding:2px 6px; border-radius:5px; border:1px solid}
+.plat.cf{color:#6F9BE8; border-color:#6F9BE855; background:#6F9BE81a}
+.plat.cc{color:#E0913C; border-color:#E0913C55; background:#E0913C1a}
+.plat.kep{color:#4FC08A; border-color:#4FC08A55; background:#4FC08A1a}
+.plat.rc{color:#B58BE6; border-color:#B58BE655; background:#B58BE61a}
+.plat.eo{color:#34BFC9; border-color:#34BFC955; background:#34BFC91a}
+.plat.x{color:var(--muted); border-color:var(--line2)}
+.contest{color:var(--muted); text-decoration:none} .contest:hover{color:var(--amber)}
+.dot2{color:var(--line2)} .date{color:var(--faint)}
+.pcomment{font-family:var(--sans); font-size:13px; color:var(--muted); margin-top:7px; line-height:1.55}
+.sp{filter:blur(5px); background:var(--line); color:var(--ink); border-radius:4px; padding:0 4px; cursor:pointer;
+  transition:filter .15s, background .15s; -webkit-user-select:none; user-select:none}
+.sp:hover{background:var(--line2)}
+.sp.on{filter:none; background:rgba(231,181,61,.10); cursor:auto; -webkit-user-select:auto; user-select:auto}
+.sp::before{content:"spoiler"; font-family:var(--mono); font-size:10px; color:var(--faint)}
+.sp.on::before{content:""}
+.empty{color:var(--faint); font-family:var(--mono); font-size:13.5px; padding:20px 2px; display:none}
+.foot{font-family:var(--mono); font-size:11px; color:var(--faint); text-align:center; margin:20px 0 4px;
+  display:flex; align-items:center; justify-content:center; gap:7px}
+:focus-visible{outline:2px solid var(--amber); outline-offset:2px}
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001s !important; transition-duration:.05s !important} }
+</style>
+</head>
+<body>
+<canvas id="mathbg" aria-hidden="true"></canvas>
+<div class="bgveil" aria-hidden="true"></div>
+
+<div class="wrap">
+  <div class="term">
+    <div class="termbar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="termtitle">◆ realmathmodel — problemsetting</span>
+    </div>
+    <div class="termbody" id="app"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   realmathmodel — problemsetting showcase
+   ========================================================================== */
+var owner='hasan', host='iug';
+
+/* rating colour map */
+var RCOL={grey:'#9AA7BD',gray:'#9AA7BD',green:'#63C08A',cyan:'#34BFC9',blue:'#6F9BE8',
+          purple:'#B58BE6',violet:'#9D8BEA',orange:'#E0913C',red:'#EB6A4E'};
+
+/* contest URLs (reused across rows) */
+var C={
+  cf36:'https://codeforces.com/gym/105445',
+  s163:'https://www.codechef.com/START163',
+  kep12:'https://kep.uz/competitions/contests/contest/419/problems',
+  kepsf:'https://kep.uz/competitions/contests/contest/421/problems',
+  robo:'https://robocontest.uz/olympiads/2619',
+  ewp5:'https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44',
+  ewp6:'https://basecamp.eolymp.com/en/compete/uukkpfajrh5fb729u5p4n5cti8',
+  ewp7:'https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0',
+  s200:'https://www.codechef.com/START200',
+  ebr1:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec',
+  ebr2:'https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc',
+  ebr4:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4',
+  ebr5:'https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps',
+  ewp12:'https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670',
+  ebr6:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k',
+  ebr9:'https://eolymp.com/en/compete/2rc5re6vmh2cnc6vlkshhn1ad8',
+  ewp16:'https://eolymp.com/en/compete/m7f5egpjit7n32822i6ged4m1k',
+  eb10:'https://eolymp.com/en/compete/94ulnr964l011arqjc94v5e5sk',
+  eb11:'https://eolymp.com/en/contests/2ad26u26792v7aamtvg0b9c4bg',
+  eb12:'https://eolymp.com/en/contests/qjgameovtl0l7dprd0o9efta48'
+};
+
+/* problems: [n, date, name, url, div, rate, colour, contest, contestUrl, commentHTML] */
+var D=[
+[1,"October 2024","Sum Fun","https://codeforces.com/gym/105445/problem/A","D2A","800","grey","TheForces Round #36 (Starters-Forces)",C.cf36,"My very first problem + my first adhoc problem"],
+[2,"October 2024","Interviews","https://codeforces.com/gym/105445/problem/B","D2A","900","grey","TheForces Round #36 (Starters-Forces)",C.cf36,"Cute Greedy Problem"],
+[3,"October 2024","YEET!","https://codeforces.com/gym/105445/problem/D","D2D","2200","orange","TheForces Round #36 (Starters-Forces)",C.cf36,"My first constructive problem <span class=sp>Initially it was aimed to be a D2B</span>"],
+[4,"December 2024","Chef Socks","https://www.codechef.com/problems/CHEFSOCKS","D4A","800⁻","grey","Starters 163 (Rated till 5 stars)",C.s163,"Very simple problem, solvable by all participants"],
+[5,"December 2024","Binary Sum","https://www.codechef.com/problems/BIANRYSUM","D2A","800","grey","Starters 163 (Rated till 5 stars)",C.s163,"Simple Bruteforce <span class=sp>There exists an <b>𝒪(1)</b> solution</span>"],
+[6,"December 2024","Minimum Types","https://www.codechef.com/problems/MINBUY","D2A","1000","grey","Starters 163 (Rated till 5 stars)",C.s163,"My First Sorting+Greedy problem"],
+[7,"December 2024","Nice Array","https://www.codechef.com/problems/NICEARRAY","D2B","1200","green","Starters 163 (Rated till 5 stars)",C.s163,"Another Cute adhoc :)"],
+[8,"December 2024","Tree Sum is Fun !","https://www.codechef.com/problems/TREE2SUM","D2C/D1A","1700","blue","Starters 163 (Rated till 5 stars)",C.s163,"My First Binary Search problem <span class=sp>Binary Search on Binary Tree <span class=sp><b>𝒪(log²x) / 𝒪(log x)</b></span></span>"],
+[9,"December 2024","Permutation Pair","https://www.codechef.com/problems/PERMUTATION2","D2C/D1A","1900","purple","Starters 163 (Rated till 5 stars)",C.s163,"My First Counting Problem <span class=sp>Inclusion Exclusion</span>"],
+[10,"January 2025","Unique Winner","https://kep.uz/practice/problems/problem/2122","D2A","800","grey","KEP Contest #12",C.kep12,"Simple Game Theory"],
+[11,"January 2025","Beautiful Pairs #1","https://kep.uz/practice/problems/problem/2115","D2A","900","grey","KEP Contest #12",C.kep12,"Bruteforce + adhoc"],
+[12,"January 2025","Beautiful Pairs #2","https://kep.uz/practice/problems/problem/2116","D2A","1000","grey","KEP Contest #12",C.kep12,"Optimization training <span class=sp>Simulation and ∑</span>"],
+[13,"January 2025","Beautiful Pairs #3","https://kep.uz/practice/problems/problem/2117","D2B","1200","green","KEP Contest #12",C.kep12,"Optimization training again ! <span class=sp>∑ again !</span>"],
+[14,"January 2025","Cubic Sum #1","https://kep.uz/practice/problems/problem/2121?contest=419","D2B/C","1400","cyan","KEP Contest #12",C.kep12,"Optimized Bruteforce <span class=sp>It's enough to iterate through one pointer and binary search for the other</span>"],
+[15,"January 2025","Cubic Sum #2","https://kep.uz/practice/problems/problem/2113?contest=419","D2C","1600","blue","KEP Contest #12",C.kep12,"Optimized Bruteforce <span class=sp>The binary search (log) factor is heavy sometimes; two pointers is smaller in practice</span>"],
+[16,"March 2025","Binary Table","https://kep.uz/practice/problems/problem/2112","D2C","1700","blue","KEP SciFi Contest",C.kepsf,"Another Counting Problem !"],
+[17,"March 2025","Hasan and Binary Function","https://robocontest.uz/olympiads/2619/tasks/A","D2A","900","grey","Robocontest 103",C.robo,"Binary Representation Properties"],
+[18,"March 2025","Hasan and Beautiful","https://robocontest.uz/olympiads/2619/tasks/B","D2A/B","1100","grey","Robocontest 103",C.robo,"Educational problem about Greedy."],
+[19,"March 2025","Hasan and Special Remove","https://robocontest.uz/olympiads/2619/tasks/C","D2B","1300","green","Robocontest 103",C.robo,"Educational problem about frequency arrays and greedy."],
+[20,"March 2025","Hasan and Permutations","https://robocontest.uz/olympiads/2619/tasks/D","D2B","1400","cyan","Robocontest 103",C.robo,"Educational problem about counting — pattern also findable by bruteforce."],
+[21,"March 2025","Hasan and Fair Split","https://robocontest.uz/olympiads/2619/tasks/G","D2C","1700","blue","Robocontest 103",C.robo,"Cool Number Theory problem"],
+[22,"March 2025","A. Special Moves","https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/1","D2A","800","grey","Eolymp Weekend Practice #5",C.ewp5,"Implementation"],
+[23,"March 2025","B. Sacrifice","https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/2","D2B","1100","grey","Eolymp Weekend Practice #5",C.ewp5,"Educational number theory"],
+[24,"March 2025","C. Score","https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/3","D2C","1700","blue","Eolymp Weekend Practice #5",C.ewp5,"Binary search on a Tree again — but it's Fenwick."],
+[25,"May 2025","A. Epic Coloring","https://basecamp.eolymp.com/en/problems/11836","D2A","800","gray","Eolymp Weekend Practice #6",C.ewp6,"Simple Math and Casework."],
+[26,"May 2025","B. XORSUM","https://basecamp.eolymp.com/en/problems/11837","D2B","1000","gray","Eolymp Weekend Practice #6",C.ewp6,"XOR cycle property + educational problem about counting cycles with remainder."],
+[27,"May 2025","C. 333 Permutation","https://basecamp.eolymp.com/en/problems/11838","D2C/D1A","1600","blue","Eolymp Weekend Practice #6",C.ewp6,"Nice Constructive Problem, with DS and implementation training."],
+[28,"May 2025","D. Constructive Fun","https://basecamp.eolymp.com/en/problems/11839","D2D/D1B","2200","orange","Eolymp Weekend Practice #6",C.ewp6,"It's Knapsack DP masked as constructive"],
+[29,"May 2025","E. Tree Sum is Fun II","https://basecamp.eolymp.com/en/problems/11840","D2F/D1C","2500","red","Eolymp Weekend Practice #6",C.ewp6,"Very Detailed Problem, won't spoil — give it a try :)"],
+[30,"June 2025","A. Unique ID","https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0/problem/1","D2A","800","gray","Eolymp Weekend Practice #7",C.ewp7,"Simple Implementation."],
+[31,"June 2025","B. Quad","https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0/problem/2","D2B","1000","gray","Eolymp Weekend Practice #7",C.ewp7,"Simple Construction / Amortized Analysis works too."],
+[32,"August 2025","Permutation Counting (Easy)","https://www.codechef.com/problems/PERMCNTEZ","D1B","2100","orange","Codechef Starters 200",C.s200,"Stars and Bars"],
+[33,"August 2025","Evading Robot","https://www.codechef.com/problems/EVADEROBOT","D1C","2500","red","Codechef Starters 200",C.s200,"Original idea proposed by Az3ar; I made slight changes, and later Dominater069 improved it to feature counting."],
+[34,"August 2025","Permutation Counting (Hard)","https://www.codechef.com/problems/PERMCNTHD","D1E","3200","red","Codechef Starters 200",C.s200,"I came up with the statement. Thanks to BurnedChicken for solving it!"],
+[35,"2025","Directed?","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/1","Div4A","800⁻","grey","Eolymp Blitz Round 1",C.ebr1,""],
+[36,"2025","Power Permutation","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/2","Div4B","800","grey","Eolymp Blitz Round 1",C.ebr1,"Simple Observation"],
+[37,"2025","Beautiful Grid","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/3","Div3C","1200","green","Eolymp Blitz Round 1",C.ebr1,"Implementation Practice"],
+[38,"2025","Powers Counting","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/4","Div2C","1600","blue","Eolymp Blitz Round 1",C.ebr1,"Nice Binary Search"],
+[39,"2025","±Permutation","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/5","Div2C","1400","cyan","Eolymp Blitz Round 1",C.ebr1,"Epic constructive"],
+[40,"2025","Prefix Suffix Reconstruction","https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/1","D3A","800","grey","Eolymp Blitz Round 2",C.ebr2,"Simple"],
+[41,"2025","Kaosar and XOR","https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/3","D3C","1000","grey","Eolymp Blitz Round 2",C.ebr2,"nice beginner casework"],
+[42,"2025","Crazy GCD","https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/5","D2C","1600","blue","Eolymp Blitz Round 2",C.ebr2,"Nice Number Theory problem"],
+[43,"2025","WOOW String","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/1","D4A","800","grey","Eolymp Blitz Round 4",C.ebr4,"Simple"],
+[44,"2025","Count Transformations","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/2","D3A","1000","grey","Eolymp Blitz Round 4",C.ebr4,"Simple counting"],
+[45,"2025","PAM!","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/3","D2B","1200","green","Eolymp Blitz Round 4",C.ebr4,"Recommended"],
+[46,"2025","Minimum Increasing Cycle","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/5","D2C","1700","blue","Eolymp Blitz Round 4",C.ebr4,"My first Dynamic-Programming problem :)"],
+[47,"2025","Collatz Beauty","https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/1","D3A","800","grey","Eolymp Blitz Round 5",C.ebr5,"Simple"],
+[48,"2025","Min Sum Construction","https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/4","D2C","1500","cyan","Eolymp Blitz Round 5",C.ebr5,"Skibidi Problem"],
+[49,"2025","Kaosar and Triples","https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/5","D2C","1700","blue","Eolymp Blitz Round 5",C.ebr5,"Multiple ways to go"],
+[50,"2025","Easy Array Coloring","https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/1","D2A","800","grey","Eolymp Weekend Practice 12",C.ewp12,"<b>n = 1</b> is evil"],
+[51,"2025","Permutation of Subarrays and Queries","https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/3","D2C","1600","blue","Eolymp Weekend Practice 12",C.ewp12,""],
+[52,"2025","Hard Arithemetic","https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/4","D2D","2000","purple","Eolymp Weekend Practice 12",C.ewp12,"Multiple ways to go"],
+[53,"2025","Easy Array Coloring II","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/1","D2A","800","grey","Eolymp Blitz Round #6",C.ebr6,"Simple."],
+[54,"2025","+ , -- or ?","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/2","D3B","900","grey","Eolymp Blitz Round #6",C.ebr6,"Simple."],
+[55,"2025","Epic Subarrays Counting","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/3","D2B","1100","grey","Eolymp Blitz Round #6",C.ebr6,"Simple."],
+[56,"2025","Binary Fun","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/1","D2C","1500","cyan","Eolymp Blitz Round #6",C.ebr6,""],
+[57,"2025","Hard Game","https://eolymp.com/en/compete/2rc5re6vmh2cnc6vlkshhn1ad8/problem/3","D2B","1200","green","Eolymp Blitz Round #9",C.ebr9,"Initially proposed to give the max answer; I made it constructive so it looks better."],
+[58,"2026","Recover The Array","https://eolymp.com/en/problems/12305","D2A","800","gray","Eolymp Weekend Practice #16",C.ewp16,"Simple Reverse Engineering :)"],
+[59,"2026","Skyline","https://eolymp.com/en/problems/12306","D2A","1000","gray","Eolymp Weekend Practice #16",C.ewp16,"Observation + Patterns."],
+[60,"2026","Minimum Triple","https://eolymp.com/en/problems/12307","D2C","1600","blue","Eolymp Weekend Practice #16",C.ewp16,""],
+[61,"2026","Permutation Fix Sum","https://eolymp.com/en/problems/12308","D1B","1900","violet","Eolymp Weekend Practice #16",C.ewp16,""],
+[62,"2026","Symmetric Construction","https://eolymp.com/en/problems/12309","D1C","2400","red","Eolymp Weekend Practice #16",C.ewp16,""],
+[63,"2026","Bouncing Ball","https://eolymp.com/en/problems/12311","D2A","800","grey","Eolymp Blitz #10",C.eb10,""],
+[64,"2026","Digit Queries","https://eolymp.com/en/problems/12312","D2A","900","grey","Eolymp Blitz #10",C.eb10,""],
+[65,"2026","Counting Pairs","https://eolymp.com/en/problems/12313","D2A","1000","grey","Eolymp Blitz #10",C.eb10,""],
+[66,"2026","2Tree Queries","https://eolymp.com/en/problems/12314","D2B/C","1400","cyan","Eolymp Blitz #10",C.eb10,""],
+[67,"2026","Wake Me Up","https://eolymp.com/en/problems/12315","D2C","1700","blue","Eolymp Blitz #10",C.eb10,""],
+[68,"2026","Kaosar and Counting","https://eolymp.com/en/problems/12328","D2C","1600","blue","Eolymp Blitz #11",C.eb11,""],
+[69,"2026","Interviews","https://eolymp.com/en/problems/12339","D2A","1000","grey","Eolymp Blitz #12",C.eb12,""]
+];
+
+/* ---------- helpers ---------- */
+var app=document.getElementById('app');
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
+function platform(url){
+  if(/codeforces\.com/.test(url))return{c:'CF',cls:'cf',name:'Codeforces'};
+  if(/codechef\.com/.test(url))return{c:'CC',cls:'cc',name:'CodeChef'};
+  if(/kep\.uz/.test(url))return{c:'KEP',cls:'kep',name:'KEP'};
+  if(/robocontest\.uz/.test(url))return{c:'RC',cls:'rc',name:'Robocontest'};
+  if(/eolymp\.com/.test(url))return{c:'EO',cls:'eo',name:'Eolymp'};
+  return{c:'?',cls:'x',name:'Other'};
+}
+function obj(a){return{n:a[0],date:a[1],name:a[2],url:a[3],div:a[4],rate:a[5],col:a[6],contest:a[7],curl:a[8],note:a[9]};}
+var PROBS=D.map(obj);
+
+/* ---------- stats ---------- */
+function buildStats(){
+  var contests={}, plats={}, hardest=0;
+  PROBS.forEach(function(p){
+    contests[p.contest]=1; plats[platform(p.url).name]=1;
+    var r=parseInt(p.rate,10); if(r>hardest)hardest=r;
+  });
+  return {total:PROBS.length, contests:Object.keys(contests).length,
+          plats:Object.keys(plats).length, hardest:hardest};
+}
+
+/* ---------- row ---------- */
+function rowHtml(p){
+  var pf=platform(p.url), col=RCOL[p.col]||'#9AA7BD', num=parseInt(p.rate,10)||0;
+  var text=(p.name+' '+p.contest+' '+pf.name+' '+p.div).toLowerCase();
+  return '<div class="prow" data-plat="'+pf.cls+'" data-rate="'+num+'" data-n="'+p.n+'" data-text="'+esc(text)+'">'+
+    '<span class="pid">'+String(p.n).padStart(2,'0')+'</span>'+
+    '<div class="pmain">'+
+      '<div class="ptitle">'+
+        '<a class="pname" href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.name)+'</a>'+
+        '<span class="rate" style="color:'+col+';border-color:'+col+'55;background:'+col+'1a">'+esc(p.rate)+'</span>'+
+        '<span class="divtag">'+esc(p.div)+'</span>'+
+      '</div>'+
+      '<div class="pmeta">'+
+        '<span class="plat '+pf.cls+'">'+pf.c+'</span>'+
+        '<a class="contest" href="'+esc(p.curl)+'" target="_blank" rel="noopener">'+esc(p.contest)+'</a>'+
+        '<span class="dot2">&middot;</span><span class="date">'+esc(p.date)+'</span>'+
+      '</div>'+
+      (p.note?'<div class="pcomment">'+p.note+'</div>':'')+
+    '</div></div>';
+}
+
+/* ---------- render ---------- */
+var state={q:'', plat:'all', sort:'n', dir:1};
+
+function render(){
+  var s=buildStats();
+  app.innerHTML=
+    '<a class="back" href="index.html">‹ cd ~</a>'+
+    '<p class="prompt"><span class="u">'+owner+'</span>@<span class="p">'+host+'</span>:<span class="d">~/problemsetting</span>$ ls --authored<span class="cursor"></span></p>'+
+    '<h1>Problem<span class="ac">setting</span></h1>'+
+    '<p class="sub">Every problem I’ve authored so far — across Codeforces, CodeChef, KEP, Robocontest &amp; Eolymp.</p>'+
+    '<div class="stats">'+
+      '<div class="stat"><div class="n">'+s.total+'</div><div class="k">problems</div></div>'+
+      '<div class="stat"><div class="n">'+s.contests+'</div><div class="k">contests</div></div>'+
+      '<div class="stat"><div class="n">'+s.plats+'</div><div class="k">platforms</div></div>'+
+      '<div class="stat"><div class="n">'+s.hardest+'</div><div class="k">hardest</div></div>'+
+    '</div>'+
+    '<div class="search"><span class="si">⌕</span>'+
+      '<input id="q" type="text" inputmode="search" autocomplete="off" placeholder="filter by name, contest, platform…"></div>'+
+    '<div class="filters" id="filters">'+
+      platChip('all','All')+platChip('cf','CF')+platChip('cc','CC')+platChip('kep','KEP')+platChip('rc','RC')+platChip('eo','EO')+
+      '<span class="spacer"></span>'+
+      '<span class="sortbtn" id="sortN"># order</span>'+
+      '<span class="sortbtn" id="sortR">↕ rating</span>'+
+    '</div>'+
+    '<div class="label" id="lab"></div>'+
+    '<div class="list" id="list">'+PROBS.map(rowHtml).join('')+'</div>'+
+    '<div class="empty" id="emp">no problem matches that.</div>'+
+    '<p class="foot">⟨/⟩ realmathmodel.github.io</p>';
+
+  document.getElementById('q').addEventListener('input',function(e){ state.q=e.target.value.trim().toLowerCase(); apply(); });
+  document.getElementById('filters').addEventListener('click',function(e){
+    var chip=e.target.closest('.chip'); if(chip){ state.plat=chip.getAttribute('data-p'); apply(); }
+  });
+  document.getElementById('sortN').addEventListener('click',function(){ state.sort='n'; state.dir=1; apply(); });
+  document.getElementById('sortR').addEventListener('click',function(){
+    if(state.sort==='rate') state.dir*=-1; else { state.sort='rate'; state.dir=-1; } apply();
+  });
+  document.getElementById('list').addEventListener('click',function(e){
+    var sp=e.target.closest('.sp'); if(sp) sp.classList.toggle('on');
+  });
+  apply();
+}
+function platChip(p,lbl){ return '<span class="chip'+(p==='all'?' on':'')+'" data-p="'+p+'">'+lbl+'</span>'; }
+
+function apply(){
+  var list=document.getElementById('list'), rows=Array.prototype.slice.call(list.children);
+  var shown=0;
+  rows.forEach(function(r){
+    var okP=(state.plat==='all')||(r.getAttribute('data-plat')===state.plat);
+    var okQ=!state.q||r.getAttribute('data-text').indexOf(state.q)>-1;
+    var vis=okP&&okQ; r.style.display=vis?'':'none'; if(vis)shown++;
+  });
+  /* sort */
+  rows.sort(function(a,b){
+    if(state.sort==='rate'){
+      var d=(+a.getAttribute('data-rate'))-(+b.getAttribute('data-rate'));
+      if(d!==0) return d*state.dir;
+    }
+    return ((+a.getAttribute('data-n'))-(+b.getAttribute('data-n')))*(state.sort==='rate'?1:state.dir);
+  });
+  rows.forEach(function(r){ list.appendChild(r); });
+  /* chips + labels */
+  Array.prototype.forEach.call(document.querySelectorAll('.chip'),function(c){
+    c.classList.toggle('on', c.getAttribute('data-p')===state.plat);
+  });
+  document.getElementById('sortN').classList.toggle('on',state.sort==='n');
+  document.getElementById('sortR').classList.toggle('on',state.sort==='rate');
+  document.getElementById('lab').textContent=shown+(shown===1?' problem':' problems')+
+    (state.sort==='rate'?(state.dir<0?' · hardest first':' · easiest first'):' · chronological');
+  document.getElementById('emp').style.display=shown?'none':'block';
+}
+
+render();
+
+/* ============================================================================
+   LIVE MATHEMATICAL BACKGROUND (same as hub)
+   ========================================================================== */
+(function(){
+  var cvs=document.getElementById('mathbg'), ctx=cvs.getContext('2d');
+  var W=0,H=0,DPR=1,t=0,raf=null;
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var PALETTE=['rgba(231,181,61,A)','rgba(79,184,154,A)','rgba(111,155,232,A)','rgba(183,155,224,A)','rgba(138,151,173,A)'];
+  var EQS=['e^{iπ} + 1 = 0','∑ 1/n² = π²/6','∫₀^∞ e^{-x²}dx = √π/2',
+    'a² + b² = c²','lim (1+1/n)ⁿ = e','f(x)=∑ aₙxⁿ',
+    'φ = (1+√5)/2','x = (-b±√(b²-4ac))/2a','cos²θ + sin²θ = 1',
+    'n! = n·(n-1)!','O(n log n)','Γ(n)=(n-1)!','∑ C(n,k) = 2ⁿ'];
+  var SYM=['∫','∑','∏','√','π','∞','∂','∇','λ','θ','Σ','Δ','φ',
+    '≈','≠','≤','≥','→','∈','∀','∃','⊕','≅','ℝ','ℤ','∮','⊨'];
+  var items=[];
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function build(){ items=[]; var area=W*H;
+    var nEq=Math.max(5,Math.min(13,Math.round(area/150000)));
+    var nSy=Math.max(10,Math.min(26,Math.round(area/52000))),i;
+    for(i=0;i<nEq;i++)items.push(mk(true)); for(i=0;i<nSy;i++)items.push(mk(false)); }
+  function mk(isEq){ var size=isEq?rnd(13,20):rnd(26,64);
+    return {eq:isEq, txt:isEq?EQS[(Math.random()*EQS.length)|0]:SYM[(Math.random()*SYM.length)|0],
+      x:rnd(0,W), y:rnd(0,H), size:size, vx:rnd(-0.06,0.06), vy:rnd(-0.16,-0.04),
+      rot:rnd(-0.25,0.25), vr:rnd(-0.0006,0.0006), base:rnd(isEq?0.045:0.05, isEq?0.10:0.16),
+      col:PALETTE[(Math.random()*PALETTE.length)|0], ph:rnd(0,6.28)}; }
+  function resize(){ DPR=Math.min(window.devicePixelRatio||1,2); W=window.innerWidth; H=window.innerHeight;
+    cvs.width=Math.floor(W*DPR); cvs.height=Math.floor(H*DPR); ctx.setTransform(DPR,0,0,DPR,0,0); build(); if(reduce)draw(true); }
+  function curves(){
+    var specs=[{col:'rgba(231,181,61,0.05)',amp:H*0.10,k:0.010,yoff:H*0.30,sp:0.00018,lw:1.4},
+               {col:'rgba(79,184,154,0.05)',amp:H*0.07,k:0.016,yoff:H*0.62,sp:-0.00012,lw:1.2},
+               {col:'rgba(111,155,232,0.04)',amp:H*0.13,k:0.007,yoff:H*0.82,sp:0.00009,lw:1.6}];
+    for(var s=0;s<specs.length;s++){ var c=specs[s]; ctx.beginPath(); ctx.lineWidth=c.lw; ctx.strokeStyle=c.col;
+      for(var x=0;x<=W;x+=6){ var y=c.yoff+Math.sin(x*c.k+t*c.sp*1000+s)*c.amp+Math.sin(x*c.k*0.5+t*c.sp*600)*c.amp*0.35;
+        if(x===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);} ctx.stroke(); } }
+  function draw(stat){ ctx.clearRect(0,0,W,H); curves(); ctx.textBaseline='middle'; ctx.textAlign='center';
+    for(var i=0;i<items.length;i++){ var it=items[i];
+      if(!stat){ it.x+=it.vx; it.y+=it.vy; it.rot+=it.vr; if(it.y<-60){it.y=H+40;it.x=rnd(0,W);}
+        if(it.x<-120)it.x=W+60; if(it.x>W+120)it.x=-60; }
+      var pulse=stat?1:(0.7+0.3*Math.sin(t*0.0006+it.ph));
+      ctx.save(); ctx.translate(it.x,it.y); ctx.rotate(it.rot);
+      ctx.font=(it.eq?'500 ':'600 ')+it.size+'px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
+      ctx.fillStyle=it.col.replace('A',(it.base*pulse).toFixed(3)); ctx.fillText(it.txt,0,0); ctx.restore(); } }
+  function loop(now){ t=now||0; draw(false); raf=requestAnimationFrame(loop); }
+  window.addEventListener('resize',function(){ if(raf)cancelAnimationFrame(raf); resize(); if(!reduce){raf=requestAnimationFrame(loop);} });
+  document.addEventListener('visibilitychange',function(){ if(document.hidden){ if(raf){cancelAnimationFrame(raf);raf=null;} }
+    else if(!reduce&&!raf){ raf=requestAnimationFrame(loop); } });
+  resize(); if(!reduce) raf=requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
