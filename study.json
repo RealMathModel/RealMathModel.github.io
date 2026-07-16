@@ -507,16 +507,6 @@
         { "label": "Further Mathematics Sumamry", "href": "", "type": "internal" }
       ]
     },
-{
-  "id": "blog",
-  "title": "My Blog",
-  "tag": "Blog",
-  "icon": "fa-solid fa-feather",
-  "accent": "green",
-  "blurb": "Blog, personal thoughts, writing",
-  "href": "blog.html",
-  "type": "internal"
-},
      {
       "id": "CSEAI",
       "title": "Computer Sciences Educational Content",
