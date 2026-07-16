@@ -1,7 +1,7 @@
 {
   "owner": "Hasan Ismail Saleh (MathModel)",
   "host": "...",
-  "tagline": "Pick an area — drill down to its resources.",
+  "tagline": "All What A Computer/AI Engineer Needs in One Place!",
   "categories": [
     {
       "id": "university",
@@ -507,6 +507,16 @@
         { "label": "Further Mathematics Sumamry", "href": "", "type": "internal" }
       ]
     },
+{
+  "id": "blog",
+  "title": "My Blog",
+  "tag": "Blog",
+  "icon": "fa-solid fa-feather",
+  "accent": "green",
+  "blurb": "Blog, personal thoughts, writing",
+  "href": "blog.html",
+  "type": "internal"
+},
      {
       "id": "CSEAI",
       "title": "Computer Sciences Educational Content",
