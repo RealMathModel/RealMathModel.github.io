@@ -526,17 +526,6 @@
           ]
         },
         {
-          "id": "uk-physics",
-          "title": "Physics",
-          "tag": "PHYS",
-          "icon": "fa-solid fa-atom",
-          "accent": "orange",
-          "blurb": "Mechanics, fields, waves, particles",
-          "resources": [
-            { "label": "Physics Sumamry", "href": "https://drive.google.com/file/d/1V5bYsyrkl5PEbYUpUQ9DYZYrPXm9BIVn/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
-          ]
-        },
-        {
           "id": "uk-cs",
           "title": "Computer Science",
           "tag": "CS",
