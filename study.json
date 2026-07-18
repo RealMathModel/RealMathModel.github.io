@@ -27,10 +27,10 @@
               "accent": "blue",
               "blurb": "Thomas — limits, derivatives, integrals",
               "resources": [
-                { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external" },
-                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external" },
-                { "label": "Mid Term Exam 2026", "href": "https://drive.google.com/file/d/1m0t2o14kDRxT8cPozwQRNh4Qt8UE0G2V/view?usp=sharing", "type": "external" },
-                { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1eJarjleXdZKKE2E9ywtMibAGUzAUTlSX/view?usp=sharing", "type": "external" }
+                { "label": "Calculus A summary", "href": "https://drive.google.com/file/d/107pETsODF5f6OGlWJtgQtCuhlAqfLi7C/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Custom Practice Problems", "href": "https://drive.google.com/file/d/1-vX-wZQe6hC3NHA0gRAPjf02g-lNGo14/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-dumbbell" },
+                { "label": "Mid Term Exam 2026", "href": "https://drive.google.com/file/d/1m0t2o14kDRxT8cPozwQRNh4Qt8UE0G2V/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-pen" },
+                { "label": "Final Exam 2026", "href": "https://drive.google.com/file/d/1eJarjleXdZKKE2E9ywtMibAGUzAUTlSX/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-check" }
               ]
             },
             {
@@ -41,7 +41,7 @@
               "accent": "purple",
               "blurb": "Physics",
               "resources": [
-                { "label": "Physics A summary", "href": "https://drive.google.com/file/d/1EjoeZa87syQ853VUBy3dkaPxfL0ij6Os/view?usp=sharing", "type": "external" }
+                { "label": "Physics A summary", "href": "https://drive.google.com/file/d/1EjoeZa87syQ853VUBy3dkaPxfL0ij6Os/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
               ]
             },
             {
@@ -52,7 +52,7 @@
               "accent": "orange",
               "blurb": "Electric",
               "resources": [
-                { "label": "Electric Circuits A summary", "href": "https://drive.google.com/file/d/1cWmIJ-XSlGFHOUldgGKwPV94RM53cfh6/view?usp=sharing", "type": "external" }
+                { "label": "Electric Circuits A summary", "href": "https://drive.google.com/file/d/1cWmIJ-XSlGFHOUldgGKwPV94RM53cfh6/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
               ]
             },
             {
@@ -63,7 +63,7 @@
               "accent": "green",
               "blurb": "Programming",
               "resources": [
-                { "label": "Porgamming Basics with Python summary", "href": "https://drive.google.com/file/d/1CgBpaztko98iItkfWR815WVXvHgrzgwP/view?usp=sharing", "type": "external", "note": "شكر للزميل المهندس محمود ابو دقة على تزويد السلايدات للمادة" }
+                { "label": "Porgamming Basics with Python summary", "href": "https://drive.google.com/file/d/1CgBpaztko98iItkfWR815WVXvHgrzgwP/view?usp=sharing", "type": "external", "note": "شكر للزميل المهندس محمود ابو دقة على تزويد السلايدات للمادة", "icon": "fa-solid fa-book" }
               ]
             }
           ]
@@ -84,11 +84,11 @@
               "accent": "purple",
               "blurb": "Thomas — series, polar, conics",
               "resources": [
-                { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "interactive study lab · offline" },
-                { "label": "Calculus B summary", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external" },
-                { "label": "Formulas Sheet", "href": "https://drive.google.com/file/d/1RpS-sYEb4hWkLsazEy3wcaGyf-IQb_92/view?usp=sharing", "type": "external" },
-                { "label": "Final Exam 2026 (Unsolved)", "href": "https://drive.google.com/file/d/1DcGgVctItzURdWz_O58zmFjxcL1_7tkZ/view?usp=sharing", "type": "external" },
-                { "label": "Final Exam 2026 (Solved)", "href": "https://drive.google.com/file/d/1Vut11bepSwlMOq2_BvCcN6V-HOXGfJsU/view?usp=sharing", "type": "external" }
+                { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "interactive study lab · offline", "icon": "fa-solid fa-flask" },
+                { "label": "Calculus B summary", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Formulas Sheet", "href": "https://drive.google.com/file/d/1RpS-sYEb4hWkLsazEy3wcaGyf-IQb_92/view?usp=sharing", "type": "external", "icon": "fa-solid fa-square-root-variable" },
+                { "label": "Final Exam 2026 (Unsolved)", "href": "https://drive.google.com/file/d/1DcGgVctItzURdWz_O58zmFjxcL1_7tkZ/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-question" },
+                { "label": "Final Exam 2026 (Solved)", "href": "https://drive.google.com/file/d/1Vut11bepSwlMOq2_BvCcN6V-HOXGfJsU/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-check" }
               ]
             },
             {
@@ -99,13 +99,13 @@
               "accent": "teal",
               "blurb": "Mano — logic, K-maps, FSMs",
               "resources": [
-                { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "interactive study lab · offline" },
-                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external" },
-                { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external" },
-                { "label": "Sequential Logic Study Lab", "href": "Sem2/seq.html", "type": "internal", "note": "interactive study lab · offline" },
-                { "label": "Chapter 4 Video", "href": "https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing", "type": "external", "note": "Chapter 4 Video" },
-                { "label": "Chapter 5 Video", "href": "https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing", "type": "external", "note": "Chapter 5 Video" },
-                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing", "type": "external", "note": "Chapter 6 Video" }
+                { "label": "DLD study lab (offline HTML)", "href": "Sem2/logic.html", "type": "internal", "note": "interactive study lab · offline", "icon": "fa-solid fa-flask" },
+                { "label": "Digital Design solutions (Mano, Ch 1–6)", "href": "https://drive.google.com/file/d/14t-T-4U5W-C6WspgcVwPbKNlYgbySc9u/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-key" },
+                { "label": "DLD Summary", "href": "https://drive.google.com/file/d/11zynGBnX-0VLKDhnr8vNtIby4qWAMpau/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Sequential Logic Study Lab", "href": "Sem2/seq.html", "type": "internal", "note": "interactive study lab · offline", "icon": "fa-solid fa-vial-circle-check" },
+                { "label": "Chapter 4 Video", "href": "https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing", "type": "external", "note": "Chapter 4 Video", "icon": "fa-solid fa-circle-play" },
+                { "label": "Chapter 5 Video", "href": "https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing", "type": "external", "note": "Chapter 5 Video", "icon": "fa-solid fa-circle-play" },
+                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing", "type": "external", "note": "Chapter 6 Video", "icon": "fa-solid fa-circle-play" }
               ]
             },
             {
@@ -116,15 +116,15 @@
               "accent": "green",
               "blurb": "Liang, chapters 1–9 + exams",
               "resources": [
-                { "label": "C++ Mastery Console — 529 MCQ + 32 coding problems", "href": "Sem2/cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline" },
-                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external" },
-                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1V7_f7831SGAuq76a4z2CtRpQI-Y55Lzs/view?usp=sharing", "type": "external" },
-                { "label": "Chapter 9 Video", "href": "https://drive.google.com/file/d/1TSmv5q5549u4kQ2VLlRi_ez1lMcDnoBa/view?usp=sharing", "type": "external" },
-                { "label": "Selection Sort Video", "href": "https://drive.google.com/file/d/11fj3p9XETc0s8JQuav0s8fHgbtpUSXHl/view?usp=sharing", "type": "external" },
-                { "label": "Binary Search Video", "href": "https://drive.google.com/file/d/1pg6dWaNJ0-_CrLa_6arRym3LVJbK43gf/view?usp=sharing", "type": "external" },
-                { "label": "Implementation Problems", "href": "https://drive.google.com/file/d/1UruXzmiP9a0cHxDxriLK51bFHr2tEUSX/view?usp=sharing", "type": "external" },
-                { "label": "Final Exam 2026 (Unsolved)", "href": "https://drive.google.com/file/d/1tJsm-iBw6sxoFbGqbfNzs8Vb9pOi-pVx/view?usp=sharing", "type": "external" },
-                { "label": "Final Exam 2026 (Solved)", "href": "https://drive.google.com/file/d/1cUBeoCv4FhoqT8YbizLseTJElB0ULNAr/view?usp=sharing", "type": "external" }
+                { "label": "C++ Mastery Console — 529 MCQ + 32 coding problems", "href": "Sem2/cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline", "icon": "fa-solid fa-terminal" },
+                { "label": "C++ Programming (1) Summary", "href": "https://drive.google.com/file/d/1h7OvJJogDXSk3Xc_-qyo-lNYi55yhx-R/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1V7_f7831SGAuq76a4z2CtRpQI-Y55Lzs/view?usp=sharing", "type": "external", "icon": "fa-solid fa-circle-play" },
+                { "label": "Chapter 9 Video", "href": "https://drive.google.com/file/d/1TSmv5q5549u4kQ2VLlRi_ez1lMcDnoBa/view?usp=sharing", "type": "external", "icon": "fa-solid fa-circle-play" },
+                { "label": "Selection Sort Video", "href": "https://drive.google.com/file/d/11fj3p9XETc0s8JQuav0s8fHgbtpUSXHl/view?usp=sharing", "type": "external", "icon": "fa-solid fa-arrow-down-short-wide" },
+                { "label": "Binary Search Video", "href": "https://drive.google.com/file/d/1pg6dWaNJ0-_CrLa_6arRym3LVJbK43gf/view?usp=sharing", "type": "external", "icon": "fa-solid fa-magnifying-glass" },
+                { "label": "Implementation Problems", "href": "https://drive.google.com/file/d/1UruXzmiP9a0cHxDxriLK51bFHr2tEUSX/view?usp=sharing", "type": "external", "icon": "fa-solid fa-laptop-code" },
+                { "label": "Final Exam 2026 (Unsolved)", "href": "https://drive.google.com/file/d/1tJsm-iBw6sxoFbGqbfNzs8Vb9pOi-pVx/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-question" },
+                { "label": "Final Exam 2026 (Solved)", "href": "https://drive.google.com/file/d/1cUBeoCv4FhoqT8YbizLseTJElB0ULNAr/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-check" }
               ]
             },
             {
@@ -135,7 +135,7 @@
               "accent": "orange",
               "blurb": "PWM, sensors, projects",
               "resources": [
-                { "label": "IoT / ESP32 summary (slide sets + diagrams)", "href": "https://drive.google.com/file/d/1W8XWIcXXM78Hm6jyTkJymSGkRyaKTQdv/view?usp=drive_link", "type": "external" }
+                { "label": "IoT / ESP32 summary (slide sets + diagrams)", "href": "https://drive.google.com/file/d/1W8XWIcXXM78Hm6jyTkJymSGkRyaKTQdv/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" }
               ]
             },
             {
@@ -146,10 +146,10 @@
               "accent": "amber",
               "blurb": "Logisim builds & lab reports",
               "resources": [
-                { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external" },
-                { "label": "Chapter 4 Video", "href": "https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing", "type": "external", "note": "Chapter 4 Video" },
-                { "label": "Chapter 5 Video", "href": "https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing", "type": "external", "note": "Chapter 5 Video" },
-                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing", "type": "external", "note": "Chapter 6 Video" }
+                { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Chapter 4 Video", "href": "https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing", "type": "external", "note": "Chapter 4 Video", "icon": "fa-solid fa-circle-play" },
+                { "label": "Chapter 5 Video", "href": "https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing", "type": "external", "note": "Chapter 5 Video", "icon": "fa-solid fa-circle-play" },
+                { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing", "type": "external", "note": "Chapter 6 Video", "icon": "fa-solid fa-circle-play" }
               ]
             }
           ]
@@ -495,7 +495,7 @@
         }
       ]
     },
-     {
+    {
       "id": "uk",
       "title": "Mathematics and CS Courses for UK",
       "tag": "UKqual",
@@ -503,11 +503,13 @@
       "accent": "purple",
       "blurb": "Qualifiers for Math/CS Major in UK Courses",
       "resources": [
-        { "label": "Mathematics Sumamry", "href": "", "type": "internal" },
-        { "label": "Further Mathematics Sumamry", "href": "", "type": "internal" }
+        { "label": "Mathematics Sumamry", "href": "https://drive.google.com/file/d/1RMYZ0cpFqMFddRxLJzYv1EgtazUgrtR4/view?usp=sharing", "type": "external", "icon": "fa-solid fa-square-root-variable" },
+        { "label": "Further Mathematics Sumamry", "href": "https://drive.google.com/file/d/1APY37TjoM1yaDT-zOzQw-gH0YvLh13kz/view?usp=sharing", "type": "external", "icon": "fa-solid fa-infinity" },
+        { "label": "Physics Sumamry", "href": "https://drive.google.com/file/d/1V5bYsyrkl5PEbYUpUQ9DYZYrPXm9BIVn/view?usp=sharing", "type": "external", "icon": "fa-solid fa-atom" },
+        { "label": "CS Sumamry", "href": "", "type": "external", "icon": "fa-solid fa-code" }
       ]
     },
-     {
+    {
       "id": "CSEAI",
       "title": "Computer Sciences Educational Content",
       "tag": "CSEAI",
@@ -515,8 +517,8 @@
       "accent": "blue",
       "blurb": "Major Courses for Any Engineer's Career",
       "resources": [
-        { "label": "CS50x Course Summary Book with Examples", "href": "", "type": "internal" },
-        { "label": "CS50 AI's Course Summary Book with Examples", "href": "", "type": "internal" }
+        { "label": "CS50x Course Summary Book with Examples", "href": "", "type": "internal", "icon": "fa-solid fa-book-open" },
+        { "label": "CS50 AI's Course Summary Book with Examples", "href": "", "type": "internal", "icon": "fa-solid fa-robot" }
       ]
     },
     {
@@ -527,7 +529,7 @@
       "accent": "amber",
       "blurb": "Every Problem I've authored so far",
       "resources": [
-        { "label": "Full List of Problems", "href": "problemset.html", "type": "internal" }
+        { "label": "Full List of Problems", "href": "problemset.html", "type": "internal", "icon": "fa-solid fa-list-check" }
       ]
     }
   ]
