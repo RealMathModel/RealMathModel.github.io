@@ -502,11 +502,51 @@
       "icon": "fa-solid fa-leaf",
       "accent": "purple",
       "blurb": "Qualifiers for Math/CS Major in UK Courses",
-      "resources": [
-        { "label": "Mathematics Sumamry", "href": "https://drive.google.com/file/d/1RMYZ0cpFqMFddRxLJzYv1EgtazUgrtR4/view?usp=sharing", "type": "external", "icon": "fa-solid fa-square-root-variable" },
-        { "label": "Further Mathematics Sumamry", "href": "https://drive.google.com/file/d/1APY37TjoM1yaDT-zOzQw-gH0YvLh13kz/view?usp=sharing", "type": "external", "icon": "fa-solid fa-infinity" },
-        { "label": "Physics Sumamry", "href": "https://drive.google.com/file/d/1V5bYsyrkl5PEbYUpUQ9DYZYrPXm9BIVn/view?usp=sharing", "type": "external", "icon": "fa-solid fa-atom" },
-        { "label": "CS Sumamry", "href": "", "type": "external", "icon": "fa-solid fa-code" }
+      "children": [
+        {
+          "id": "uk-mathematics",
+          "title": "Mathematics",
+          "tag": "MATH",
+          "icon": "fa-solid fa-square-root-variable",
+          "accent": "blue",
+          "blurb": "Pure & applied — algebra, calculus, mechanics",
+          "resources": [
+            { "label": "Mathematics Sumamry", "href": "https://drive.google.com/file/d/1RMYZ0cpFqMFddRxLJzYv1EgtazUgrtR4/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
+          ]
+        },
+        {
+          "id": "uk-further-mathematics",
+          "title": "Further Mathematics",
+          "tag": "MATH",
+          "icon": "fa-solid fa-infinity",
+          "accent": "purple",
+          "blurb": "Complex numbers, matrices, further calculus",
+          "resources": [
+            { "label": "Further Mathematics Sumamry", "href": "https://drive.google.com/file/d/1APY37TjoM1yaDT-zOzQw-gH0YvLh13kz/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
+          ]
+        },
+        {
+          "id": "uk-physics",
+          "title": "Physics",
+          "tag": "PHYS",
+          "icon": "fa-solid fa-atom",
+          "accent": "orange",
+          "blurb": "Mechanics, fields, waves, particles",
+          "resources": [
+            { "label": "Physics Sumamry", "href": "https://drive.google.com/file/d/1V5bYsyrkl5PEbYUpUQ9DYZYrPXm9BIVn/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
+          ]
+        },
+        {
+          "id": "uk-cs",
+          "title": "Computer Science",
+          "tag": "CS",
+          "icon": "fa-solid fa-code",
+          "accent": "green",
+          "blurb": "Algorithms, theory & programming fundamentals",
+          "resources": [
+            { "label": "CS Sumamry", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+          ]
+        }
       ]
     },
     {
