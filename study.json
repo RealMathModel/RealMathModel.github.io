@@ -147,6 +147,7 @@
               "blurb": "Logisim builds & lab reports",
               "resources": [
                 { "label": "Logic Lab Summary", "href": "https://drive.google.com/file/d/1vB-8KN_lkw1ga0iZvzdC5Rs_QFNB3tyI/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Final Project ", "href": "https://drive.google.com/file/d/1dSg8H8DXY_l9VpJUNGiBUO9FaZzp-sIT/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Chapter 4 Video", "href": "https://drive.google.com/file/d/1orXcD4uKbGpRZGN0raZKZ9atxN7CXCd5/view?usp=sharing", "type": "external", "note": "Chapter 4 Video", "icon": "fa-solid fa-circle-play" },
                 { "label": "Chapter 5 Video", "href": "https://drive.google.com/file/d/12FKVmbfI7xz7SimPRa2QHFaFSb-PDled/view?usp=sharing", "type": "external", "note": "Chapter 5 Video", "icon": "fa-solid fa-circle-play" },
                 { "label": "Chapter 6 Video", "href": "https://drive.google.com/file/d/1KtaB2tPd-LNcG8z8hKQ9o2t4fINp0wlS/view?usp=sharing", "type": "external", "note": "Chapter 6 Video", "icon": "fa-solid fa-circle-play" }
