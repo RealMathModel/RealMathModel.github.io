@@ -534,7 +534,7 @@
           "accent": "green",
           "blurb": "Algorithms, theory & programming fundamentals",
           "resources": [
-            { "label": "CS Sumamry", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+            { "label": "CS Sumamry", "href": "https://drive.google.com/file/d/13B9oCtsJiN6vNKOS-REuQ50ljI4vx9CZ/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" }
           ]
         }
       ]
