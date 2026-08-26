@@ -271,6 +271,14 @@
               "accent": "red",
               "blurb": "First formal introduction to ML",
               "resources": []
+            },{
+              "id": "ODE",
+              "title": "Ordinary Differential Equations",
+              "tag": "ODE",
+              "icon": "fa-solid fa-wave-square",
+              "accent": "blue",
+              "blurb": "Elementary Ordinary Differential Equations",
+              "resources": []
             }
           ]
         },
