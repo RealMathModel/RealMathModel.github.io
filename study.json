@@ -219,6 +219,15 @@
           "blurb": "Data, Signals & First Steps into ML",
           "children": [
             {
+              "id": "ODE",
+              "title": "Ordinary Differential Equations",
+              "tag": "ODE",
+              "icon": "fa-solid fa-function",
+              "accent": "blue",
+              "blurb": "Elementary Ordinary Differential Equations",
+              "resources": []
+            },
+            {
               "id": "prob-stats",
               "title": "Probability and Statistics Theory",
               "tag": "MATH",
@@ -270,14 +279,6 @@
               "icon": "fa-solid fa-brain",
               "accent": "red",
               "blurb": "First formal introduction to ML",
-              "resources": []
-            },{
-              "id": "ODE",
-              "title": "Ordinary Differential Equations",
-              "tag": "ODE",
-              "icon": "fa-solid fa-wave-square",
-              "accent": "blue",
-              "blurb": "Elementary Ordinary Differential Equations",
               "resources": []
             }
           ]
