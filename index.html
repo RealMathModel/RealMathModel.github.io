@@ -512,39 +512,22 @@ fetch('study.json',{cache:'no-store'})
    otherwise the endpoint sends no CORS header and the badge stays hidden.
    ========================================================================== */
 (function(){
-      /* Self-hosted visit counter — Cloudflare Worker + KV. See worker/SETUP.md.
-         REMAINING STEP: after `npx wrangler deploy`, put your real workers.dev
-         URL in API below. Until that is done the badge falls back to the old
-         GoatCounter total so the number keeps showing. Once API is set, the
-         goat() fallback never runs and can be deleted. */
-      var API='https://rmm-counter.YOUR-SUBDOMAIN.workers.dev/';
+      /* Visit counter — countapi clone (countapi.mileshilliard.com).
+         Every page load hits /hit and increments by 1. */
+      var API='https://countapi.mileshilliard.com/api/v1/hit/realmathmodel_github_io_visits';
       var box=document.getElementById('visits'),
           n=document.getElementById('vCount');
       if(!box||!n) return;
 
-      function paint(v){ n.textContent=v; box.classList.add('show'); }
-
-      function goat(){
-        fetch('https://realmathmodel.goatcounter.com/counter/TOTAL.json',{cache:'no-store'})
-          .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
-          .then(function(d){ paint(d.count); })
-          .catch(function(){ /* endpoint off or blocked — leave badge hidden */ });
-      }
-
-      if(API.indexOf('YOUR-SUBDOMAIN')>-1){ goat(); return; }
-
-      /* One increment per tab session, so hash-route clicks don't inflate it. */
-      var counted=false;
-      try{ counted = sessionStorage.getItem('rmm_counted')==='1'; }catch(e){}
-
-      fetch(API,{method: counted ? 'GET' : 'POST', cache:'no-store', mode:'cors'})
+      fetch(API,{cache:'no-store'})
         .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
         .then(function(d){
-          if(typeof d.count!=='number') throw new Error('bad payload');
-          if(!counted){ try{ sessionStorage.setItem('rmm_counted','1'); }catch(e){} }
-          paint(d.count);
+          var v = (d && (d.value!=null ? d.value : d.count));
+          if(v==null) throw new Error('bad payload');
+          n.textContent=v;
+          box.classList.add('show');
         })
-        .catch(function(){ /* worker down or blocked — leave badge hidden */ });
+        .catch(function(){ /* endpoint off or blocked — leave badge hidden */ });
     })();
 </script>
 
