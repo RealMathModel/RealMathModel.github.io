@@ -1,0 +1,14 @@
+name = "rmm-counter"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+# Keep the worker off the public workers.dev subdomain once you have a
+# custom route, or leave it true to use https://rmm-counter.<you>.workers.dev
+workers_dev = true
+
+[[kv_namespaces]]
+binding = "HITS"
+id = "PASTE_YOUR_KV_NAMESPACE_ID_HERE"
+
+[observability]
+enabled = true
