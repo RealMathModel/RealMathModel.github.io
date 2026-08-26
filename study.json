@@ -222,7 +222,7 @@
               "id": "ODE",
               "title": "Ordinary Differential Equations",
               "tag": "ODE",
-              "icon": "fas fa-waves-sine",
+              "icon": "fas fa-infnity",
               "accent": "blue",
               "blurb": "Elementary Ordinary Differential Equations",
               "resources": []
