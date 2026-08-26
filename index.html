@@ -37,7 +37,7 @@ body{background:var(--bg); color:var(--ink); font-family:var(--sans);
     radial-gradient(1100px 620px at 72% -8%, rgba(231,181,61,.07), transparent 60%),
     radial-gradient(900px 520px at -8% 112%, rgba(79,184,154,.07), transparent 55%),
     radial-gradient(700px 700px at 50% 45%, rgba(11,18,32,.55), rgba(11,18,32,.0) 70%);}
-     
+
 .wrap{position:relative; z-index:2; max-width:760px; margin:0 auto;
   padding:0 16px env(safe-area-inset-bottom) 16px; padding-top:calc(14px + env(safe-area-inset-top));}
 
@@ -175,7 +175,8 @@ h1 .ac{color:var(--amber)}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001s !important; transition-duration:.05s !important}
 }
-  /* ---- visit counter badge ---- */
+
+/* ---- visit counter badge ---- */
 .visits{position:fixed; z-index:40; display:none; align-items:center; gap:8px;
   top:calc(10px + env(safe-area-inset-top)); right:12px;
   font-family:var(--mono); font-size:11.5px; color:var(--muted);
@@ -186,17 +187,17 @@ h1 .ac{color:var(--amber)}
 .visits.show{display:inline-flex}
 .visits i{color:var(--amber); font-size:11px}
 .visits b{color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums}
-.visits .uq{color:var(--faint)}
 @media(max-width:640px){.visits{font-size:10.5px; padding:6px 9px; right:8px}}
 </style>
 </head>
 <body>
 <canvas id="mathbg" aria-hidden="true"></canvas>
 <div class="bgveil" aria-hidden="true"></div>
+
 <div class="visits" id="visits" title="total page views">
-  <i class="fa-solid fa-eye"></i><b id="vCount">—</b>
-  <span class="uq" id="vUniq"></span>
+  <i class="fa-solid fa-eye"></i><b id="vCount">&mdash;</b>
 </div>
+
 <div class="wrap">
   <div class="term">
     <div class="termbar">
@@ -504,22 +505,27 @@ fetch('study.json',{cache:'no-store'})
   resize();
   if(!reduce) raf=requestAnimationFrame(loop);
 })();
-  /* ---------- visit counter (GoatCounter public endpoint) ---------- */
+
+/* ============================================================================
+   VISIT COUNTER  (GoatCounter public endpoint — total pageviews, not unique)
+   Requires: Settings -> "Allow adding visitor counts to your website" = ON,
+   otherwise the endpoint sends no CORS header and the badge stays hidden.
+   ========================================================================== */
 (function(){
   var box=document.getElementById('visits'),
-      n=document.getElementById('vCount'),
-      u=document.getElementById('vUniq');
+      n=document.getElementById('vCount');
   fetch('https://realmathmodel.goatcounter.com/counter/TOTAL.json',{cache:'no-store'})
     .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
     .then(function(d){
       n.textContent=d.count;
-      if(d.count_unique) u.textContent='· '+d.count_unique+' unique';
       box.classList.add('show');
     })
     .catch(function(){ /* endpoint off or blocked — leave the badge hidden */ });
 })();
 </script>
-  <script data-goatcounter="https://realmathmodel.goatcounter.com/count"
+
+<!-- GoatCounter tracking beacon -->
+<script data-goatcounter="https://realmathmodel.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
