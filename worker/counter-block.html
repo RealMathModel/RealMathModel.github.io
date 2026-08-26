@@ -1,0 +1,42 @@
+<!--
+  DROP-IN REPLACEMENT for the GoatCounter badge script in index.html.
+
+  Find this exact block (near the bottom of <body>) and replace the whole
+  IIFE with the one below. Nothing else in index.html changes:
+
+    (function(){
+      var box=document.getElementById('visits'),
+          n=document.getElementById('vCount');
+      fetch('https://realmathmodel.goatcounter.com/counter/TOTAL.json',{cache:'no-store'})
+        .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
+        .then(function(d){ n.textContent=d.count; box.classList.add('show'); })
+        .catch(function(){ });
+    })();
+
+  The .visits CSS stays as-is. The badge markup stays as-is. The GoatCounter
+  beacon <script> stays as-is.
+-->
+<script>
+(function(){
+  var API='https://rmm-counter.YOUR-SUBDOMAIN.workers.dev/';  /* <-- set after deploy */
+  var box=document.getElementById('visits'),
+      n=document.getElementById('vCount');
+  if(!box||!n) return;
+
+  /* One increment per tab session. Hash-route changes re-run nothing here,
+     but a full reload in the same tab also won't double-count within a tab
+     session; other tabs and later sessions each count once. */
+  var counted=false;
+  try{ counted = sessionStorage.getItem('rmm_counted')==='1'; }catch(e){}
+
+  fetch(API,{method: counted ? 'GET' : 'POST', cache:'no-store', mode:'cors'})
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(d){
+      if(typeof d.count!=='number') throw new Error('bad payload');
+      if(!counted){ try{ sessionStorage.setItem('rmm_counted','1'); }catch(e){} }
+      n.textContent=d.count;
+      box.classList.add('show');
+    })
+    .catch(function(){ /* worker down or blocked — leave badge hidden */ });
+})();
+</script>
