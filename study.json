@@ -550,18 +550,6 @@
       ]
     },
     {
-      "id": "CSEAI",
-      "title": "Computer Sciences Educational Content",
-      "tag": "CSEAI",
-      "icon": "fa-solid fa-microchip",
-      "accent": "blue",
-      "blurb": "Major Courses for Any Engineer's Career",
-      "resources": [
-        { "label": "CS50x Course Summary Book with Examples", "href": "", "type": "internal", "icon": "fa-solid fa-book-open" },
-        { "label": "CS50 AI's Course Summary Book with Examples", "href": "", "type": "internal", "icon": "fa-solid fa-robot" }
-      ]
-    },
-    {
       "id": "problemsetting",
       "title": "Problemsetting",
       "tag": "Problemsetting",
@@ -589,8 +577,7 @@
           "blurb": "Long-form study material written from scratch",
           "resources": [
             { "label": "CS50x Course Study Handbook", "href": "", "type": "internal", "icon": "fa-solid fa-laptop-code" },
-            { "label": "Mathematics and Algorithms Route — Problem Solving Handbook", "href": "", "type": "internal", "icon": "fa-solid fa-route" },
-            { "label": "Rosen Discrete Mathematics — Practice Set", "href": "", "type": "external", "icon": "fa-solid fa-pen-ruler" }
+            { "label": "Mathematics and Algorithms Route — Problem Solving Handbook", "href": "", "type": "internal", "icon": "fa-solid fa-route" }
           ]
         },
         {
@@ -622,8 +609,6 @@
           "accent": "red",
           "blurb": "Model-driven builds",
           "resources": [
-            { "label": "Manim AI Animator — text prompt to math animation", "href": "", "type": "external", "icon": "fa-solid fa-clapperboard" },
-            { "label": "Handwriting / Book Page to LaTeX (OCR)", "href": "", "type": "external", "icon": "fa-solid fa-wand-magic-sparkles" }
           ]
         },
         {
@@ -647,8 +632,6 @@
           "accent": "teal",
           "blurb": "Scripts and bots that remove manual work",
           "resources": [
-            { "label": "IUG Portal Monitor & Telegram Broadcaster", "href": "", "type": "external", "icon": "fa-brands fa-telegram" },
-            { "label": "IUG Admission Batch Retriever (Playwright)", "href": "", "type": "external", "icon": "fa-solid fa-list-ol" }
           ]
         }
       ]
@@ -719,30 +702,6 @@
           "blurb": "Background, CV and contact",
           "resources": [
             { "label": "CV / Résumé", "href": "", "type": "external", "icon": "fa-solid fa-file-arrow-down" },
-            { "label": "Codeforces — MathModel", "href": "https://codeforces.com/profile/MathModel", "type": "external", "icon": "fa-solid fa-trophy" },
-            { "label": "GitHub — RealMathModel", "href": "https://github.com/RealMathModel", "type": "external", "icon": "fa-brands fa-github" }
-          ]
-        },
-        {
-          "id": "journey-cp",
-          "title": "Competitive Programming",
-          "tag": "CP",
-          "icon": "fa-solid fa-flag-checkered",
-          "accent": "amber",
-          "blurb": "Contests, rounds and problemsetting milestones",
-          "resources": [
-            { "label": "Contest & rating timeline", "href": "", "type": "internal", "icon": "fa-solid fa-chart-line" }
-          ]
-        },
-        {
-          "id": "journey-milestones",
-          "title": "Milestones",
-          "tag": "LOG",
-          "icon": "fa-solid fa-flag",
-          "accent": "green",
-          "blurb": "Year-by-year log of what changed",
-          "resources": [
-            { "label": "Timeline", "href": "", "type": "internal", "icon": "fa-solid fa-timeline" }
           ]
         }
       ]
