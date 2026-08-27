@@ -2,7 +2,7 @@
   "owner": "Hasan Ismail Saleh (MathModel)",
   "host": "...",
   "tagline": "All What A Computer/AI Engineer Needs in One Place!",
-  "categories": [ 
+  "categories": [
     {
       "id": "university",
       "title": "AI Engineering University",
@@ -87,7 +87,7 @@
                 { "label": "Calculus B study lab (offline HTML)", "href": "Sem2/calcB.html", "type": "internal", "note": "interactive study lab · offline", "icon": "fa-solid fa-flask" },
                 { "label": "Calculus B summary", "href": "https://drive.google.com/file/d/1FYOIk7lpfwhTp7OzjkFX0C0OfTOT6yQz/view?usp=drive_link", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Formulas Sheet", "href": "https://drive.google.com/file/d/1RpS-sYEb4hWkLsazEy3wcaGyf-IQb_92/view?usp=sharing", "type": "external", "icon": "fa-solid fa-square-root-variable" },
-                {"label": "Solved Samples", "href": "https://drive.google.com/drive/folders/1Q7_ojfmJrGu1SX14GVdWrVpy4Cpco62D?usp=sharing", "type": "external", "icon": "fa-solid fa-edit" },
+                { "label": "Solved Samples", "href": "https://drive.google.com/drive/folders/1Q7_ojfmJrGu1SX14GVdWrVpy4Cpco62D?usp=sharing", "type": "external", "icon": "fa-solid fa-edit" },
                 { "label": "Final Exam 2026 (Unsolved)", "href": "https://drive.google.com/file/d/1DcGgVctItzURdWz_O58zmFjxcL1_7tkZ/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-question" },
                 { "label": "Final Exam 2026 (Solved)", "href": "https://drive.google.com/file/d/1Vut11bepSwlMOq2_BvCcN6V-HOXGfJsU/view?usp=sharing", "type": "external", "icon": "fa-solid fa-file-circle-check" }
               ]
@@ -570,6 +570,181 @@
       "blurb": "Every Problem I've authored so far",
       "resources": [
         { "label": "Full List of Problems", "href": "problemset.html", "type": "internal", "icon": "fa-solid fa-list-check" }
+      ]
+    },
+    {
+      "id": "publications",
+      "title": "Publications",
+      "tag": "PUB",
+      "icon": "fa-solid fa-book-open-reader",
+      "accent": "purple",
+      "blurb": "Books, handbooks and research papers I've authored",
+      "children": [
+        {
+          "id": "pub-books",
+          "title": "Books & Handbooks",
+          "tag": "BOOK",
+          "icon": "fa-solid fa-book",
+          "accent": "blue",
+          "blurb": "Long-form study material written from scratch",
+          "resources": [
+            { "label": "CS50x Course Study Handbook", "href": "", "type": "internal", "icon": "fa-solid fa-laptop-code" },
+            { "label": "Mathematics and Algorithms Route — Problem Solving Handbook", "href": "", "type": "internal", "icon": "fa-solid fa-route" },
+            { "label": "Rosen Discrete Mathematics — Practice Set", "href": "", "type": "external", "icon": "fa-solid fa-pen-ruler" }
+          ]
+        },
+        {
+          "id": "pub-research",
+          "title": "Research",
+          "tag": "RES",
+          "icon": "fa-solid fa-flask-vial",
+          "accent": "red",
+          "blurb": "Independent mathematical research",
+          "resources": [
+            { "label": "Mathematics and Computer Sciences in Proving Collatz's Conjecture", "href": "", "type": "external", "icon": "fa-solid fa-file-lines" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "projects",
+      "title": "Projects",
+      "tag": "BUILD",
+      "icon": "fa-solid fa-screwdriver-wrench",
+      "accent": "green",
+      "blurb": "Things I've built — tools, platforms and experiments",
+      "children": [
+        {
+          "id": "proj-ai",
+          "title": "AI & Research Tools",
+          "tag": "AI",
+          "icon": "fa-solid fa-brain",
+          "accent": "red",
+          "blurb": "Model-driven builds",
+          "resources": [
+            { "label": "Manim AI Animator — text prompt to math animation", "href": "", "type": "external", "icon": "fa-solid fa-clapperboard" },
+            { "label": "Handwriting / Book Page to LaTeX (OCR)", "href": "", "type": "external", "icon": "fa-solid fa-wand-magic-sparkles" }
+          ]
+        },
+        {
+          "id": "proj-education",
+          "title": "Education Platforms",
+          "tag": "EDU",
+          "icon": "fa-solid fa-chalkboard-user",
+          "accent": "amber",
+          "blurb": "Teaching infrastructure I run",
+          "resources": [
+            { "label": "SOLVABLE Academy", "href": "", "type": "external", "icon": "fa-solid fa-graduation-cap" },
+            { "label": "MainTip — Mathematical Innovation Team in Palestine", "href": "", "type": "external", "icon": "fa-solid fa-people-group" },
+            { "label": "Study Hub (this site)", "href": "#", "type": "internal", "icon": "fa-solid fa-house-laptop" }
+          ]
+        },
+        {
+          "id": "proj-automation",
+          "title": "Automation & Tooling",
+          "tag": "TOOL",
+          "icon": "fa-solid fa-robot",
+          "accent": "teal",
+          "blurb": "Scripts and bots that remove manual work",
+          "resources": [
+            { "label": "IUG Portal Monitor & Telegram Broadcaster", "href": "", "type": "external", "icon": "fa-brands fa-telegram" },
+            { "label": "IUG Admission Batch Retriever (Playwright)", "href": "", "type": "external", "icon": "fa-solid fa-list-ol" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "certifications",
+      "title": "Certifications",
+      "tag": "CERT",
+      "icon": "fa-solid fa-certificate",
+      "accent": "amber",
+      "blurb": "Verified courses, credentials and proficiency tests",
+      "children": [
+        {
+          "id": "cert-cs",
+          "title": "Computer Science & AI",
+          "tag": "CS",
+          "icon": "fa-solid fa-microchip",
+          "accent": "blue",
+          "blurb": "Course completion certificates",
+          "resources": [
+            { "label": "CS50x — Introduction to Computer Science (Harvard)", "href": "", "type": "external", "icon": "fa-solid fa-laptop-code" },
+            { "label": "CS50 AI — Introduction to AI with Python (Harvard)", "href": "", "type": "external", "icon": "fa-solid fa-robot" }
+          ]
+        },
+        {
+          "id": "cert-math",
+          "title": "Mathematics",
+          "tag": "MATH",
+          "icon": "fa-solid fa-square-root-variable",
+          "accent": "purple",
+          "blurb": "Mathematics and problem-solving credentials",
+          "resources": []
+        },
+        {
+          "id": "cert-language",
+          "title": "Language Proficiency",
+          "tag": "LANG",
+          "icon": "fa-solid fa-language",
+          "accent": "teal",
+          "blurb": "English proficiency and language tests",
+          "resources": []
+        },
+        {
+          "id": "cert-competitions",
+          "title": "Competitions & Awards",
+          "tag": "AWARD",
+          "icon": "fa-solid fa-medal",
+          "accent": "orange",
+          "blurb": "Contest placements and recognitions",
+          "resources": []
+        }
+      ]
+    },
+    {
+      "id": "journey",
+      "title": "My Journey",
+      "tag": "ME",
+      "icon": "fa-solid fa-compass",
+      "accent": "orange",
+      "blurb": "Who I am, what I've competed in, and where I'm heading",
+      "children": [
+        {
+          "id": "journey-about",
+          "title": "About Me",
+          "tag": "BIO",
+          "icon": "fa-solid fa-id-card",
+          "accent": "blue",
+          "blurb": "Background, CV and contact",
+          "resources": [
+            { "label": "CV / Résumé", "href": "", "type": "external", "icon": "fa-solid fa-file-arrow-down" },
+            { "label": "Codeforces — MathModel", "href": "https://codeforces.com/profile/MathModel", "type": "external", "icon": "fa-solid fa-trophy" },
+            { "label": "GitHub — RealMathModel", "href": "https://github.com/RealMathModel", "type": "external", "icon": "fa-brands fa-github" }
+          ]
+        },
+        {
+          "id": "journey-cp",
+          "title": "Competitive Programming",
+          "tag": "CP",
+          "icon": "fa-solid fa-flag-checkered",
+          "accent": "amber",
+          "blurb": "Contests, rounds and problemsetting milestones",
+          "resources": [
+            { "label": "Contest & rating timeline", "href": "", "type": "internal", "icon": "fa-solid fa-chart-line" }
+          ]
+        },
+        {
+          "id": "journey-milestones",
+          "title": "Milestones",
+          "tag": "LOG",
+          "icon": "fa-solid fa-flag",
+          "accent": "green",
+          "blurb": "Year-by-year log of what changed",
+          "resources": [
+            { "label": "Timeline", "href": "", "type": "internal", "icon": "fa-solid fa-timeline" }
+          ]
+        }
       ]
     }
   ]
