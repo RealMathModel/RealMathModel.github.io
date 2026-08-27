@@ -701,7 +701,7 @@
           "accent": "blue",
           "blurb": "Background, CV and contact",
           "resources": [
-            { "label": "CV / Résumé", "href": "", "type": "external", "icon": "fa-solid fa-file-arrow-down" },
+            { "label": "CV / Résumé", "href": "", "type": "external", "icon": "fa-solid fa-file-arrow-down" }
           ]
         }
       ]
