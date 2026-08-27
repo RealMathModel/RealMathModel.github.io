@@ -39,6 +39,8 @@ body{background:var(--bg); color:var(--ink); font-family:var(--sans);
     radial-gradient(700px 700px at 50% 45%, rgba(11,18,32,.55), rgba(11,18,32,.0) 70%);}
 
 .wrap{position:relative; z-index:2; max-width:760px; margin:0 auto;
+  transition:max-width .2s}
+@media(min-width:900px){.wrap{max-width:1120px}}
   padding:0 16px env(safe-area-inset-bottom) 16px; padding-top:calc(14px + env(safe-area-inset-top));}
 
 .term{position:relative; border:1px solid var(--line); border-radius:14px; overflow:hidden;
@@ -83,7 +85,13 @@ h1 .ac{color:var(--amber)}
 .search input::placeholder{color:var(--faint)}
 
 .grid{display:grid; grid-template-columns:1fr; gap:10px; margin-top:4px}
-.card{display:flex; align-items:center; gap:13px; padding:14px; cursor:pointer;
+@media(min-width:900px){
+  .grid{grid-auto-flow:column; grid-template-rows:repeat(4,auto);
+        grid-template-columns:none; grid-auto-columns:minmax(260px,1fr);
+        overflow-x:auto; padding-bottom:6px; scrollbar-width:thin}
+  .grid .cblurb{white-space:normal; overflow:visible; text-overflow:clip}
+}
+  .card{display:flex; align-items:center; gap:13px; padding:14px; cursor:pointer;
   background:var(--panel); border:1px solid var(--line); border-radius:12px;
   text-decoration:none; color:inherit; transition:border-color .15s, background .15s, transform .12s, box-shadow .15s}
 .card:hover{border-color:var(--line2); background:linear-gradient(var(--panel),var(--panel2));
