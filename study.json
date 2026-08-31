@@ -174,15 +174,6 @@
               "resources": []
             },
             {
-              "id": "linear-algebra",
-              "title": "Linear Algebra",
-              "tag": "MATH",
-              "icon": "fa-solid fa-vector-square",
-              "accent": "purple",
-              "blurb": "Matrices, vector spaces, eigenvalues",
-              "resources": []
-            },
-            {
               "id": "programming-2",
               "title": "Programming II",
               "tag": "CS",
@@ -235,6 +226,15 @@
               "icon": "fa-solid fa-chart-simple",
               "accent": "blue",
               "blurb": "Distributions, inference, estimation",
+              "resources": []
+            },
+            {
+              "id": "linear-algebra",
+              "title": "Linear Algebra",
+              "tag": "MATH",
+              "icon": "fa-solid fa-vector-square",
+              "accent": "purple",
+              "blurb": "Matrices, vector spaces, eigenvalues",
               "resources": []
             },
             {
