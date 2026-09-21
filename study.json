@@ -171,7 +171,13 @@
               "icon": "fa-solid fa-diagram-project",
               "accent": "blue",
               "blurb": "Logic, sets, graphs, combinatorics",
-              "resources": []
+              "resources": [
+                  { "label": "Discrete Math Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Discrete Math Practice Problems", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Discrete Math Mid Term", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Discrete Math Final Exam (Unsolved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Discrete Math Final Exam (Solved)", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+              ]
             },
             {
               "id": "linear-algebra",
@@ -180,7 +186,13 @@
               "icon": "fa-solid fa-vector-square",
               "accent": "purple",
               "blurb": "Matrices, vector spaces, eigenvalues",
-              "resources": []
+              "resources": [
+                { "label": "Linear Algebra True/False Mastery", "href": "Sem3/la_mastery.html", "type": "internal", "note": "T/F mastery · offline", "icon": "fa-solid fa-check-circle" },
+                { "label": "Linear Algebra Summary Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Linear Algebra Mid Term", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Linear Algebra Final Exam (Unsolved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "Linear Algebra Final Exam (Solved)", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+              ]
             },
             {
               "id": "programming-2",
@@ -189,7 +201,13 @@
               "icon": "fa-solid fa-laptop-code",
               "accent": "green",
               "blurb": "Data structures & OOP continuation",
-              "resources": []
+              "resources": [
+                { "label": "C++ II Mastery Console — MCQ", "href": "Sem3/cpp_mastery.html", "type": "internal", "note": "quiz + implementation lab · offline", "icon": "fa-solid fa-terminal" },
+                { "label": "Programming II Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                  { "label": "C++ Programming II Mid Term", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "C++ Programming II Final Exam (Unsolved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                { "label": "C++ Programming II Final Exam (Solved)", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+              ]
             },
             {
               "id": "technical-english",
@@ -198,7 +216,9 @@
               "icon": "fa-solid fa-language",
               "accent": "teal",
               "blurb": "Technical writing & communication",
-              "resources": []
+              "resources": [
+                 { "label": "Technical English Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+              ]
             },
             {
               "id": "engineering-drawing",
@@ -207,7 +227,9 @@
               "icon": "fa-solid fa-drafting-compass",
               "accent": "orange",
               "blurb": "Projections, sketching, CAD basics",
-              "resources": []
+              "resources": [
+                { "label": "Engineering Drawing Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+              ]
             }
           ]
         },
