@@ -261,7 +261,7 @@
               "accent": "blue",
               "blurb": "Distributions, inference, estimation",
               "resources": [
-                { "label": "Elementary Probability and Statistics", "href": "", "type": "external", "icon": "fa-solid fa-chart-column" }
+                { "label": "Elementary Probability and Statistics Summary", "href": "", "type": "external", "icon": "fa-solid fa-chart-column" }
               ]
             },
             {
@@ -272,7 +272,7 @@
               "accent": "green",
               "blurb": "Trees, graphs, complexity, core algorithms",
               "resources": [
-                { "label": "Data Structures and Algorithms", "href": "", "type": "external", "icon": "fa-solid fa-circle-nodes" }
+                { "label": "Data Structures and Algorithms Summary", "href": "", "type": "external", "icon": "fa-solid fa-circle-nodes" }
               ]
             },
             {
@@ -283,7 +283,7 @@
               "accent": "teal",
               "blurb": "Applied Python beyond the basics",
               "resources": [
-                { "label": "Python Programming", "href": "", "type": "external", "icon": "fa-brands fa-python" }
+                { "label": "Python Programming Summary", "href": "", "type": "external", "icon": "fa-brands fa-python" }
               ]
             },
             {
@@ -294,7 +294,7 @@
               "accent": "orange",
               "blurb": "Sampling, filters, transforms",
               "resources": [
-                { "label": "Digital Signals Processing", "href": "", "type": "external", "icon": "fa-solid fa-wave-square" }
+                { "label": "Digital Signals Processing Summary", "href": "", "type": "external", "icon": "fa-solid fa-wave-square" }
               ]
             },
             {
@@ -317,7 +317,7 @@
               "accent": "red",
               "blurb": "First formal introduction to ML",
               "resources": [
-                      { "label": "Optimizations for Machine Learning", "href": "", "type": "external", "icon": "fa-solid fa-brain" }
+                      { "label": "Optimizations for Machine Learning Summary", "href": "", "type": "external", "icon": "fa-solid fa-brain" }
               ]
             }
           ]
