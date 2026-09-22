@@ -188,7 +188,7 @@
               "accent": "purple",
               "blurb": "Matrices, vector spaces, eigenvalues",
               "resources": [
-                "{ "label": "Linear Algebra True/False Mastery", "href": "Sem3/la_mastery.html", "type": "internal", "note": "T/F mastery · offline", "icon": "fa-solid fa-check-circle" },"
+                { "label": "Linear Algebra True/False Mastery", "href": "Sem3/la_mastery.html", "type": "internal", "note": "T/F mastery · offline", "icon": "fa-solid fa-check-circle" },
                 { "label": "Linear Algebra Summary Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Linear Algebra Mid Term", "href": "", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Linear Algebra Final Exam (Unsolved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
