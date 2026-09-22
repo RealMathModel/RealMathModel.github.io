@@ -249,16 +249,20 @@
               "icon": "fa-solid fa-infinity",
               "accent": "blue",
               "blurb": "Elementary Ordinary Differential Equations",
-              "resources": []
+              "resources": [
+                { "label": "Elementary Ordinary Differential Equations Summary", "href": "", "type": "external", "icon": "fa-solid fa-fire" }
+              ]
             },
             {
               "id": "prob-stats",
-              "title": "Probability and Statistics Theory",
+              "title": "Elementary Probability and Statistics",
               "tag": "MATH",
               "icon": "fa-solid fa-chart-simple",
               "accent": "blue",
               "blurb": "Distributions, inference, estimation",
-              "resources": []
+              "resources": [
+                { "label": "Elementary Probability and Statistics", "href": "", "type": "external", "icon": "fa-solid fa-chart-column" }
+              ]
             },
             {
               "id": "dsa",
@@ -267,7 +271,9 @@
               "icon": "fa-solid fa-sitemap",
               "accent": "green",
               "blurb": "Trees, graphs, complexity, core algorithms",
-              "resources": []
+              "resources": [
+                { "label": "Data Structures and Algorithms", "href": "", "type": "external", "icon": "fa-solid fa-circle-nodes" }
+              ]
             },
             {
               "id": "python-programming",
@@ -276,7 +282,9 @@
               "icon": "fa-brands fa-python",
               "accent": "teal",
               "blurb": "Applied Python beyond the basics",
-              "resources": []
+              "resources": [
+                { "label": "Python Programming", "href": "", "type": "external", "icon": "fa-brands fa-python" }
+              ]
             },
             {
               "id": "dsp",
@@ -285,7 +293,9 @@
               "icon": "fa-solid fa-wave-square",
               "accent": "orange",
               "blurb": "Sampling, filters, transforms",
-              "resources": []
+              "resources": [
+                { "label": "Digital Signals Processing", "href": "", "type": "external", "icon": "fa-solid fa-wave-square" }
+              ]
             },
             {
               "id": "dsp-lab",
@@ -294,16 +304,21 @@
               "icon": "fa-solid fa-flask-vial",
               "accent": "amber",
               "blurb": "Hands-on DSP implementation",
-              "resources": []
+              "resources": [
+                    { "label": "Digital Signals Processing Lab Summary", "href": "", "type": "external", "icon": "fa-solid fa-flask-vial" }
+
+              ]
             },
             {
               "id": "intro-ml",
-              "title": "Ideal Machine Learning",
+              "title": "Optimizations for Machine Learning",
               "tag": "ML",
               "icon": "fa-solid fa-brain",
               "accent": "red",
               "blurb": "First formal introduction to ML",
-              "resources": []
+              "resources": [
+                      { "label": "Optimizations for Machine Learning", "href": "", "type": "external", "icon": "fa-solid fa-brain" }
+              ]
             }
           ]
         },
