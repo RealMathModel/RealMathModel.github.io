@@ -56,13 +56,11 @@ h1{font-family:var(--mono); font-weight:700; font-size:27px; letter-spacing:-.01
 h1 .ac{color:var(--amber)}
 .sub{color:var(--muted); font-size:14px; margin:0 0 16px}
 
-/* stats */
 .stats{display:flex; flex-wrap:wrap; gap:8px; margin:2px 0 16px}
 .stat{flex:1 1 auto; min-width:96px; background:var(--panel); border:1px solid var(--line); border-radius:11px; padding:11px 13px}
 .stat .n{font-family:var(--mono); font-size:20px; font-weight:700; color:var(--amber); line-height:1}
 .stat .k{font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-top:5px}
 
-/* controls */
 .search{display:flex; align-items:center; gap:10px; background:var(--bg2); border:1px solid var(--line);
   border-radius:10px; padding:11px 13px; margin:2px 0 10px; transition:border-color .15s, box-shadow .15s}
 .search:focus-within{border-color:var(--line2); box-shadow:0 0 0 3px rgba(231,181,61,.08)}
@@ -84,7 +82,6 @@ h1 .ac{color:var(--amber)}
   color:var(--faint); margin:6px 0 10px; display:flex; align-items:center; gap:9px}
 .label::before{content:""; width:16px; height:1px; background:var(--line2)}
 
-/* problem rows */
 .list{display:flex; flex-direction:column; gap:8px}
 .prow{display:flex; gap:12px; padding:13px 14px; background:var(--panel); border:1px solid var(--line);
   border-radius:11px; transition:border-color .15s, background .15s}
@@ -138,159 +135,225 @@ h1 .ac{color:var(--amber)}
 <script>
 /* ============================================================================
    realmathmodel — problemsetting showcase
+
+   HOW TO ADD A PROBLEM
+   1) New contest?  Add one line to CONTESTS:   key:{name, url, date}
+   2) Append the problem to the END of PROBLEMS:
+        {c:'key', name:'...', url:'...', rate:'1600', div:'D2C', note:'...'}
+      - number, platform badge and rating colour are computed automatically
+      - standalone problem (no contest)? omit c and give date instead:
+        {name:'...', url:'...', rate:'900', div:'D2A', date:'2026'}
+      - note is optional; it may contain HTML, e.g. <span class=sp>spoiler</span>
    ========================================================================== */
 var owner='hasan', host='iug';
 
-/* rating colour map */
-var RCOL={grey:'#9AA7BD',gray:'#9AA7BD',green:'#63C08A',cyan:'#34BFC9',blue:'#6F9BE8',
-          purple:'#B58BE6',violet:'#9D8BEA',orange:'#E0913C',red:'#EB6A4E'};
-
-/* contest URLs (reused across rows) */
-var C={
-  cf36:'https://codeforces.com/gym/105445',
-  s163:'https://www.codechef.com/START163',
-  kep12:'https://kep.uz/competitions/contests/contest/419/problems',
-  kepsf:'https://kep.uz/competitions/contests/contest/421/problems',
-  robo:'https://robocontest.uz/olympiads/2619',
-  ewp5:'https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44',
-  ewp6:'https://basecamp.eolymp.com/en/compete/uukkpfajrh5fb729u5p4n5cti8',
-  ewp7:'https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0',
-  s200:'https://www.codechef.com/START200',
-  ebr1:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec',
-  ebr2:'https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc',
-  ebr4:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4',
-  ebr5:'https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps',
-  ewp12:'https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670',
-  ebr6:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k',
-  ebr9:'https://eolymp.com/en/compete/2rc5re6vmh2cnc6vlkshhn1ad8',
-  ewp16:'https://eolymp.com/en/compete/m7f5egpjit7n32822i6ged4m1k',
-  eb10:'https://eolymp.com/en/compete/94ulnr964l011arqjc94v5e5sk',
-  eb11:'https://eolymp.com/en/contests/2ad26u26792v7aamtvg0b9c4bg',
-  eb12:'https://eolymp.com/en/contests/qjgameovtl0l7dprd0o9efta48'
+/* ---------- CONTESTS ---------- */
+var CONTESTS={
+  cf36 :{name:'TheForces Round #36 (Starters-Forces)', url:'https://codeforces.com/gym/105445', date:'October 2024'},
+  s163 :{name:'Starters 163 (Rated till 5 stars)',     url:'https://www.codechef.com/START163', date:'December 2024'},
+  kep12:{name:'KEP Contest #12',                       url:'https://kep.uz/competitions/contests/contest/419/problems', date:'January 2025'},
+  kepsf:{name:'KEP SciFi Contest',                     url:'https://kep.uz/competitions/contests/contest/421/problems', date:'March 2025'},
+  robo :{name:'Robocontest 103',                       url:'https://robocontest.uz/olympiads/2619', date:'March 2025'},
+  ewp5 :{name:'Eolymp Weekend Practice #5',            url:'https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44', date:'March 2025'},
+  ewp6 :{name:'Eolymp Weekend Practice #6',            url:'https://basecamp.eolymp.com/en/compete/uukkpfajrh5fb729u5p4n5cti8', date:'May 2025'},
+  ewp7 :{name:'Eolymp Weekend Practice #7',            url:'https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0', date:'June 2025'},
+  s200 :{name:'Codechef Starters 200',                 url:'https://www.codechef.com/START200', date:'August 2025'},
+  ebr1 :{name:'Eolymp Blitz Round 1',                  url:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec', date:'2025'},
+  ebr2 :{name:'Eolymp Blitz Round 2',                  url:'https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc', date:'2025'},
+  ebr4 :{name:'Eolymp Blitz Round 4',                  url:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4', date:'2025'},
+  ebr5 :{name:'Eolymp Blitz Round 5',                  url:'https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps', date:'2025'},
+  ewp12:{name:'Eolymp Weekend Practice 12',            url:'https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670', date:'2025'},
+  ebr6 :{name:'Eolymp Blitz Round #6',                 url:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k', date:'2025'},
+  ebr9 :{name:'Eolymp Blitz Round #9',                 url:'https://eolymp.com/en/compete/2rc5re6vmh2cnc6vlkshhn1ad8', date:'2025'},
+  ewp16:{name:'Eolymp Weekend Practice #16',           url:'https://eolymp.com/en/compete/m7f5egpjit7n32822i6ged4m1k', date:'2026'},
+  eb10 :{name:'Eolymp Blitz #10',                      url:'https://eolymp.com/en/compete/94ulnr964l011arqjc94v5e5sk', date:'2026'},
+  eb11 :{name:'Eolymp Blitz #11',                      url:'https://eolymp.com/en/contests/2ad26u26792v7aamtvg0b9c4bg', date:'2026'},
+  eb12 :{name:'Eolymp Blitz #12',                      url:'https://eolymp.com/en/contests/qjgameovtl0l7dprd0o9efta48', date:'2026'}
 };
 
-/* problems: [n, date, name, url, div, rate, colour, contest, contestUrl, commentHTML] */
-var D=[
-[1,"October 2024","Sum Fun","https://codeforces.com/gym/105445/problem/A","D2A","800","grey","TheForces Round #36 (Starters-Forces)",C.cf36,"My very first problem + my first adhoc problem"],
-[2,"October 2024","Interviews","https://codeforces.com/gym/105445/problem/B","D2A","900","grey","TheForces Round #36 (Starters-Forces)",C.cf36,"Cute Greedy Problem"],
-[3,"October 2024","YEET!","https://codeforces.com/gym/105445/problem/D","D2D","2200","orange","TheForces Round #36 (Starters-Forces)",C.cf36,"My first constructive problem <span class=sp>Initially it was aimed to be a D2B</span>"],
-[4,"December 2024","Chef Socks","https://www.codechef.com/problems/CHEFSOCKS","D4A","800⁻","grey","Starters 163 (Rated till 5 stars)",C.s163,"Very simple problem, solvable by all participants"],
-[5,"December 2024","Binary Sum","https://www.codechef.com/problems/BIANRYSUM","D2A","800","grey","Starters 163 (Rated till 5 stars)",C.s163,"Simple Bruteforce <span class=sp>There exists an <b>𝒪(1)</b> solution</span>"],
-[6,"December 2024","Minimum Types","https://www.codechef.com/problems/MINBUY","D2A","1000","grey","Starters 163 (Rated till 5 stars)",C.s163,"My First Sorting+Greedy problem"],
-[7,"December 2024","Nice Array","https://www.codechef.com/problems/NICEARRAY","D2B","1200","green","Starters 163 (Rated till 5 stars)",C.s163,"Another Cute adhoc :)"],
-[8,"December 2024","Tree Sum is Fun !","https://www.codechef.com/problems/TREE2SUM","D2C/D1A","1700","blue","Starters 163 (Rated till 5 stars)",C.s163,"My First Binary Search problem <span class=sp>Binary Search on Binary Tree <span class=sp><b>𝒪(log²x) / 𝒪(log x)</b></span></span>"],
-[9,"December 2024","Permutation Pair","https://www.codechef.com/problems/PERMUTATION2","D2C/D1A","1900","purple","Starters 163 (Rated till 5 stars)",C.s163,"My First Counting Problem <span class=sp>Inclusion Exclusion</span>"],
-[10,"January 2025","Unique Winner","https://kep.uz/practice/problems/problem/2122","D2A","800","grey","KEP Contest #12",C.kep12,"Simple Game Theory"],
-[11,"January 2025","Beautiful Pairs #1","https://kep.uz/practice/problems/problem/2115","D2A","900","grey","KEP Contest #12",C.kep12,"Bruteforce + adhoc"],
-[12,"January 2025","Beautiful Pairs #2","https://kep.uz/practice/problems/problem/2116","D2A","1000","grey","KEP Contest #12",C.kep12,"Optimization training <span class=sp>Simulation and ∑</span>"],
-[13,"January 2025","Beautiful Pairs #3","https://kep.uz/practice/problems/problem/2117","D2B","1200","green","KEP Contest #12",C.kep12,"Optimization training again ! <span class=sp>∑ again !</span>"],
-[14,"January 2025","Cubic Sum #1","https://kep.uz/practice/problems/problem/2121?contest=419","D2B/C","1400","cyan","KEP Contest #12",C.kep12,"Optimized Bruteforce <span class=sp>It's enough to iterate through one pointer and binary search for the other</span>"],
-[15,"January 2025","Cubic Sum #2","https://kep.uz/practice/problems/problem/2113?contest=419","D2C","1600","blue","KEP Contest #12",C.kep12,"Optimized Bruteforce <span class=sp>The binary search (log) factor is heavy sometimes; two pointers is smaller in practice</span>"],
-[16,"March 2025","Binary Table","https://kep.uz/practice/problems/problem/2112","D2C","1700","blue","KEP SciFi Contest",C.kepsf,"Another Counting Problem !"],
-[17,"March 2025","Hasan and Binary Function","https://robocontest.uz/olympiads/2619/tasks/A","D2A","900","grey","Robocontest 103",C.robo,"Binary Representation Properties"],
-[18,"March 2025","Hasan and Beautiful","https://robocontest.uz/olympiads/2619/tasks/B","D2A/B","1100","grey","Robocontest 103",C.robo,"Educational problem about Greedy."],
-[19,"March 2025","Hasan and Special Remove","https://robocontest.uz/olympiads/2619/tasks/C","D2B","1300","green","Robocontest 103",C.robo,"Educational problem about frequency arrays and greedy."],
-[20,"March 2025","Hasan and Permutations","https://robocontest.uz/olympiads/2619/tasks/D","D2B","1400","cyan","Robocontest 103",C.robo,"Educational problem about counting — pattern also findable by bruteforce."],
-[21,"March 2025","Hasan and Fair Split","https://robocontest.uz/olympiads/2619/tasks/G","D2C","1700","blue","Robocontest 103",C.robo,"Cool Number Theory problem"],
-[22,"March 2025","A. Special Moves","https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/1","D2A","800","grey","Eolymp Weekend Practice #5",C.ewp5,"Implementation"],
-[23,"March 2025","B. Sacrifice","https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/2","D2B","1100","grey","Eolymp Weekend Practice #5",C.ewp5,"Educational number theory"],
-[24,"March 2025","C. Score","https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/3","D2C","1700","blue","Eolymp Weekend Practice #5",C.ewp5,"Binary search on a Tree again — but it's Fenwick."],
-[25,"May 2025","A. Epic Coloring","https://basecamp.eolymp.com/en/problems/11836","D2A","800","gray","Eolymp Weekend Practice #6",C.ewp6,"Simple Math and Casework."],
-[26,"May 2025","B. XORSUM","https://basecamp.eolymp.com/en/problems/11837","D2B","1000","gray","Eolymp Weekend Practice #6",C.ewp6,"XOR cycle property + educational problem about counting cycles with remainder."],
-[27,"May 2025","C. 333 Permutation","https://basecamp.eolymp.com/en/problems/11838","D2C/D1A","1600","blue","Eolymp Weekend Practice #6",C.ewp6,"Nice Constructive Problem, with DS and implementation training."],
-[28,"May 2025","D. Constructive Fun","https://basecamp.eolymp.com/en/problems/11839","D2D/D1B","2200","orange","Eolymp Weekend Practice #6",C.ewp6,"It's Knapsack DP masked as constructive"],
-[29,"May 2025","E. Tree Sum is Fun II","https://basecamp.eolymp.com/en/problems/11840","D2F/D1C","2500","red","Eolymp Weekend Practice #6",C.ewp6,"Very Detailed Problem, won't spoil — give it a try :)"],
-[30,"June 2025","A. Unique ID","https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0/problem/1","D2A","800","gray","Eolymp Weekend Practice #7",C.ewp7,"Simple Implementation."],
-[31,"June 2025","B. Quad","https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0/problem/2","D2B","1000","gray","Eolymp Weekend Practice #7",C.ewp7,"Simple Construction / Amortized Analysis works too."],
-[32,"August 2025","Permutation Counting (Easy)","https://www.codechef.com/problems/PERMCNTEZ","D1B","2100","orange","Codechef Starters 200",C.s200,"Stars and Bars"],
-[33,"August 2025","Evading Robot","https://www.codechef.com/problems/EVADEROBOT","D1C","2500","red","Codechef Starters 200",C.s200,"Original idea proposed by Az3ar; I made slight changes, and later Dominater069 improved it to feature counting."],
-[34,"August 2025","Permutation Counting (Hard)","https://www.codechef.com/problems/PERMCNTHD","D1E","3200","red","Codechef Starters 200",C.s200,"I came up with the statement. Thanks to BurnedChicken for solving it!"],
-[35,"2025","Directed?","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/1","Div4A","800⁻","grey","Eolymp Blitz Round 1",C.ebr1,""],
-[36,"2025","Power Permutation","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/2","Div4B","800","grey","Eolymp Blitz Round 1",C.ebr1,"Simple Observation"],
-[37,"2025","Beautiful Grid","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/3","Div3C","1200","green","Eolymp Blitz Round 1",C.ebr1,"Implementation Practice"],
-[38,"2025","Powers Counting","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/4","Div2C","1600","blue","Eolymp Blitz Round 1",C.ebr1,"Nice Binary Search"],
-[39,"2025","±Permutation","https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/5","Div2C","1400","cyan","Eolymp Blitz Round 1",C.ebr1,"Epic constructive"],
-[40,"2025","Prefix Suffix Reconstruction","https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/1","D3A","800","grey","Eolymp Blitz Round 2",C.ebr2,"Simple"],
-[41,"2025","Kaosar and XOR","https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/3","D3C","1000","grey","Eolymp Blitz Round 2",C.ebr2,"nice beginner casework"],
-[42,"2025","Crazy GCD","https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/5","D2C","1600","blue","Eolymp Blitz Round 2",C.ebr2,"Nice Number Theory problem"],
-[43,"2025","WOOW String","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/1","D4A","800","grey","Eolymp Blitz Round 4",C.ebr4,"Simple"],
-[44,"2025","Count Transformations","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/2","D3A","1000","grey","Eolymp Blitz Round 4",C.ebr4,"Simple counting"],
-[45,"2025","PAM!","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/3","D2B","1200","green","Eolymp Blitz Round 4",C.ebr4,"Recommended"],
-[46,"2025","Minimum Increasing Cycle","https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/5","D2C","1700","blue","Eolymp Blitz Round 4",C.ebr4,"My first Dynamic-Programming problem :)"],
-[47,"2025","Collatz Beauty","https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/1","D3A","800","grey","Eolymp Blitz Round 5",C.ebr5,"Simple"],
-[48,"2025","Min Sum Construction","https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/4","D2C","1500","cyan","Eolymp Blitz Round 5",C.ebr5,"Skibidi Problem"],
-[49,"2025","Kaosar and Triples","https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/5","D2C","1700","blue","Eolymp Blitz Round 5",C.ebr5,"Multiple ways to go"],
-[50,"2025","Easy Array Coloring","https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/1","D2A","800","grey","Eolymp Weekend Practice 12",C.ewp12,"<b>n = 1</b> is evil"],
-[51,"2025","Permutation of Subarrays and Queries","https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/3","D2C","1600","blue","Eolymp Weekend Practice 12",C.ewp12,""],
-[52,"2025","Hard Arithemetic","https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/4","D2D","2000","purple","Eolymp Weekend Practice 12",C.ewp12,"Multiple ways to go"],
-[53,"2025","Easy Array Coloring II","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/1","D2A","800","grey","Eolymp Blitz Round #6",C.ebr6,"Simple."],
-[54,"2025","+ , -- or ?","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/2","D3B","900","grey","Eolymp Blitz Round #6",C.ebr6,"Simple."],
-[55,"2025","Epic Subarrays Counting","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/3","D2B","1100","grey","Eolymp Blitz Round #6",C.ebr6,"Simple."],
-[56,"2025","Binary Fun","https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/1","D2C","1500","cyan","Eolymp Blitz Round #6",C.ebr6,""],
-[57,"2025","Hard Game","https://eolymp.com/en/compete/2rc5re6vmh2cnc6vlkshhn1ad8/problem/3","D2B","1200","green","Eolymp Blitz Round #9",C.ebr9,"Initially proposed to give the max answer; I made it constructive so it looks better."],
-[58,"2026","Recover The Array","https://eolymp.com/en/problems/12305","D2A","800","gray","Eolymp Weekend Practice #16",C.ewp16,"Simple Reverse Engineering :)"],
-[59,"2026","Skyline","https://eolymp.com/en/problems/12306","D2A","1000","gray","Eolymp Weekend Practice #16",C.ewp16,"Observation + Patterns."],
-[60,"2026","Minimum Triple","https://eolymp.com/en/problems/12307","D2C","1600","blue","Eolymp Weekend Practice #16",C.ewp16,""],
-[61,"2026","Permutation Fix Sum","https://eolymp.com/en/problems/12308","D1B","1900","violet","Eolymp Weekend Practice #16",C.ewp16,""],
-[62,"2026","Symmetric Construction","https://eolymp.com/en/problems/12309","D1C","2400","red","Eolymp Weekend Practice #16",C.ewp16,""],
-[63,"2026","Bouncing Ball","https://eolymp.com/en/problems/12311","D2A","800","grey","Eolymp Blitz #10",C.eb10,""],
-[64,"2026","Digit Queries","https://eolymp.com/en/problems/12312","D2A","900","grey","Eolymp Blitz #10",C.eb10,""],
-[65,"2026","Counting Pairs","https://eolymp.com/en/problems/12313","D2A","1000","grey","Eolymp Blitz #10",C.eb10,""],
-[66,"2026","2Tree Queries","https://eolymp.com/en/problems/12314","D2B/C","1400","cyan","Eolymp Blitz #10",C.eb10,""],
-[67,"2026","Wake Me Up","https://eolymp.com/en/problems/12315","D2C","1700","blue","Eolymp Blitz #10",C.eb10,""],
-[68,"2026","Kaosar and Counting","https://eolymp.com/en/problems/12328","D2C","1600","blue","Eolymp Blitz #11",C.eb11,""],
-[69,"2026","Interviews","https://eolymp.com/en/problems/12339","D2A","1000","grey","Eolymp Blitz #12",C.eb12,""],
-[70,"2026","Cheater","https://eolymp.com/en/problems/12353","D2A","800","grey","Eolymp","https://eolymp.com/en/problems/12353",""],
-[71,"2026","Area","https://eolymp.com/en/problems/12429","D2A","900","grey","Eolymp","https://eolymp.com/en/problems/12429",""],
-[72,"2026","Exciting Arrays","https://eolymp.com/en/problems/12460","D2A","900","grey","Eolymp","https://eolymp.com/en/problems/12460",""],
-[73,"2026","Rotate the Matrix","https://eolymp.com/en/problems/13034","D2A","800","grey","Eolymp","https://eolymp.com/en/problems/13034",""],
-[74,"2026","Permutation Test","https://eolymp.com/en/problems/13035","D3B","900","grey","Eolymp","https://eolymp.com/en/problems/13035",""],
-[75,"2026","Matrix is Fun","https://eolymp.com/en/problems/13036","D3C","1100","grey","Eolymp","https://eolymp.com/en/problems/13036",""],
-[76,"2026","Sigma Queries","https://eolymp.com/en/problems/13037","D3D","1200","green","Eolymp","https://eolymp.com/en/problems/13037",""],
-[77,"2026","Ceiling Sum","https://eolymp.com/en/problems/13038","D2D","2000","purple","Eolymp","https://eolymp.com/en/problems/13038",""]
+/* ---------- PROBLEMS (chronological — append new ones at the bottom) ---------- */
+var PROBLEMS=[
+  /* TheForces Round #36 */
+  {c:'cf36', name:'Sum Fun',    url:'https://codeforces.com/gym/105445/problem/A', rate:'800',  div:'D2A', note:'My very first problem + my first adhoc problem'},
+  {c:'cf36', name:'Interviews', url:'https://codeforces.com/gym/105445/problem/B', rate:'900',  div:'D2A', note:'Cute Greedy Problem'},
+  {c:'cf36', name:'YEET!',      url:'https://codeforces.com/gym/105445/problem/D', rate:'2200', div:'D2D', note:'My first constructive problem <span class=sp>Initially it was aimed to be a D2B</span>'},
+
+  /* CodeChef Starters 163 */
+  {c:'s163', name:'Chef Socks',        url:'https://www.codechef.com/problems/CHEFSOCKS',    rate:'800⁻', div:'D4A',     note:'Very simple problem, solvable by all participants'},
+  {c:'s163', name:'Binary Sum',        url:'https://www.codechef.com/problems/BIANRYSUM',    rate:'800',  div:'D2A',     note:'Simple Bruteforce <span class=sp>There exists an <b>𝒪(1)</b> solution</span>'},
+  {c:'s163', name:'Minimum Types',     url:'https://www.codechef.com/problems/MINBUY',       rate:'1000', div:'D2A',     note:'My First Sorting+Greedy problem'},
+  {c:'s163', name:'Nice Array',        url:'https://www.codechef.com/problems/NICEARRAY',    rate:'1200', div:'D2B',     note:'Another Cute adhoc :)'},
+  {c:'s163', name:'Tree Sum is Fun !', url:'https://www.codechef.com/problems/TREE2SUM',     rate:'1700', div:'D2C/D1A', note:'My First Binary Search problem <span class=sp>Binary Search on Binary Tree <span class=sp><b>𝒪(log²x) / 𝒪(log x)</b></span></span>'},
+  {c:'s163', name:'Permutation Pair',  url:'https://www.codechef.com/problems/PERMUTATION2', rate:'1900', div:'D2C/D1A', note:'My First Counting Problem <span class=sp>Inclusion Exclusion</span>'},
+
+  /* KEP Contest #12 */
+  {c:'kep12', name:'Unique Winner',      url:'https://kep.uz/practice/problems/problem/2122',            rate:'800',  div:'D2A',   note:'Simple Game Theory'},
+  {c:'kep12', name:'Beautiful Pairs #1', url:'https://kep.uz/practice/problems/problem/2115',            rate:'900',  div:'D2A',   note:'Bruteforce + adhoc'},
+  {c:'kep12', name:'Beautiful Pairs #2', url:'https://kep.uz/practice/problems/problem/2116',            rate:'1000', div:'D2A',   note:'Optimization training <span class=sp>Simulation and ∑</span>'},
+  {c:'kep12', name:'Beautiful Pairs #3', url:'https://kep.uz/practice/problems/problem/2117',            rate:'1200', div:'D2B',   note:'Optimization training again ! <span class=sp>∑ again !</span>'},
+  {c:'kep12', name:'Cubic Sum #1',       url:'https://kep.uz/practice/problems/problem/2121?contest=419', rate:'1400', div:'D2B/C', note:'Optimized Bruteforce <span class=sp>It\'s enough to iterate through one pointer and binary search for the other</span>'},
+  {c:'kep12', name:'Cubic Sum #2',       url:'https://kep.uz/practice/problems/problem/2113?contest=419', rate:'1600', div:'D2C',   note:'Optimized Bruteforce <span class=sp>The binary search (log) factor is heavy sometimes; two pointers is smaller in practice</span>'},
+
+  /* KEP SciFi */
+  {c:'kepsf', name:'Binary Table', url:'https://kep.uz/practice/problems/problem/2112', rate:'1700', div:'D2C', note:'Another Counting Problem !'},
+
+  /* Robocontest 103 */
+  {c:'robo', name:'Hasan and Binary Function',  url:'https://robocontest.uz/olympiads/2619/tasks/A', rate:'900',  div:'D2A',   note:'Binary Representation Properties'},
+  {c:'robo', name:'Hasan and Beautiful',        url:'https://robocontest.uz/olympiads/2619/tasks/B', rate:'1100', div:'D2A/B', note:'Educational problem about Greedy.'},
+  {c:'robo', name:'Hasan and Special Remove',   url:'https://robocontest.uz/olympiads/2619/tasks/C', rate:'1300', div:'D2B',   note:'Educational problem about frequency arrays and greedy.'},
+  {c:'robo', name:'Hasan and Permutations',     url:'https://robocontest.uz/olympiads/2619/tasks/D', rate:'1400', div:'D2B',   note:'Educational problem about counting — pattern also findable by bruteforce.'},
+  {c:'robo', name:'Hasan and Fair Split',       url:'https://robocontest.uz/olympiads/2619/tasks/G', rate:'1700', div:'D2C',   note:'Cool Number Theory problem'},
+
+  /* Eolymp Weekend Practice #5 */
+  {c:'ewp5', name:'A. Special Moves', url:'https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/1', rate:'800',  div:'D2A', note:'Implementation'},
+  {c:'ewp5', name:'B. Sacrifice',     url:'https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/2', rate:'1100', div:'D2B', note:'Educational number theory'},
+  {c:'ewp5', name:'C. Score',         url:'https://basecamp.eolymp.com/en/compete/n2f9epa4510sbe8o3dujppfl44/problem/3', rate:'1700', div:'D2C', note:'Binary search on a Tree again — but it\'s Fenwick.'},
+
+  /* Eolymp Weekend Practice #6 */
+  {c:'ewp6', name:'A. Epic Coloring',       url:'https://basecamp.eolymp.com/en/problems/11836', rate:'800',  div:'D2A',     note:'Simple Math and Casework.'},
+  {c:'ewp6', name:'B. XORSUM',              url:'https://basecamp.eolymp.com/en/problems/11837', rate:'1000', div:'D2B',     note:'XOR cycle property + educational problem about counting cycles with remainder.'},
+  {c:'ewp6', name:'C. 333 Permutation',     url:'https://basecamp.eolymp.com/en/problems/11838', rate:'1600', div:'D2C/D1A', note:'Nice Constructive Problem, with DS and implementation training.'},
+  {c:'ewp6', name:'D. Constructive Fun',    url:'https://basecamp.eolymp.com/en/problems/11839', rate:'2200', div:'D2D/D1B', note:'It\'s Knapsack DP masked as constructive'},
+  {c:'ewp6', name:'E. Tree Sum is Fun II',  url:'https://basecamp.eolymp.com/en/problems/11840', rate:'2500', div:'D2F/D1C', note:'Very Detailed Problem, won\'t spoil — give it a try :)'},
+
+  /* Eolymp Weekend Practice #7 */
+  {c:'ewp7', name:'A. Unique ID', url:'https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0/problem/1', rate:'800',  div:'D2A', note:'Simple Implementation.'},
+  {c:'ewp7', name:'B. Quad',      url:'https://basecamp.eolymp.com/en/compete/uitnv9tt356kj7di2bqsabpps0/problem/2', rate:'1000', div:'D2B', note:'Simple Construction / Amortized Analysis works too.'},
+
+  /* CodeChef Starters 200 */
+  {c:'s200', name:'Permutation Counting (Easy)', url:'https://www.codechef.com/problems/PERMCNTEZ',  rate:'2100', div:'D1B', note:'Stars and Bars'},
+  {c:'s200', name:'Evading Robot',               url:'https://www.codechef.com/problems/EVADEROBOT', rate:'2500', div:'D1C', note:'Original idea proposed by Az3ar; I made slight changes, and later Dominater069 improved it to feature counting.'},
+  {c:'s200', name:'Permutation Counting (Hard)', url:'https://www.codechef.com/problems/PERMCNTHD',  rate:'3200', div:'D1E', note:'I came up with the statement. Thanks to BurnedChicken for solving it!'},
+
+  /* Eolymp Blitz Round 1 */
+  {c:'ebr1', name:'Directed?',         url:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/1', rate:'800⁻', div:'Div4A'},
+  {c:'ebr1', name:'Power Permutation', url:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/2', rate:'800',  div:'Div4B', note:'Simple Observation'},
+  {c:'ebr1', name:'Beautiful Grid',    url:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/3', rate:'1200', div:'Div3C', note:'Implementation Practice'},
+  {c:'ebr1', name:'Powers Counting',   url:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/4', rate:'1600', div:'Div2C', note:'Nice Binary Search'},
+  {c:'ebr1', name:'±Permutation',      url:'https://eolymp.com/en/compete/k4s9lmqljd6ttcsrh0fm71hbec/problem/5', rate:'1400', div:'Div2C', note:'Epic constructive'},
+
+  /* Eolymp Blitz Round 2 */
+  {c:'ebr2', name:'Prefix Suffix Reconstruction', url:'https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/1', rate:'800',  div:'D3A', note:'Simple'},
+  {c:'ebr2', name:'Kaosar and XOR',               url:'https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/3', rate:'1000', div:'D3C', note:'nice beginner casework'},
+  {c:'ebr2', name:'Crazy GCD',                    url:'https://eolymp.com/en/compete/on8n7jfi3t72744m3dd83jrhlc/problem/5', rate:'1600', div:'D2C', note:'Nice Number Theory problem'},
+
+  /* Eolymp Blitz Round 4 */
+  {c:'ebr4', name:'WOOW String',              url:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/1', rate:'800',  div:'D4A', note:'Simple'},
+  {c:'ebr4', name:'Count Transformations',    url:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/2', rate:'1000', div:'D3A', note:'Simple counting'},
+  {c:'ebr4', name:'PAM!',                     url:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/3', rate:'1200', div:'D2B', note:'Recommended'},
+  {c:'ebr4', name:'Minimum Increasing Cycle', url:'https://eolymp.com/en/compete/7mk1e6onrl4pb69590dkne46j4/problem/5', rate:'1700', div:'D2C', note:'My first Dynamic-Programming problem :)'},
+
+  /* Eolymp Blitz Round 5 */
+  {c:'ebr5', name:'Collatz Beauty',       url:'https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/1', rate:'800',  div:'D3A', note:'Simple'},
+  {c:'ebr5', name:'Min Sum Construction', url:'https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/4', rate:'1500', div:'D2C', note:'Skibidi Problem'},
+  {c:'ebr5', name:'Kaosar and Triples',   url:'https://eolymp.com/en/compete/ca6um42ddh6m59ihudob27bfps/problem/5', rate:'1700', div:'D2C', note:'Multiple ways to go'},
+
+  /* Eolymp Weekend Practice 12 */
+  {c:'ewp12', name:'Easy Array Coloring',                  url:'https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/1', rate:'800',  div:'D2A', note:'<b>n = 1</b> is evil'},
+  {c:'ewp12', name:'Permutation of Subarrays and Queries', url:'https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/3', rate:'1600', div:'D2C'},
+  {c:'ewp12', name:'Hard Arithemetic',                     url:'https://eolymp.com/en/compete/d1vblrqu112ord1d68l1dh4670/problem/4', rate:'2000', div:'D2D', note:'Multiple ways to go'},
+
+  /* Eolymp Blitz Round #6 */
+  {c:'ebr6', name:'Easy Array Coloring II', url:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/1', rate:'800',  div:'D2A', note:'Simple.'},
+  {c:'ebr6', name:'+ , -- or ?',            url:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/2', rate:'900',  div:'D3B', note:'Simple.'},
+  {c:'ebr6', name:'Epic Subarrays Counting',url:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/3', rate:'1100', div:'D2B', note:'Simple.'},
+  {c:'ebr6', name:'Binary Fun',             url:'https://eolymp.com/en/compete/4kehdltk2d0jpemt7vr3flpq2k/problem/1', rate:'1500', div:'D2C'},
+
+  /* Eolymp Blitz Round #9 */
+  {c:'ebr9', name:'Hard Game', url:'https://eolymp.com/en/compete/2rc5re6vmh2cnc6vlkshhn1ad8/problem/3', rate:'1200', div:'D2B', note:'Initially proposed to give the max answer; I made it constructive so it looks better.'},
+
+  /* Eolymp Weekend Practice #16 */
+  {c:'ewp16', name:'Recover The Array',      url:'https://eolymp.com/en/problems/12305', rate:'800',  div:'D2A', note:'Simple Reverse Engineering :)'},
+  {c:'ewp16', name:'Skyline',                url:'https://eolymp.com/en/problems/12306', rate:'1000', div:'D2A', note:'Observation + Patterns.'},
+  {c:'ewp16', name:'Minimum Triple',         url:'https://eolymp.com/en/problems/12307', rate:'1600', div:'D2C'},
+  {c:'ewp16', name:'Permutation Fix Sum',    url:'https://eolymp.com/en/problems/12308', rate:'1900', div:'D1B'},
+  {c:'ewp16', name:'Symmetric Construction', url:'https://eolymp.com/en/problems/12309', rate:'2400', div:'D1C'},
+
+  /* Eolymp Blitz #10 */
+  {c:'eb10', name:'Bouncing Ball',  url:'https://eolymp.com/en/problems/12311', rate:'800',  div:'D2A'},
+  {c:'eb10', name:'Digit Queries',  url:'https://eolymp.com/en/problems/12312', rate:'900',  div:'D2A'},
+  {c:'eb10', name:'Counting Pairs', url:'https://eolymp.com/en/problems/12313', rate:'1000', div:'D2A'},
+  {c:'eb10', name:'2Tree Queries',  url:'https://eolymp.com/en/problems/12314', rate:'1400', div:'D2B/C'},
+  {c:'eb10', name:'Wake Me Up',     url:'https://eolymp.com/en/problems/12315', rate:'1700', div:'D2C'},
+
+  /* Eolymp Blitz #11 / #12 */
+  {c:'eb11', name:'Kaosar and Counting', url:'https://eolymp.com/en/problems/12328', rate:'1600', div:'D2C'},
+  {c:'eb12', name:'Interviews',          url:'https://eolymp.com/en/problems/12339', rate:'1000', div:'D2A'},
+
+  /* Eolymp — standalone */
+  {name:'Cheater',           url:'https://eolymp.com/en/problems/12353', rate:'800',  div:'D2A', date:'2026'},
+  {name:'Area',              url:'https://eolymp.com/en/problems/12429', rate:'900',  div:'D2A', date:'2026'},
+  {name:'Exciting Arrays',   url:'https://eolymp.com/en/problems/12460', rate:'900',  div:'D2A', date:'2026'},
+  {name:'Rotate the Matrix', url:'https://eolymp.com/en/problems/13034', rate:'800',  div:'D2A', date:'2026'},
+  {name:'Permutation Test',  url:'https://eolymp.com/en/problems/13035', rate:'900',  div:'D3B', date:'2026'},
+  {name:'Matrix is Fun',     url:'https://eolymp.com/en/problems/13036', rate:'1100', div:'D3C', date:'2026'},
+  {name:'Sigma Queries',     url:'https://eolymp.com/en/problems/13037', rate:'1200', div:'D3D', date:'2026'},
+  {name:'Ceiling Sum',       url:'https://eolymp.com/en/problems/13038', rate:'2000', div:'D2D', date:'2026'},
+  {name:'Opening',           url:'https://eolymp.com/en/problems/13087', rate:'900',  div:'D2A',   date:'2026'},
+  {name:'Slicing',           url:'https://eolymp.com/en/problems/13088', rate:'1200', div:'D2B',   date:'2026'},
+  {name:'1221',              url:'https://eolymp.com/en/problems/13089', rate:'1400', div:'D2B/C', date:'2026'},
+  {name:'+⊕3%',              url:'https://eolymp.com/en/problems/13090', rate:'1600', div:'D2C',   date:'2026'},
+  {name:'Skibidi String',    url:'https://eolymp.com/en/problems/13091', rate:'1800', div:'D2C/D', date:'2026'}
 ];
+
+/* ---------- derived data (nothing to edit below for new problems) ---------- */
+var PLATFORMS=[
+  {re:/codeforces\.com/,  c:'CF',  cls:'cf',  name:'Codeforces'},
+  {re:/codechef\.com/,    c:'CC',  cls:'cc',  name:'CodeChef'},
+  {re:/kep\.uz/,          c:'KEP', cls:'kep', name:'KEP'},
+  {re:/robocontest\.uz/,  c:'RC',  cls:'rc',  name:'Robocontest'},
+  {re:/eolymp\.com/,      c:'EO',  cls:'eo',  name:'Eolymp'}
+];
+var OTHER={c:'?',cls:'x',name:'Other'};
+function platform(url){
+  for(var i=0;i<PLATFORMS.length;i++) if(PLATFORMS[i].re.test(url)) return PLATFORMS[i];
+  return OTHER;
+}
+
+/* Codeforces-style rating bands */
+var BANDS=[[1200,'#9AA7BD'],[1400,'#63C08A'],[1600,'#34BFC9'],[1900,'#6F9BE8'],
+           [2100,'#B58BE6'],[2400,'#E0913C'],[Infinity,'#EB6A4E']];
+function rateColour(r){ for(var i=0;i<BANDS.length;i++) if(r<BANDS[i][0]) return BANDS[i][1]; }
+
+var PROBS=PROBLEMS.map(function(p,i){
+  var ct=p.c?CONTESTS[p.c]:null, pf=platform(p.url), num=parseInt(p.rate,10)||0;
+  if(p.c&&!ct) console.warn('Unknown contest key:',p.c,p.name);
+  return {
+    n:i+1, name:p.name, url:p.url, div:p.div||'', rate:p.rate, num:num, col:rateColour(num), note:p.note||'',
+    pf:pf, ckey:p.c||null,
+    contest:ct?ct.name:pf.name, curl:ct?ct.url:p.url, date:p.date||(ct?ct.date:'')
+  };
+});
 
 /* ---------- helpers ---------- */
 var app=document.getElementById('app');
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]);});}
-function platform(url){
-  if(/codeforces\.com/.test(url))return{c:'CF',cls:'cf',name:'Codeforces'};
-  if(/codechef\.com/.test(url))return{c:'CC',cls:'cc',name:'CodeChef'};
-  if(/kep\.uz/.test(url))return{c:'KEP',cls:'kep',name:'KEP'};
-  if(/robocontest\.uz/.test(url))return{c:'RC',cls:'rc',name:'Robocontest'};
-  if(/eolymp\.com/.test(url))return{c:'EO',cls:'eo',name:'Eolymp'};
-  return{c:'?',cls:'x',name:'Other'};
-}
-function obj(a){return{n:a[0],date:a[1],name:a[2],url:a[3],div:a[4],rate:a[5],col:a[6],contest:a[7],curl:a[8],note:a[9]};}
-var PROBS=D.map(obj);
 
-/* ---------- stats ---------- */
 function buildStats(){
   var contests={}, plats={}, hardest=0;
   PROBS.forEach(function(p){
-    contests[p.contest]=1; plats[platform(p.url).name]=1;
-    var r=parseInt(p.rate,10); if(r>hardest)hardest=r;
+    if(p.ckey) contests[p.ckey]=1;
+    plats[p.pf.name]=1;
+    if(p.num>hardest) hardest=p.num;
   });
   return {total:PROBS.length, contests:Object.keys(contests).length,
           plats:Object.keys(plats).length, hardest:hardest};
 }
 
-/* ---------- row ---------- */
 function rowHtml(p){
-  var pf=platform(p.url), col=RCOL[p.col]||'#9AA7BD', num=parseInt(p.rate,10)||0;
-  var text=(p.name+' '+p.contest+' '+pf.name+' '+p.div).toLowerCase();
-  return '<div class="prow" data-plat="'+pf.cls+'" data-rate="'+num+'" data-n="'+p.n+'" data-text="'+esc(text)+'">'+
+  var text=(p.name+' '+p.contest+' '+p.pf.name+' '+p.div).toLowerCase();
+  return '<div class="prow" data-plat="'+p.pf.cls+'" data-rate="'+p.num+'" data-n="'+p.n+'" data-text="'+esc(text)+'">'+
     '<span class="pid">'+String(p.n).padStart(2,'0')+'</span>'+
     '<div class="pmain">'+
       '<div class="ptitle">'+
         '<a class="pname" href="'+esc(p.url)+'" target="_blank" rel="noopener">'+esc(p.name)+'</a>'+
-        '<span class="rate" style="color:'+col+';border-color:'+col+'55;background:'+col+'1a">'+esc(p.rate)+'</span>'+
-        '<span class="divtag">'+esc(p.div)+'</span>'+
+        '<span class="rate" style="color:'+p.col+';border-color:'+p.col+'55;background:'+p.col+'1a">'+esc(p.rate)+'</span>'+
+        (p.div?'<span class="divtag">'+esc(p.div)+'</span>':'')+
       '</div>'+
       '<div class="pmeta">'+
-        '<span class="plat '+pf.cls+'">'+pf.c+'</span>'+
+        '<span class="plat '+p.pf.cls+'">'+p.pf.c+'</span>'+
         '<a class="contest" href="'+esc(p.curl)+'" target="_blank" rel="noopener">'+esc(p.contest)+'</a>'+
-        '<span class="dot2">&middot;</span><span class="date">'+esc(p.date)+'</span>'+
+        (p.date?'<span class="dot2">&middot;</span><span class="date">'+esc(p.date)+'</span>':'')+
       '</div>'+
       (p.note?'<div class="pcomment">'+p.note+'</div>':'')+
     '</div></div>';
@@ -299,8 +362,11 @@ function rowHtml(p){
 /* ---------- render ---------- */
 var state={q:'', plat:'all', sort:'n', dir:1};
 
+function platChip(p,lbl){ return '<span class="chip'+(p==='all'?' on':'')+'" data-p="'+p+'">'+lbl+'</span>'; }
+
 function render(){
   var s=buildStats();
+  var chips=platChip('all','All')+PLATFORMS.map(function(pf){ return platChip(pf.cls,pf.c); }).join('');
   app.innerHTML=
     '<a class="back" href="index.html">‹ cd ~</a>'+
     '<p class="prompt"><span class="u">'+owner+'</span>@<span class="p">'+host+'</span>:<span class="d">~/problemsetting</span>$ ls --authored<span class="cursor"></span></p>'+
@@ -314,8 +380,7 @@ function render(){
     '</div>'+
     '<div class="search"><span class="si">⌕</span>'+
       '<input id="q" type="text" inputmode="search" autocomplete="off" placeholder="filter by name, contest, platform…"></div>'+
-    '<div class="filters" id="filters">'+
-      platChip('all','All')+platChip('cf','CF')+platChip('cc','CC')+platChip('kep','KEP')+platChip('rc','RC')+platChip('eo','EO')+
+    '<div class="filters" id="filters">'+chips+
       '<span class="spacer"></span>'+
       '<span class="sortbtn" id="sortN"># order</span>'+
       '<span class="sortbtn" id="sortR">↕ rating</span>'+
@@ -338,7 +403,6 @@ function render(){
   });
   apply();
 }
-function platChip(p,lbl){ return '<span class="chip'+(p==='all'?' on':'')+'" data-p="'+p+'">'+lbl+'</span>'; }
 
 function apply(){
   var list=document.getElementById('list'), rows=Array.prototype.slice.call(list.children);
@@ -348,7 +412,6 @@ function apply(){
     var okQ=!state.q||r.getAttribute('data-text').indexOf(state.q)>-1;
     var vis=okP&&okQ; r.style.display=vis?'':'none'; if(vis)shown++;
   });
-  /* sort */
   rows.sort(function(a,b){
     if(state.sort==='rate'){
       var d=(+a.getAttribute('data-rate'))-(+b.getAttribute('data-rate'));
@@ -357,7 +420,6 @@ function apply(){
     return ((+a.getAttribute('data-n'))-(+b.getAttribute('data-n')))*(state.sort==='rate'?1:state.dir);
   });
   rows.forEach(function(r){ list.appendChild(r); });
-  /* chips + labels */
   Array.prototype.forEach.call(document.querySelectorAll('.chip'),function(c){
     c.classList.toggle('on', c.getAttribute('data-p')===state.plat);
   });
