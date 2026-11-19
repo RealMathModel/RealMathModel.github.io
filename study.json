@@ -177,7 +177,7 @@
                 { "label": "Discrete Math Mid Term", "href": "", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Discrete Math Summary (Part 2) ", "href": "", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Discrete Math Final Exam (Unsolved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
-                { "label": "Discrete Math Final Exam (Solved)", "href": "", "type": "external", "icon": "fa-solid fa-book" }
+                { "label": "Discrete Math Final Exam (Solved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "Discrete Math Summary (Full) ", "href": "", "type": "external", "icon": "fa-solid fa-book" }
               ]
             },
