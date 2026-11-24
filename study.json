@@ -204,7 +204,7 @@
               "blurb": "Data structures & OOP continuation",
               "resources": [
                 { "label": "Programming II Summary", "href": "", "type": "external", "icon": "fa-solid fa-book" },
-                  { "label": "C++ Programming II Mid Term", "href": "", "type": "external", "icon": "fa-solid fa-book" },
+                  { "label": "C++ Programming II Mid Term (Solved)", "href": "https://drive.google.com/file/d/1YzDHzIRXK_tJu0Dx6dFqU1mMcK4HFOUl/view?usp=sharing", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "C++ Programming II Final Exam (Unsolved)", "href": "", "type": "external", "icon": "fa-solid fa-book" },
                 { "label": "C++ Programming II Final Exam (Solved)", "href": "", "type": "external", "icon": "fa-solid fa-book" }
               ]
